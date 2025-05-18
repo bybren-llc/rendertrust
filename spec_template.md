@@ -146,6 +146,51 @@
 - **Risk**: [Describe potential risk]
   - **Mitigation**: [Describe mitigation strategy]
 
+## Pull Request Template
+> Use this template when creating a pull request for your implementation
+
+```markdown
+# Pull Request Template
+
+## Overview
+<!-- Provide a brief description of what this PR does -->
+[Brief description of the implementation based on this spec]
+
+## Changes
+<!-- List the specific changes made in this PR -->
+- [Major change 1]
+- [Major change 2]
+- [Major change 3]
+
+## Technical Details
+<!-- Explain any technical decisions, trade-offs, or architectural considerations -->
+[Explain key technical decisions made during implementation]
+
+## Testing
+<!-- Describe how you tested these changes -->
+- [ ] Tested changes in local development environment
+- [ ] Checked for errors in console logs and network requests
+- [ ] Ran full build to verify production readiness
+- [ ] Updated or added unit tests
+- [ ] Performed integration testing
+
+## Impact
+<!-- Describe the potential impact of these changes on users or other parts of the system -->
+[Describe how these changes affect the system and users]
+
+## Related Issues
+<!-- Link to any related issues -->
+- Resolves [REN-XX: Issue Title]
+
+---
+
+<!-- Please ensure your PR follows our contribution guidelines -->
+- [ ] I have followed the SAFe Essentials workflow
+- [ ] I have consulted with team members as needed
+- [ ] I have updated documentation as necessary
+- [ ] I have verified that these changes meet the acceptance criteria
+```
+
 ---
 
 ## Agent Implementation Checklist
