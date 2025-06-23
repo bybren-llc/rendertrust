@@ -68,3 +68,8 @@ Thumbs.db
 *.bak
 *.backup
 *~
+
+# Planning workflow - keep only templates and completed docs
+specs/wip/
+specs/todo/
+specs/doing/
