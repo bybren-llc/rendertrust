@@ -60,6 +60,9 @@ out/
 *.swp
 *.swo
 
+# Claude Code local settings (user-specific)
+.claude/settings.local.json
+
 # OS files
 .DS_Store
 Thumbs.db
