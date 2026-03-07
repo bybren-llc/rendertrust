@@ -1,0 +1,15 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
+  },
+  "teammateMode": "in-process",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "mcp__claude_ai_Linear__*",
+      "mcp__claude_ai_Atlassian__*"
+    ]
+  }
+}
