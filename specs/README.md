@@ -1,6 +1,6 @@
 # RenderTrust Planning Specifications
 
-This directory contains planning specifications and templates for the RenderTrust project, following the WTFB Linear Agents methodology.
+This directory contains planning specifications and templates for the RenderTrust project, following the SAFe Agentic Workflow methodology.
 
 ## Directory Structure
 
