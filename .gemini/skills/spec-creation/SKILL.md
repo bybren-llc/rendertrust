@@ -18,40 +18,49 @@ Guide spec creation with clear acceptance criteria, pattern references, and test
 
 ## Spec Template (MANDATORY)
 
-```markdown
+````markdown
 # SPEC-REN-{number}: {Feature Name}
 
 ## Summary
+
 {One paragraph describing the feature}
 
 ## User Story
+
 As a [user type], I want [goal] so that [benefit].
 
 ## Acceptance Criteria
+
 - [ ] {Testable criterion 1}
 - [ ] {Testable criterion 2}
 - [ ] {Testable criterion 3}
 
 ## Pattern References
+
 - **UI**: `patterns_library/ui/{pattern}.md`
 - **API**: `patterns_library/api/{pattern}.md`
 - **Database**: `patterns_library/database/{pattern}.md`
 
 ## Success Validation Command
+
 ```bash
 {validation command}
 ```
+````
 
 ## Demo Script
+
 1. Navigate to {page}
 2. Click {button}
 3. Observe {expected behavior}
 
 ## Logical Commits
+
 1. `feat(scope): implement data model [REN-{number}]`
 2. `feat(scope): add API endpoint [REN-{number}]`
 3. `feat(scope): create UI component [REN-{number}]`
-```
+
+````
 
 ## Acceptance Criteria Patterns
 
@@ -65,7 +74,7 @@ As a [user type], I want [goal] so that [benefit].
 
 # Errors
 - [ ] Invalid input shows {error message}
-```
+````
 
 ## Quality Checklist
 

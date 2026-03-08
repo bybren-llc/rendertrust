@@ -8,13 +8,13 @@ simultaneously require serialized, safe merging.
 
 ## Why Merge Queue + Squash
 
-| Concern | Solution |
-|---------|----------|
-| Multiple agents pushing PRs concurrently | Merge queue serializes merges |
-| Readable git history under high bot throughput | Squash: 1 PR = 1 commit on trunk |
-| Easy rollback of bad agent work | `git revert <single_commit>` |
-| No rebase SHA churn from long-running branches | Squash avoids it entirely |
-| Granular work archaeology | PR body + Linear artifacts + agent logs |
+| Concern                                        | Solution                                |
+| ---------------------------------------------- | --------------------------------------- |
+| Multiple agents pushing PRs concurrently       | Merge queue serializes merges           |
+| Readable git history under high bot throughput | Squash: 1 PR = 1 commit on trunk        |
+| Easy rollback of bad agent work                | `git revert <single_commit>`            |
+| No rebase SHA churn from long-running branches | Squash avoids it entirely               |
+| Granular work archaeology                      | PR body + Linear artifacts + agent logs |
 
 ---
 
@@ -102,6 +102,7 @@ on:
 ```
 
 Both triggers are required:
+
 - `pull_request` -- runs CI when PR is created/updated (pre-queue feedback)
 - `merge_group` -- runs CI when PR enters the queue (actual gate)
 
@@ -168,6 +169,7 @@ in `CONTRIBUTING.md` still applies. This policy change only affects queued merge
 ### Creating PRs
 
 Agents create PRs using:
+
 ```bash
 gh pr create --title "type(scope): description [REN-XXX]" --body "..."
 ```
@@ -175,6 +177,7 @@ gh pr create --title "type(scope): description [REN-XXX]" --body "..."
 ### Enqueuing for Merge
 
 Agents enqueue PRs using:
+
 ```bash
 gh pr merge --auto --squash
 ```
@@ -193,6 +196,7 @@ pass." The `--squash` flag is advisory -- the queue's configured merge method
 ### Stop-the-Line
 
 If the merge queue is unavailable or broken:
+
 - **Agents stop creating PRs**
 - **TDM reports the blocker**
 - **No fallback to direct merge** -- ever

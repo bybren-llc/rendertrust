@@ -21,6 +21,7 @@ SAFe® is a registered trademark of Scaled Agile, Inc.
 ## Quick Start
 
 This skill activates automatically when you mention:
+
 - Before implementing new features
 - When creating components or API routes
 - Database operations
@@ -31,9 +32,9 @@ Ensures existing patterns are checked before writing new code. Implements 'Searc
 
 ## Provider Compatibility
 
-| Provider | Status |
-|----------|--------|
-| Gemini CLI | ✅ Native |
+| Provider    | Status                                   |
+| ----------- | ---------------------------------------- |
+| Gemini CLI  | ✅ Native                                |
 | Claude Code | ✅ Equivalent skill in `.claude/skills/` |
 
 ## Related Skills
@@ -43,11 +44,11 @@ Ensures existing patterns are checked before writing new code. Implements 'Searc
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-14 |
+| Field           | Value               |
+| --------------- | ------------------- |
+| Last Updated    | 2026-01-14          |
 | Harness Version | {{HARNESS_VERSION}} |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

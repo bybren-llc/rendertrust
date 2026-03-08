@@ -372,6 +372,6 @@ Options:
 
 To adapt this command for your infrastructure, replace these placeholders:
 
-| Placeholder       | Description               | Example               |
-| ----------------- | ------------------------- | --------------------- |
-| `REN` | Your Linear ticket prefix | `WOR`, `PROJ`, `TASK` |
+| Placeholder | Description               | Example               |
+| ----------- | ------------------------- | --------------------- |
+| `REN`       | Your Linear ticket prefix | `WOR`, `PROJ`, `TASK` |

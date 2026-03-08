@@ -14,23 +14,25 @@
 
 ## What Are Agent Teams?
 
-Agent Teams is a Claude Code capability that allows multiple Claude Code sessions to coordinate as a real-time team. A single **team lead** session spawns **teammate** sessions, and all participants share a structured TaskList and communicate through direct inter-agent messages. The team lead orchestrates the work, creates tasks with dependencies, monitors progress, and synthesizes results when the work is done.
+Agent Teams is a Claude Code capability that allows multiple Claude Code sessions to coordinate as a real-time team. A single **team lead** session spawns **teammate** sessions, and all participants share a structured TaskList and communicate through direct inter-agent messages.
+The team lead orchestrates the work, creates tasks with dependencies, monitors progress, and synthesizes results when the work is done.
 
-In the SAFe Agentic Workflow, Agent Teams map naturally to the 11-agent structure defined in [AGENTS.md](../../AGENTS.md). The TDM (or ARCHitect-in-CLI) acts as the team lead, spawning specialist teammates such as BE Developer, FE Developer, QAS, and others. Each teammate operates in its own Claude Code session with full tool access, working on assigned tasks in parallel or sequence based on dependency relationships.
+In the SAFe Agentic Workflow, Agent Teams map naturally to the 11-agent structure defined in [AGENTS.md](../../AGENTS.md). The TDM (or ARCHitect-in-CLI) acts as the team lead, spawning specialist teammates such as BE Developer, FE Developer, QAS, and others.
+Each teammate operates in its own Claude Code session with full tool access, working on assigned tasks in parallel or sequence based on dependency relationships.
 
 Agent Teams differ from the two other multi-agent approaches available in Claude Code: subagents (via the Task tool) and background agents (headless sessions). Understanding when to use each approach is critical for efficient token usage and effective coordination.
 
 ### Agent Teams vs Subagents vs Background Agents
 
-| Aspect | Agent Teams | Subagents (Task tool) | Background Agents |
-| --- | --- | --- | --- |
-| **Communication** | Bi-directional messaging between all teammates and lead | One-way: subagent reports result back to caller | None during execution; results available after completion |
-| **Coordination** | Shared TaskList with dependencies, real-time status | Caller waits for subagent to finish, then proceeds | Fire-and-forget; poll for completion |
-| **Visibility** | All teammates visible in split panes or in-process view | Subagent runs inline within the caller's session | Runs headless in the background |
-| **Shared state** | Shared filesystem; teammates can read each other's output | Shared filesystem within the session | Shared filesystem (same repo clone) |
-| **Best for** | Feature implementation requiring 3-8 coordinated specialists | Focused single-step delegation (review, test, generate) | Long-running tasks that do not need real-time feedback |
-| **Token cost** | Approximately 7x a single session (per teammate) | 1-2x per subagent invocation | 1x per background session |
-| **Session model** | Single team per session; no resumption after exit | Ephemeral within the parent session | Persistent; can be listed and retrieved later |
+| Aspect            | Agent Teams                                                  | Subagents (Task tool)                                   | Background Agents                                         |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------- |
+| **Communication** | Bi-directional messaging between all teammates and lead      | One-way: subagent reports result back to caller         | None during execution; results available after completion |
+| **Coordination**  | Shared TaskList with dependencies, real-time status          | Caller waits for subagent to finish, then proceeds      | Fire-and-forget; poll for completion                      |
+| **Visibility**    | All teammates visible in split panes or in-process view      | Subagent runs inline within the caller's session        | Runs headless in the background                           |
+| **Shared state**  | Shared filesystem; teammates can read each other's output    | Shared filesystem within the session                    | Shared filesystem (same repo clone)                       |
+| **Best for**      | Feature implementation requiring 3-8 coordinated specialists | Focused single-step delegation (review, test, generate) | Long-running tasks that do not need real-time feedback    |
+| **Token cost**    | Approximately 7x a single session (per teammate)             | 1-2x per subagent invocation                            | 1x per background session                                 |
+| **Session model** | Single team per session; no resumption after exit            | Ephemeral within the parent session                     | Persistent; can be listed and retrieved later             |
 
 **Rule of thumb**: Use Agent Teams when you need multiple specialists working simultaneously with awareness of each other's progress. Use subagents when you need a focused specialist to complete a task and return the result. Use background agents when the work is independent and you do not need the result immediately.
 
@@ -250,29 +252,29 @@ Each of the 11 agent roles can be spawned as a teammate. Use the agent prompt fi
 
 **Planning and Coordination**:
 
-| Role | Agent file | Model | Use as teammate when |
-| --- | --- | --- | --- |
-| TDM | `.claude/agents/tdm.md` | opus | Typically the lead, not a teammate |
-| BSA | `.claude/agents/bsa.md` | opus | Spec needs to be created as part of the workflow |
-| System Architect | `.claude/agents/system-architect.md` | opus | Architectural review is part of the task |
+| Role             | Agent file                           | Model | Use as teammate when                             |
+| ---------------- | ------------------------------------ | ----- | ------------------------------------------------ |
+| TDM              | `.claude/agents/tdm.md`              | opus  | Typically the lead, not a teammate               |
+| BSA              | `.claude/agents/bsa.md`              | opus  | Spec needs to be created as part of the workflow |
+| System Architect | `.claude/agents/system-architect.md` | opus  | Architectural review is part of the task         |
 
 **Implementation**:
 
-| Role | Agent file | Model | Use as teammate when |
-| --- | --- | --- | --- |
-| BE Developer | `.claude/agents/be-developer.md` | sonnet | API routes, server logic, RLS enforcement |
-| FE Developer | `.claude/agents/fe-developer.md` | sonnet | UI components, client-side logic |
-| Data Engineer | `.claude/agents/data-engineer.md` | sonnet | Schema changes, migrations |
-| DPE | `.claude/agents/data-provisioning-eng.md` | sonnet | Test data, data pipelines |
+| Role          | Agent file                                | Model  | Use as teammate when                      |
+| ------------- | ----------------------------------------- | ------ | ----------------------------------------- |
+| BE Developer  | `.claude/agents/be-developer.md`          | sonnet | API routes, server logic, RLS enforcement |
+| FE Developer  | `.claude/agents/fe-developer.md`          | sonnet | UI components, client-side logic          |
+| Data Engineer | `.claude/agents/data-engineer.md`         | sonnet | Schema changes, migrations                |
+| DPE           | `.claude/agents/data-provisioning-eng.md` | sonnet | Test data, data pipelines                 |
 
 **Quality and Documentation**:
 
-| Role | Agent file | Model | Use as teammate when |
-| --- | --- | --- | --- |
-| QAS | `.claude/agents/qas.md` | sonnet | Testing and validation (non-collapsible gate) |
-| Security Engineer | `.claude/agents/security-engineer.md` | sonnet | Security audit (non-collapsible gate) |
-| Tech Writer | `.claude/agents/tech-writer.md` | sonnet | Documentation updates needed |
-| RTE | `.claude/agents/rte.md` | sonnet | PR creation and CI shepherding |
+| Role              | Agent file                            | Model  | Use as teammate when                          |
+| ----------------- | ------------------------------------- | ------ | --------------------------------------------- |
+| QAS               | `.claude/agents/qas.md`               | sonnet | Testing and validation (non-collapsible gate) |
+| Security Engineer | `.claude/agents/security-engineer.md` | sonnet | Security audit (non-collapsible gate)         |
+| Tech Writer       | `.claude/agents/tech-writer.md`       | sonnet | Documentation updates needed                  |
+| RTE               | `.claude/agents/rte.md`               | sonnet | PR creation and CI shepherding                |
 
 When spawning a teammate, provide the agent's role prompt as the system context and include the spec or ticket reference so the teammate has full context for its work.
 
@@ -308,11 +310,11 @@ Direct messages are targeted to a specific teammate and are the most common comm
 
 Choose team size based on the scope of work. Larger teams increase token cost and coordination overhead.
 
-| Work scope | Team size | Typical composition | When to use |
-| --- | --- | --- | --- |
-| **Story** (single user story) | 2-3 teammates | 1 implementer + 1 QAS (+ optional TW) | Focused work on a single feature slice |
-| **Feature** (multi-story feature) | 3-5 teammates | 1-2 implementers + QAS + optional SecEng + optional TW | Standard feature implementation |
-| **Epic** (large initiative) | 5-8 teammates | BSA + multiple implementers + QAS + SecEng + RTE | Major cross-cutting work requiring full team |
+| Work scope                        | Team size     | Typical composition                                    | When to use                                  |
+| --------------------------------- | ------------- | ------------------------------------------------------ | -------------------------------------------- |
+| **Story** (single user story)     | 2-3 teammates | 1 implementer + 1 QAS (+ optional TW)                  | Focused work on a single feature slice       |
+| **Feature** (multi-story feature) | 3-5 teammates | 1-2 implementers + QAS + optional SecEng + optional TW | Standard feature implementation              |
+| **Epic** (large initiative)       | 5-8 teammates | BSA + multiple implementers + QAS + SecEng + RTE       | Major cross-cutting work requiring full team |
 
 **Rules of thumb:**
 
@@ -573,11 +575,11 @@ nano ~/.dark-factory/env
 
 Dark Factory provides pre-built tmux layouts that map to the team sizes described in [Team Sizing Guidelines](#team-sizing-guidelines):
 
-| Layout | Panes | Agents | Command |
-| --- | --- | --- | --- |
-| `story` | 3 | TDM + BE + QAS | `factory-start.sh story` |
-| `feature` | 5 | TDM + BE + FE + QAS + RTE | `factory-start.sh feature` |
-| `epic` | 9 | TDM + BSA + ARCH + SecEng + BE + FE + Data + QAS + RTE | `factory-start.sh epic` |
+| Layout    | Panes | Agents                                                 | Command                    |
+| --------- | ----- | ------------------------------------------------------ | -------------------------- |
+| `story`   | 3     | TDM + BE + QAS                                         | `factory-start.sh story`   |
+| `feature` | 5     | TDM + BE + FE + QAS + RTE                              | `factory-start.sh feature` |
+| `epic`    | 9     | TDM + BSA + ARCH + SecEng + BE + FE + Data + QAS + RTE | `factory-start.sh epic`    |
 
 ### Observing from Cursor IDE
 

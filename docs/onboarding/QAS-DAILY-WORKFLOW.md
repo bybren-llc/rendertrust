@@ -165,15 +165,15 @@ Evidence is required for every ticket before it can move to "Ready for Review." 
 
 ### What to Capture
 
-| Evidence Type          | When Required                 | Format                          |
-| ---------------------- | ----------------------------- | ------------------------------- |
-| **Test results**       | Always                        | CLI output or test report       |
-| **Coverage report**    | When tests are written        | Coverage summary with %         |
-| **Screenshots**        | UI changes                    | PNG/JPG of before/after         |
-| **Validation output**  | Always                        | Output of validation commands   |
-| **RLS audit results**  | Database operations            | RLS test script output          |
-| **Performance data**   | When `#EXPORT_CRITICAL` perf  | Benchmark results               |
-| **Session ID**         | Always                        | Claude Code session identifier  |
+| Evidence Type         | When Required                | Format                         |
+| --------------------- | ---------------------------- | ------------------------------ |
+| **Test results**      | Always                       | CLI output or test report      |
+| **Coverage report**   | When tests are written       | Coverage summary with %        |
+| **Screenshots**       | UI changes                   | PNG/JPG of before/after        |
+| **Validation output** | Always                       | Output of validation commands  |
+| **RLS audit results** | Database operations          | RLS test script output         |
+| **Performance data**  | When `#EXPORT_CRITICAL` perf | Benchmark results              |
+| **Session ID**        | Always                       | Claude Code session identifier |
 
 ### Format for Evidence
 
@@ -188,11 +188,11 @@ Structure your evidence as a Linear comment:
 
 ### Acceptance Criteria Validation
 
-| AC   | Description                | Status | Evidence        |
-| ---- | -------------------------- | ------ | --------------- |
-| AC-1 | [Description]              | PASS   | Unit test suite |
-| AC-2 | [Description]              | PASS   | Integration test |
-| AC-3 | [Description]              | PASS   | E2E test         |
+| AC   | Description   | Status | Evidence         |
+| ---- | ------------- | ------ | ---------------- |
+| AC-1 | [Description] | PASS   | Unit test suite  |
+| AC-2 | [Description] | PASS   | Integration test |
+| AC-3 | [Description] | PASS   | E2E test         |
 
 ### Test Results
 

@@ -238,7 +238,7 @@ it("should enforce RLS context", async () => {
   expect(mockWithUserContext).toHaveBeenCalledWith(
     expect.anything(),
     testUserId,
-    expect.any(Function),
+    expect.any(Function)
   );
 });
 ```

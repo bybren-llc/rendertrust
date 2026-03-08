@@ -58,7 +58,7 @@ Skills are loaded progressively—metadata at startup, full content when context
 | `testing-patterns`       | Writing tests          | pytest, Playwright patterns                 |
 | `orchestration-patterns` | Multi-step work        | Agent loop, evidence-based delivery         |
 | `agent-coordination`     | Multi-agent work       | Assignment matrix, escalation patterns      |
-| `team-coordination`    | Agent Teams spawn     | Multi-agent orchestration (experimental)  |
+| `team-coordination`      | Agent Teams spawn      | Multi-agent orchestration (experimental)    |
 
 **Note**: `/skills` command has display bug (v2.0.73, GitHub #14733). Skills work but won't show in list. Ask Claude directly: "What skills are available?"
 

@@ -26,12 +26,12 @@ RLS Enforcement (Data Protection)
 
 ```typescript
 // REQUIRED for all user operations
-const userData = await withUserContext(prisma, userId, async (client) => {
+const userData = await withUserContext(prisma, userId, async client => {
   return client.scripts.findMany({ where: { author_id: userId } });
 });
 
 // REQUIRED for all admin operations
-const adminData = await withAdminContext(prisma, async (client) => {
+const adminData = await withAdminContext(prisma, async client => {
   return client.admin_reports.findMany();
 });
 ```

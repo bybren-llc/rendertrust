@@ -19,12 +19,12 @@ Provides patterns for Claude Code Agent Teams -- real-time multi-agent coordinat
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| agent team | spawn teammates |
+| Primary           | Secondary       |
+| ----------------- | --------------- |
+| agent team        | spawn teammates |
 | team coordination | parallel agents |
-| multi-agent | SAFe pipeline |
-| TeamCreate | quality gates |
+| multi-agent       | SAFe pipeline   |
+| TeamCreate        | quality gates   |
 
 ## Prerequisites
 
@@ -45,11 +45,11 @@ Agent Teams must be enabled (experimental):
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-03-05 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-03-05 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

@@ -25,14 +25,14 @@ Gemini CLI is Google's open-source AI agent that brings Gemini directly into you
 
 ### Gemini CLI vs Claude Code
 
-| Feature | Gemini CLI | Claude Code |
-|---------|------------|-------------|
-| **Skills** | `.gemini/skills/SKILL.md` | `.claude/skills/SKILL.md` |
-| **Commands** | `.gemini/commands/*.toml` | `.claude/commands/*.md` |
-| **Config** | `settings.json` | `settings.local.json` |
-| **Hooks** | `settings.json` hooks section | `hooks-config.json` |
-| **Shell Injection** | `!{command}` in prompts | Via Bash tool |
-| **File Injection** | `@{file}` in prompts | Via Read tool |
+| Feature             | Gemini CLI                    | Claude Code               |
+| ------------------- | ----------------------------- | ------------------------- |
+| **Skills**          | `.gemini/skills/SKILL.md`     | `.claude/skills/SKILL.md` |
+| **Commands**        | `.gemini/commands/*.toml`     | `.claude/commands/*.md`   |
+| **Config**          | `settings.json`               | `settings.local.json`     |
+| **Hooks**           | `settings.json` hooks section | `hooks-config.json`       |
+| **Shell Injection** | `!{command}` in prompts       | Via Bash tool             |
+| **File Injection**  | `@{file}` in prompts          | Via Read tool             |
 
 ### Why Both?
 
@@ -45,14 +45,14 @@ Gemini CLI is Google's open-source AI agent that brings Gemini directly into you
 
 ### Primary Documentation
 
-| Resource | URL | Description |
-|----------|-----|-------------|
-| **Main Docs** | [geminicli.com/docs](https://geminicli.com/docs) | Official documentation |
-| **GitHub** | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) | Source code |
-| **Skills** | [geminicli.com/docs/cli/skills](https://geminicli.com/docs/cli/skills/) | Skill specification |
-| **Commands** | [geminicli.com/docs/cli/custom-commands](https://geminicli.com/docs/cli/custom-commands/) | Command specification |
-| **Hooks** | [geminicli.com/docs/hooks](https://geminicli.com/docs/hooks/) | Hooks reference |
-| **Settings Schema** | [GitHub Schema](https://raw.githubusercontent.com/google-gemini/gemini-cli/main/schemas/settings.schema.json) | JSON Schema |
+| Resource            | URL                                                                                                           | Description            |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **Main Docs**       | [geminicli.com/docs](https://geminicli.com/docs)                                                              | Official documentation |
+| **GitHub**          | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli)                                       | Source code            |
+| **Skills**          | [geminicli.com/docs/cli/skills](https://geminicli.com/docs/cli/skills/)                                       | Skill specification    |
+| **Commands**        | [geminicli.com/docs/cli/custom-commands](https://geminicli.com/docs/cli/custom-commands/)                     | Command specification  |
+| **Hooks**           | [geminicli.com/docs/hooks](https://geminicli.com/docs/hooks/)                                                 | Hooks reference        |
+| **Settings Schema** | [GitHub Schema](https://raw.githubusercontent.com/google-gemini/gemini-cli/main/schemas/settings.schema.json) | JSON Schema            |
 
 ### Hands-On Tutorial
 
@@ -109,10 +109,10 @@ Invoke this skill when:
 
 ### Required Frontmatter Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | **Yes** | Unique identifier (lowercase alphanumeric + dashes) |
-| `description` | **Yes** | What it does + when to use (Gemini uses this for auto-activation) |
+| Field         | Required | Description                                                       |
+| ------------- | -------- | ----------------------------------------------------------------- |
+| `name`        | **Yes**  | Unique identifier (lowercase alphanumeric + dashes)               |
+| `description` | **Yes**  | What it does + when to use (Gemini uses this for auto-activation) |
 
 ### Description Best Practices
 
@@ -155,15 +155,15 @@ description: Helps with database stuff.
 
 Subdirectories create namespaced commands using colons:
 
-| File Path | Command |
-|-----------|---------|
-| `commands/test.toml` | `/test` |
-| `commands/git/commit.toml` | `/git:commit` |
+| File Path                       | Command            |
+| ------------------------------- | ------------------ |
+| `commands/test.toml`            | `/test`            |
+| `commands/git/commit.toml`      | `/git:commit`      |
 | `commands/workflow/pre-pr.toml` | `/workflow:pre-pr` |
 
 ### TOML Format
 
-```toml
+`````toml
 description = "Brief description shown in /help"
 
 prompt = """
@@ -179,20 +179,21 @@ User input: {{args}}
 
 ```bash
 !{git status}
-```
+````
 
 ## File Injection
 
 @{package.json}
 """
-```
+
+`````
 
 ### Required vs Optional Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `prompt` | **Yes** | The text sent to Gemini (string or multi-line) |
-| `description` | No | Brief description for `/help` menu |
+| Field         | Required | Description                                    |
+| ------------- | -------- | ---------------------------------------------- |
+| `prompt`      | **Yes**  | The text sent to Gemini (string or multi-line) |
+| `description` | No       | Brief description for `/help` menu             |
 
 ### Special Syntax
 
@@ -206,7 +207,7 @@ Search for: {{args}}
 
 !{grep -r "{{args}}" . --include="*.ts"}
 """
-```
+````
 
 - Outside `!{}`: Injected exactly as typed
 - Inside `!{}`: Automatically shell-escaped
@@ -299,19 +300,19 @@ Add to `.gemini/settings.json`:
 
 ### Available Hook Events
 
-| Event | Trigger | Use Case |
-|-------|---------|----------|
-| `SessionStart` | Session begins | Initialize resources |
-| `SessionEnd` | Session ends | Cleanup, save state |
-| `BeforeAgent` | After prompt, before planning | Add context |
-| `AfterAgent` | Agent loop ends | Review output |
-| `BeforeModel` | Before LLM request | Modify prompts |
-| `AfterModel` | After LLM response | Filter responses |
-| `BeforeToolSelection` | Before tool filtering | Restrict tools |
-| `BeforeTool` | Before tool execution | Validate, block |
-| `AfterTool` | After tool execution | Process results |
-| `PreCompress` | Before context compression | Save state |
-| `Notification` | Permission events | Auto-approve |
+| Event                 | Trigger                       | Use Case             |
+| --------------------- | ----------------------------- | -------------------- |
+| `SessionStart`        | Session begins                | Initialize resources |
+| `SessionEnd`          | Session ends                  | Cleanup, save state  |
+| `BeforeAgent`         | After prompt, before planning | Add context          |
+| `AfterAgent`          | Agent loop ends               | Review output        |
+| `BeforeModel`         | Before LLM request            | Modify prompts       |
+| `AfterModel`          | After LLM response            | Filter responses     |
+| `BeforeToolSelection` | Before tool filtering         | Restrict tools       |
+| `BeforeTool`          | Before tool execution         | Validate, block      |
+| `AfterTool`           | After tool execution          | Process results      |
+| `PreCompress`         | Before context compression    | Save state           |
+| `Notification`        | Permission events             | Auto-approve         |
 
 ### Migrating from Claude Code
 
@@ -325,17 +326,17 @@ gemini hooks migrate --from-claude
 
 ### Supported File Types
 
-| Category | Formats | Use Case |
-|----------|---------|----------|
-| **Images** | PNG, JPG, GIF, WEBP, SVG, BMP | Visual analysis, OCR |
-| **Audio** | MP3, WAV, AIFF, AAC, OGG, FLAC | Transcription |
-| **Documents** | PDF | Text extraction, tables |
+| Category      | Formats                        | Use Case                |
+| ------------- | ------------------------------ | ----------------------- |
+| **Images**    | PNG, JPG, GIF, WEBP, SVG, BMP  | Visual analysis, OCR    |
+| **Audio**     | MP3, WAV, AIFF, AAC, OGG, FLAC | Transcription           |
+| **Documents** | PDF                            | Text extraction, tables |
 
 ### File Size Limits
 
-| Version | Limit |
-|---------|-------|
-| Gemini 2.x | 20MB |
+| Version    | Limit |
+| ---------- | ----- |
+| Gemini 2.x | 20MB  |
 | Gemini 3.x | 100MB |
 
 ### Multimodal Command Pattern
@@ -437,7 +438,7 @@ Enforce SAFe (Scaled Agile Framework) development practices...
 
 ### Command Example: /workflow:start-work
 
-```toml
+````toml
 description = "Start work on a new Linear ticket with proper workflow"
 
 prompt = """
@@ -453,10 +454,12 @@ You are starting work on a new Linear ticket.
 
 ```bash
 !{git checkout -b {{args}}}
-```
+````
+
 ...
 """
-```
+
+````
 
 ### Multimodal Command Example: /media:analyze-images
 
@@ -473,7 +476,7 @@ Analyze images in the specified directory using Gemini's multimodal vision.
 @{{{args}}}
 ...
 """
-```
+````
 
 ---
 
@@ -481,26 +484,26 @@ Analyze images in the specified directory using Gemini's multimodal vision.
 
 ### File Locations
 
-| Type | Location |
-|------|----------|
-| Skills | `.gemini/skills/<name>/SKILL.md` |
-| Commands | `.gemini/commands/**/*.toml` |
-| Settings | `.gemini/settings.json` |
-| System Instructions | `.gemini/GEMINI.md` |
+| Type                | Location                         |
+| ------------------- | -------------------------------- |
+| Skills              | `.gemini/skills/<name>/SKILL.md` |
+| Commands            | `.gemini/commands/**/*.toml`     |
+| Settings            | `.gemini/settings.json`          |
+| System Instructions | `.gemini/GEMINI.md`              |
 
 ### Command Syntax
 
-| Syntax | Purpose | Example |
-|--------|---------|---------|
-| `{{args}}` | User input | `Search: {{args}}` |
-| `!{cmd}` | Shell output | `!{git status}` |
-| `@{path}` | File contents | `@{package.json}` |
+| Syntax     | Purpose       | Example            |
+| ---------- | ------------- | ------------------ |
+| `{{args}}` | User input    | `Search: {{args}}` |
+| `!{cmd}`   | Shell output  | `!{git status}`    |
+| `@{path}`  | File contents | `@{package.json}`  |
 
 ### Namespacing
 
-| Path | Command |
-|------|---------|
-| `commands/foo.toml` | `/foo` |
+| Path                    | Command    |
+| ----------------------- | ---------- |
+| `commands/foo.toml`     | `/foo`     |
 | `commands/bar/baz.toml` | `/bar:baz` |
 
 ---

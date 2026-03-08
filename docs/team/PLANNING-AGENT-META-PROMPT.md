@@ -70,7 +70,7 @@ const user1 = await prisma.user.findUnique({ where: { id: userId } });
 const user2 = await prisma.user.findUnique({ where: { id: userId } });
 
 // ✅ GOOD: Reuse pattern
-const user = await withUserContext(userId, async (prisma) => {
+const user = await withUserContext(userId, async prisma => {
   return prisma.user.findUnique({ where: { id: userId } });
 });
 ```
@@ -90,11 +90,11 @@ const user = await withUserContext(userId, async (prisma) => {
 
 ```typescript
 // ❌ BAD: Overly clever
-const result = data?.items?.filter((x) => x.active)?.map((x) => x.id) ?? [];
+const result = data?.items?.filter(x => x.active)?.map(x => x.id) ?? [];
 
 // ✅ GOOD: Clear and simple
-const activeItems = data?.items?.filter((item) => item.active) || [];
-const activeIds = activeItems.map((item) => item.id);
+const activeItems = data?.items?.filter(item => item.active) || [];
+const activeIds = activeItems.map(item => item.id);
 ```
 
 ### YAGNI (You Aren't Gonna Need It)
@@ -156,7 +156,7 @@ User Request → API Route → Business Logic → Data Access → Database
 
 ```typescript
 // ✅ ALWAYS use RLS context helpers
-const result = await withUserContext(userId, async (prisma) => {
+const result = await withUserContext(userId, async prisma => {
   // All database operations here are automatically scoped to user
   return prisma.resource.findMany();
 });
@@ -567,17 +567,17 @@ Parent: Link to Feature
 
 ```typescript
 // User-scoped operations
-const result = await withUserContext(userId, async (prisma) => {
+const result = await withUserContext(userId, async prisma => {
   return prisma.resource.findMany();
 });
 
 // Admin operations
-const result = await withAdminContext(adminId, async (prisma) => {
+const result = await withAdminContext(adminId, async prisma => {
   return prisma.resource.findMany();
 });
 
 // System operations (no user context)
-const result = await withSystemContext(async (prisma) => {
+const result = await withSystemContext(async prisma => {
   return prisma.resource.findMany();
 });
 ```

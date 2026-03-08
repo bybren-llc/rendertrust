@@ -132,6 +132,7 @@ git log --oneline "$LAST_TAG"..HEAD
 ```
 
 Group changes by type:
+
 - **Features** (`feat:`)
 - **Fixes** (`fix:`)
 - **Documentation** (`docs:`)
@@ -268,9 +269,9 @@ Or flag blockers:
 
 ## Customization Guide
 
-| Placeholder | Description | Example |
-|-------------|-------------|---------|
-| `dev` | Primary branch name | `main`, `template` |
-| `REN` | Linear/Jira ticket prefix | `WOR`, `SCA`, `PROJ` |
-| `ByBren-LLC` | GitHub organization | `bybren-llc` |
-| `{{GITHUB_REPO}}` | GitHub repository name | `safe-agentic-workflow` |
+| Placeholder       | Description               | Example                 |
+| ----------------- | ------------------------- | ----------------------- |
+| `dev`             | Primary branch name       | `main`, `template`      |
+| `REN`             | Linear/Jira ticket prefix | `WOR`, `SCA`, `PROJ`    |
+| `ByBren-LLC`      | GitHub organization       | `bybren-llc`            |
+| `{{GITHUB_REPO}}` | GitHub repository name    | `safe-agentic-workflow` |

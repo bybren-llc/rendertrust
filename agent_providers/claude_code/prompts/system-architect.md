@@ -570,12 +570,12 @@ yarn lint && yarn type-check && yarn build
 
 ```typescript
 // User operation - automatic context setting
-const result = await withUserContext(prisma, userId, async (client) => {
+const result = await withUserContext(prisma, userId, async client => {
   return client.tableName.findMany({ where: { user_id: userId } });
 });
 
 // Admin operation - requires admin role
-const adminResult = await withAdminContext(prisma, userId, async (client) => {
+const adminResult = await withAdminContext(prisma, userId, async client => {
   return client.tableName.findMany();
 });
 
@@ -583,9 +583,9 @@ const adminResult = await withAdminContext(prisma, userId, async (client) => {
 const systemResult = await withSystemContext(
   prisma,
   "operation",
-  async (client) => {
+  async client => {
     return client.tableName.create({ data: systemData });
-  },
+  }
 );
 ```
 
@@ -603,7 +603,7 @@ export async function GET(req: NextRequest) {
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const data = await withUserContext(prisma, userId, async (client) => {
+  const data = await withUserContext(prisma, userId, async client => {
     return client.tableName.findMany({ where: { user_id: userId } });
   });
 

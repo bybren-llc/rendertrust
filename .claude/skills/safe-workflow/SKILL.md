@@ -182,13 +182,13 @@ git log origin/dev..HEAD --oneline
 
 ### High-Risk Files (Announce Before Touching)
 
-| File                   | Risk   | Required Action                    |
-| ---------------------- | ------ | ---------------------------------- |
-| `prisma/schema.prisma` | HIGH   | Announce in Slack BEFORE touching  |
-| `prisma/migrations/*`  | HIGH   | Coordinate with all teams          |
-| `docker-compose*.yml`  | HIGH   | All teams must restart containers  |
+| File                   | Risk   | Required Action                      |
+| ---------------------- | ------ | ------------------------------------ |
+| `prisma/schema.prisma` | HIGH   | Announce in Slack BEFORE touching    |
+| `prisma/migrations/*`  | HIGH   | Coordinate with all teams            |
+| `docker-compose*.yml`  | HIGH   | All teams must restart containers    |
 | `package.json`         | MEDIUM | Run `{{INSTALL_COMMAND}}` after sync |
-| `.env.template`        | MEDIUM | Update local `.env` files          |
+| `.env.template`        | MEDIUM | Update local `.env` files            |
 
 ### Before Starting Work
 
@@ -220,10 +220,10 @@ For complete workflow documentation, see:
 
 ## Customization Guide
 
-| Placeholder             | Description              | Example               |
-| ----------------------- | ------------------------ | --------------------- |
-| `REN`       | Your ticket/issue prefix | `WOR`, `PROJ`, `FEAT` |
-| `dev`         | Main git branch name     | `main`, `dev`         |
-| `make ci` | CI validation command    | `yarn ci:validate`    |
-| `{{LINT_MD_COMMAND}}`     | Markdown linting command | `yarn lint:md`        |
-| `{{INSTALL_COMMAND}}`     | Package install command  | `yarn install`        |
+| Placeholder           | Description              | Example               |
+| --------------------- | ------------------------ | --------------------- |
+| `REN`                 | Your ticket/issue prefix | `WOR`, `PROJ`, `FEAT` |
+| `dev`                 | Main git branch name     | `main`, `dev`         |
+| `make ci`             | CI validation command    | `yarn ci:validate`    |
+| `{{LINT_MD_COMMAND}}` | Markdown linting command | `yarn lint:md`        |
+| `{{INSTALL_COMMAND}}` | Package install command  | `yarn install`        |

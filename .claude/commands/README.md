@@ -16,54 +16,54 @@ The command architecture and workflow methodology are the intellectual property 
 
 ### Workflow Commands
 
-| Command | Purpose |
-|---------|---------|
-| `/start-work` | Begin work on Linear ticket |
-| `/pre-pr` | Run validation before PR |
-| `/release` | Full version release (merge, tag, publish, sync, cleanup) |
-| `/end-work` | Complete work session |
-| `/check-workflow` | Check workflow status |
-| `/update-docs` | Update documentation |
-| `/retro` | Session retrospective |
-| `/sync-linear` | Sync with Linear ticket |
-| `/quick-fix` | Fast-track small fixes |
+| Command           | Purpose                                                   |
+| ----------------- | --------------------------------------------------------- |
+| `/start-work`     | Begin work on Linear ticket                               |
+| `/pre-pr`         | Run validation before PR                                  |
+| `/release`        | Full version release (merge, tag, publish, sync, cleanup) |
+| `/end-work`       | Complete work session                                     |
+| `/check-workflow` | Check workflow status                                     |
+| `/update-docs`    | Update documentation                                      |
+| `/retro`          | Session retrospective                                     |
+| `/sync-linear`    | Sync with Linear ticket                                   |
+| `/quick-fix`      | Fast-track small fixes                                    |
 
 ### Local Operations
 
-| Command | Purpose |
-|---------|---------|
-| `/local-sync` | Sync after git pull |
-| `/local-deploy` | Deploy locally |
+| Command         | Purpose             |
+| --------------- | ------------------- |
+| `/local-sync`   | Sync after git pull |
+| `/local-deploy` | Deploy locally      |
 
 ### Remote Operations
 
-| Command | Purpose |
-|---------|---------|
-| `/remote-status` | Check remote Docker status |
-| `/remote-deploy` | Deploy to remote staging |
-| `/remote-health` | Remote health dashboard |
-| `/remote-logs` | View remote container logs |
+| Command            | Purpose                    |
+| ------------------ | -------------------------- |
+| `/remote-status`   | Check remote Docker status |
+| `/remote-deploy`   | Deploy to remote staging   |
+| `/remote-health`   | Remote health dashboard    |
+| `/remote-logs`     | View remote container logs |
 | `/remote-rollback` | Rollback remote deployment |
 
 ### Other Commands
 
-| Command | Purpose |
-|---------|---------|
+| Command           | Purpose                 |
+| ----------------- | ----------------------- |
 | `/test-pr-docker` | Test PR Docker workflow |
-| `/audit-deps` | Dependency audit |
-| `/search-pattern` | Search code patterns |
+| `/audit-deps`     | Dependency audit        |
+| `/search-pattern` | Search code patterns    |
 
 ### Deprecated Aliases
 
 These commands are thin wrappers pointing to canonical `/remote-*` commands.
 
-| Command | Alias For | Note |
-|---------|-----------|------|
-| `/check-docker-status` | `/remote-status` | Deprecated |
-| `/deploy-dev` | `/remote-deploy` | Deprecated |
-| `/dev-health` | `/remote-health` | Deprecated |
-| `/dev-logs` | `/remote-logs` | Deprecated |
-| `/rollback-dev` | `/remote-rollback` | Deprecated |
+| Command                | Alias For          | Note       |
+| ---------------------- | ------------------ | ---------- |
+| `/check-docker-status` | `/remote-status`   | Deprecated |
+| `/deploy-dev`          | `/remote-deploy`   | Deprecated |
+| `/dev-health`          | `/remote-health`   | Deprecated |
+| `/dev-logs`            | `/remote-logs`     | Deprecated |
+| `/rollback-dev`        | `/remote-rollback` | Deprecated |
 
 ## YAML Frontmatter
 

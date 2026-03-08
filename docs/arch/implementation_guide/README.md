@@ -76,11 +76,11 @@ The relay facilitates communication between the scheduler and worker containers:
 
 Various container types handle different workloads:
 
-| Job Type | Base Image | GPU RAM | ETA Example |
-|----------|------------|---------|-------------|
-| Storyboard (SD-XL) | `cheddarfox/rendertrust-comfyui:cu12.1` | 12 GB | 4 s / frame |
-| LLM (Ollama Mixtral) | `ollama/ollama:0.1` | 0 / CPU opt | 80 tokens/s |
-| Voice (OpenVoice) | `cheddarfox/rendertrust-voice:onnx` | 6 GB | 30 s / 10 s clip |
+| Job Type             | Base Image                              | GPU RAM     | ETA Example      |
+| -------------------- | --------------------------------------- | ----------- | ---------------- |
+| Storyboard (SD-XL)   | `cheddarfox/rendertrust-comfyui:cu12.1` | 12 GB       | 4 s / frame      |
+| LLM (Ollama Mixtral) | `ollama/ollama:0.1`                     | 0 / CPU opt | 80 tokens/s      |
+| Voice (OpenVoice)    | `cheddarfox/rendertrust-voice:onnx`     | 6 GB        | 30 s / 10 s clip |
 
 ### Node Poller
 
@@ -94,16 +94,17 @@ Monitors the health and status of edge nodes:
 
 ### Environment Setup
 
-| Layer | Tech | Host | Notes |
-|-------|------|------|-------|
-| **Control Plane** | Coolify-core v4 | 8-core VPS, 32 GB RAM, 200 GB SSD | Public IP + CF proxy |
-| **Data Plane** | PostgreSQL 15 | Same VPS (dev) / Cloud SQL (prod) | 2 vCPU / 8 GB RAM |
-| | S3-compatible (MinIO or R2) | MinIO Docker (dev) / Cloudflare R2 (prod) | Private bucket `rendertrust-jobs` |
-| **Secrets** | Vault 1.15 | Docker on VPS | TLS via CF Origin Cert |
-| **Observability** | Grafana 10 + Influx 3 | Docker | Dashboards 9119/9120 |
-| **CI/CD** | GitHub Actions → Coolify API | — | Deploy tags to staging/prod |
+| Layer             | Tech                         | Host                                      | Notes                             |
+| ----------------- | ---------------------------- | ----------------------------------------- | --------------------------------- |
+| **Control Plane** | Coolify-core v4              | 8-core VPS, 32 GB RAM, 200 GB SSD         | Public IP + CF proxy              |
+| **Data Plane**    | PostgreSQL 15                | Same VPS (dev) / Cloud SQL (prod)         | 2 vCPU / 8 GB RAM                 |
+|                   | S3-compatible (MinIO or R2)  | MinIO Docker (dev) / Cloudflare R2 (prod) | Private bucket `rendertrust-jobs` |
+| **Secrets**       | Vault 1.15                   | Docker on VPS                             | TLS via CF Origin Cert            |
+| **Observability** | Grafana 10 + Influx 3        | Docker                                    | Dashboards 9119/9120              |
+| **CI/CD**         | GitHub Actions → Coolify API | —                                         | Deploy tags to staging/prod       |
 
 Edge nodes require:
+
 - **GPU tier**: NVIDIA RTX 3060+ (12 GB) OR CPU-only (≥4 cores)
 - Docker 24 + NVIDIA Container Toolkit
 - Outbound HTTPS (no inbound ports)
@@ -118,6 +119,7 @@ Edge nodes require:
    - Add domain `coolify.rendertrust.com` in Cloudflare → orange-cloud; issue origin cert
 
 2. **Vault + Terraform** (~15 min)
+
    ```bash
    cd infra/vault && docker compose up -d
    export VAULT_ADDR=https://vault.rendertrust.com
@@ -126,6 +128,7 @@ Edge nodes require:
    ```
 
 3. **Core Platform Deploy** (~10 min)
+
    ```bash
    coolify deploy --project core-platform \
      --env POSTGRES_URL=postgres://... \
@@ -140,12 +143,12 @@ Edge nodes require:
 
 ## Security
 
-| Threat | Control | Residual Risk |
-|--------|---------|---------------|
-| Rogue node exfiltrates script | AES-GCM encryption + audit hash | Low (must break AES) |
-| JWT stolen | 24 h TTL, device fingerprint, revocation list | Very Low |
-| Supply-chain attack | Image digest pin + Trivy scan in CI | Low |
-| Edge container escape | Rootless Docker + seccomp | Medium (will move to Firecracker) |
+| Threat                        | Control                                       | Residual Risk                     |
+| ----------------------------- | --------------------------------------------- | --------------------------------- |
+| Rogue node exfiltrates script | AES-GCM encryption + audit hash               | Low (must break AES)              |
+| JWT stolen                    | 24 h TTL, device fingerprint, revocation list | Very Low                          |
+| Supply-chain attack           | Image digest pin + Trivy scan in CI           | Low                               |
+| Edge container escape         | Rootless Docker + seccomp                     | Medium (will move to Firecracker) |
 
 Pen-tests are scheduled each quarter; the last report (04-2025) had zero critical findings.
 
@@ -161,11 +164,11 @@ Pen-tests are scheduled each quarter; the last report (04-2025) had zero critica
 
 ## Disaster Recovery
 
-| Asset | Backup | RPO | Restore |
-|-------|--------|-----|---------|
-| Postgres | WAL + nightly snapshot | 15 min | Ansible script `pg-restore.yml` |
-| S3 Jobs | R2 CRR to EU | 1 h | Point app to secondary bucket |
-| Vault | Raft snapshots hourly | 1 h | `vault operator raft snapshot restore` |
+| Asset    | Backup                 | RPO    | Restore                                |
+| -------- | ---------------------- | ------ | -------------------------------------- |
+| Postgres | WAL + nightly snapshot | 15 min | Ansible script `pg-restore.yml`        |
+| S3 Jobs  | R2 CRR to EU           | 1 h    | Point app to secondary bucket          |
+| Vault    | Raft snapshots hourly  | 1 h    | `vault operator raft snapshot restore` |
 
 DR drills are conducted every 6 months.
 

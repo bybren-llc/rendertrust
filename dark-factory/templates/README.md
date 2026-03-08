@@ -8,6 +8,7 @@ customize these for your environment.
 ### `tmux.conf`
 
 tmux configuration optimized for AI agent sessions:
+
 - 50,000 line scrollback buffer
 - Mouse support enabled (for Cursor SSH terminal)
 - Pane border titles showing agent role names
@@ -19,6 +20,7 @@ tmux configuration optimized for AI agent sessions:
 ### `env.template`
 
 Environment configuration copied to `~/.dark-factory/env` during setup. Contains:
+
 - Project settings (`FACTORY_PROJECT_DIR`, `FACTORY_MAIN_BRANCH`, `FACTORY_TICKET_PREFIX`)
 - Remote access settings (`FACTORY_SSH_KEY`, `FACTORY_REMOTE_HOST`, `FACTORY_REMOTE_USER`)
 - Feature flags (`FACTORY_USE_WORKTREES`, `FACTORY_AUTO_PERMISSIONS`)
@@ -30,11 +32,11 @@ Environment configuration copied to `~/.dark-factory/env` during setup. Contains
 tmux pane layout scripts sourced by `factory-start.sh`. Each creates a specific
 arrangement of panes and starts Claude Code in each one.
 
-| Layout | Panes | Agents | Use Case |
-|--------|-------|--------|----------|
-| `story-team.sh` | 3 | TDM + BE + QAS | Small stories, bug fixes |
-| `feature-team.sh` | 5 | TDM + BE + FE + QAS + RTE | Feature development |
-| `epic-team.sh` | 9 | TDM + BSA + ARCH + Security + BE + FE + Data + QAS + RTE | Full SAFe team for epics |
+| Layout            | Panes | Agents                                                   | Use Case                 |
+| ----------------- | ----- | -------------------------------------------------------- | ------------------------ |
+| `story-team.sh`   | 3     | TDM + BE + QAS                                           | Small stories, bug fixes |
+| `feature-team.sh` | 5     | TDM + BE + FE + QAS + RTE                                | Feature development      |
+| `epic-team.sh`    | 9     | TDM + BSA + ARCH + Security + BE + FE + Data + QAS + RTE | Full SAFe team for epics |
 
 ### `github/merge-queue-ruleset.json`
 
@@ -42,6 +44,7 @@ GitHub branch ruleset template for merge queue enforcement. Import via
 Settings > Rules > Rulesets in your GitHub repository.
 
 Enforces:
+
 - Squash-only merge method
 - Merge queue required (ALLGREEN grouping)
 - Required status checks (customize for your CI)

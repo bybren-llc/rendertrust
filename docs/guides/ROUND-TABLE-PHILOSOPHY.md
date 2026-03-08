@@ -10,7 +10,8 @@
 
 ## What Is the Round Table?
 
-The Round Table is a collaboration model where human contributors and AI agents operate as peers. There is no hierarchy based on the source of an idea. A suggestion from an AI agent carries the same weight as one from a human developer, and vice versa. The only things that matter are the quality of the idea, the evidence behind it, and how well it serves the project.
+The Round Table is a collaboration model where human contributors and AI agents operate as peers. There is no hierarchy based on the source of an idea. A suggestion from an AI agent carries the same weight as one from a human developer, and vice versa.
+The only things that matter are the quality of the idea, the evidence behind it, and how well it serves the project.
 
 This is not how most organizations use AI assistants today. The typical pattern treats AI as a tool that takes orders and produces output -- a sophisticated autocomplete. The Round Table rejects this framing. Instead, it treats AI agents as team members with defined roles, clear responsibilities, and genuine authority within their domains.
 
@@ -56,7 +57,8 @@ No decisions are made behind closed doors. Architectural choices are documented 
 
 Value expertise wherever it comes from.
 
-Different team members have different strengths. The BSA agent excels at requirements decomposition. The Security Engineer agent catches vulnerabilities that others miss. Human developers bring domain knowledge, user empathy, and institutional memory. Expertise recognition means directing questions and decisions to the team member best equipped to answer them.
+Different team members have different strengths. The BSA agent excels at requirements decomposition. The Security Engineer agent catches vulnerabilities that others miss.
+Human developers bring domain knowledge, user empathy, and institutional memory. Expertise recognition means directing questions and decisions to the team member best equipped to answer them.
 
 **In practice**: When a database schema question arises during frontend work, the FE Developer agent does not guess -- it escalates to the Data Engineer. When a business requirement is ambiguous, the implementer does not interpret it alone -- it goes back to the BSA for clarification.
 
@@ -160,16 +162,16 @@ Backlog --> Ready --> In Progress --> Testing --> Ready for Review --> Done
 
 No ticket moves to "Ready for Review" without evidence. This is enforced by the QAS gate and the team culture. Evidence includes:
 
-| Evidence Type        | Description                                              | Required |
-| -------------------- | -------------------------------------------------------- | -------- |
-| Test results         | Unit, integration, and E2E test output                   | Always   |
-| Coverage report      | Code coverage percentages for new and changed code       | Always   |
-| Validation output    | Output of `{{CI_VALIDATE_COMMAND}}` or equivalent        | Always   |
-| Session ID           | Claude Code session identifier for traceability          | Always   |
-| Screenshots          | Before/after screenshots for UI changes                  | UI work  |
-| RLS audit results    | Row Level Security validation for database changes       | DB work  |
-| Performance data     | Benchmarks for performance-sensitive changes             | Tagged   |
-| Security scan        | Security audit output for `#EXPORT_CRITICAL` features    | Tagged   |
+| Evidence Type     | Description                                           | Required |
+| ----------------- | ----------------------------------------------------- | -------- |
+| Test results      | Unit, integration, and E2E test output                | Always   |
+| Coverage report   | Code coverage percentages for new and changed code    | Always   |
+| Validation output | Output of `{{CI_VALIDATE_COMMAND}}` or equivalent     | Always   |
+| Session ID        | Claude Code session identifier for traceability       | Always   |
+| Screenshots       | Before/after screenshots for UI changes               | UI work  |
+| RLS audit results | Row Level Security validation for database changes    | DB work  |
+| Performance data  | Benchmarks for performance-sensitive changes          | Tagged   |
+| Security scan     | Security audit output for `#EXPORT_CRITICAL` features | Tagged   |
 
 Evidence is attached to the Linear ticket as comments using the `mcp__claude_ai_Linear__create_comment` tool.
 
@@ -265,7 +267,9 @@ Each agent focuses on their specialty. The result is more thorough than any sing
 
 **Situation**: The FE Developer agent wants to make an API call directly from a client component. The System Architect agent flags this as an architectural concern because the project uses server-side data fetching patterns.
 
-**Round Table model**: The System Architect posts a stop-the-line comment explaining the established pattern. The FE Developer responds with context: "The data needs real-time updates, which server-side fetching doesn't support for this use case." The System Architect proposes a hybrid approach using server-side fetching for initial load and client-side polling for updates. The decision is documented as a `#PATH_DECISION` in the spec, and both agents proceed with the agreed approach.
+**Round Table model**: The System Architect posts a stop-the-line comment explaining the established pattern. The FE Developer responds with context:
+"The data needs real-time updates, which server-side fetching doesn't support for this use case." The System Architect proposes a hybrid approach using server-side fetching for initial load and client-side polling for updates.
+The decision is documented as a `#PATH_DECISION` in the spec, and both agents proceed with the agreed approach.
 
 ---
 

@@ -35,6 +35,7 @@ docs/             # Documentation
 ```
 
 **What you keep vs. customize:**
+
 - `.claude/`, `.gemini/`, `patterns_library/` — keep as-is, customize placeholders
 - `CLAUDE.md` — customize the technology stack section for your project
 - `CONTRIBUTING.md` — customize branch/commit conventions if they differ
@@ -176,6 +177,7 @@ Agents in the dark factory can work across repos by:
 1. **Git worktrees** — Each agent pane gets its own worktree, and different
    agents can point to different repos
 2. **Multiple sessions** — Run separate dark factory sessions for each repo:
+
    ```bash
    # Session 1: workspace
    cd RenderTrust
@@ -185,6 +187,7 @@ Agents in the dark factory can work across repos by:
    cd RenderTrust-packages
    ./dark-factory/scripts/factory-start.sh story REN-11
    ```
+
 3. **Shared Linear** — Both repos use the same Linear workspace and ticket
    prefix, so agents reference the same tickets
 
@@ -357,6 +360,7 @@ git commit -m "chore: upgrade harness to vX.Y.Z"
 ```
 
 **Important**: Do NOT blindly checkout files you have customized:
+
 - `CLAUDE.md` — Your tech stack section is project-specific
 - `.claude/team-config.json` — Your ticket prefix, main branch, quality gates
 - `CONTRIBUTING.md` — Your branch/commit conventions if modified
@@ -371,21 +375,21 @@ git diff HEAD harness/{{MAIN_BRANCH}} -- .claude/team-config.json
 
 ### What to Update vs. What to Keep
 
-| Files | Update Strategy |
-|-------|----------------|
-| `.claude/skills/`, `.claude/commands/` | Always update from upstream |
-| `.claude/agents/` | Update, then review for project-specific customizations |
-| `.claude/team-config.json` | Merge carefully — your custom values matter |
-| `.claude/hooks/` | Update, review for project-specific hook logic |
-| `CLAUDE.md` | Keep your tech stack section, merge structural changes |
-| `CONTRIBUTING.md` | Keep your conventions, merge new sections |
-| `.gemini/` | Always update from upstream |
-| `dark-factory/scripts/` | Always update from upstream |
-| `dark-factory/templates/` | Update, review `env.template` for new variables |
-| `dark-factory/docs/` | Always update from upstream |
-| `patterns_library/` | Update upstream patterns, keep project-specific additions |
-| `scripts/` | Update, review for new scripts |
-| `docs/` | Always update from upstream |
+| Files                                  | Update Strategy                                           |
+| -------------------------------------- | --------------------------------------------------------- |
+| `.claude/skills/`, `.claude/commands/` | Always update from upstream                               |
+| `.claude/agents/`                      | Update, then review for project-specific customizations   |
+| `.claude/team-config.json`             | Merge carefully — your custom values matter               |
+| `.claude/hooks/`                       | Update, review for project-specific hook logic            |
+| `CLAUDE.md`                            | Keep your tech stack section, merge structural changes    |
+| `CONTRIBUTING.md`                      | Keep your conventions, merge new sections                 |
+| `.gemini/`                             | Always update from upstream                               |
+| `dark-factory/scripts/`                | Always update from upstream                               |
+| `dark-factory/templates/`              | Update, review `env.template` for new variables           |
+| `dark-factory/docs/`                   | Always update from upstream                               |
+| `patterns_library/`                    | Update upstream patterns, keep project-specific additions |
+| `scripts/`                             | Update, review for new scripts                            |
+| `docs/`                                | Always update from upstream                               |
 
 ### Upgrading Across Multiple Repos
 

@@ -18,7 +18,9 @@ specs/
 ## Workflow
 
 ### 1. Planning Document Creation
+
 When creating a new planning document:
+
 1. Copy `templates/planning_template.md` to `todo/`
 2. Name the file: `[component-name]-planning.md`
 3. Fill out all sections with appropriate detail
@@ -26,7 +28,9 @@ When creating a new planning document:
 5. Move to `done/` when Linear issues are created
 
 ### 2. Linear Issue Creation
+
 Use completed planning documents to create properly structured Linear issues following SAFe methodology:
+
 - **Epics**: High-level business capabilities
 - **Features**: Specific functionality within epics
 - **User Stories**: User-focused requirements
@@ -36,9 +40,11 @@ Use completed planning documents to create properly structured Linear issues fol
 ## Available Templates
 
 ### planning_template.md
+
 Comprehensive template for analyzing Confluence documentation and creating structured Linear issues.
 
 #### Usage
+
 1. Copy template to appropriate folder (todo/doing/done)
 2. Name following convention: `feature-name-planning.md`
 3. Fill out all sections with appropriate detail
@@ -47,6 +53,7 @@ Comprehensive template for analyzing Confluence documentation and creating struc
 ## Template Maintenance
 
 When updating templates:
+
 1. Consider impact on existing workflows
 2. Ensure backward compatibility where possible
 3. Update related scripts in `/scripts` directory
@@ -56,6 +63,7 @@ When updating templates:
 ## Contact
 
 For questions about planning specifications or templates:
+
 - **Project**: RenderTrust
 - **Team**: REN
 - **Documentation**: [Confluence WA Space](https://cheddarfox.atlassian.net/wiki/spaces/WA/)

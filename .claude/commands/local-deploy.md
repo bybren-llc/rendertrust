@@ -17,11 +17,11 @@ Works on any machine with Docker Desktop or Docker Engine installed.
 
 ## Deployment Modes
 
-| Mode                      | Flag        | Container                    | Use Case                                                                     |
-| ------------------------- | ----------- | ---------------------------- | ---------------------------------------------------------------------------- |
-| **Development** (default) | (none)      | `rendertrust-dev-app`     | Active development with hot-reload (STANDARD port 3000)                      |
-| **Staging**               | `--staging` | `rendertrust-staging-app` | Production-like, self-contained, survives git operations (port 3001)         |
-| **Both**                  | `--both`    | Both containers              | Run dev and staging simultaneously (REN-400/REN-401) |
+| Mode                      | Flag        | Container                 | Use Case                                                             |
+| ------------------------- | ----------- | ------------------------- | -------------------------------------------------------------------- |
+| **Development** (default) | (none)      | `rendertrust-dev-app`     | Active development with hot-reload (STANDARD port 3000)              |
+| **Staging**               | `--staging` | `rendertrust-staging-app` | Production-like, self-contained, survives git operations (port 3001) |
+| **Both**                  | `--both`    | Both containers           | Run dev and staging simultaneously (REN-400/REN-401)                 |
 
 **When to use each mode:**
 

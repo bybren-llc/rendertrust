@@ -35,5 +35,5 @@ To adapt this command for your infrastructure, replace these placeholders:
 
 | Placeholder       | Description                  | Example                           |
 | ----------------- | ---------------------------- | --------------------------------- |
-| `REN` | Your Linear ticket prefix    | `WOR`, `PROJ`, `TASK`             |
-| `{{DEV_MACHINE}}`   | Your remote dev machine name | `Pop OS`, `staging`, `dev-server` |
+| `REN`             | Your Linear ticket prefix    | `WOR`, `PROJ`, `TASK`             |
+| `{{DEV_MACHINE}}` | Your remote dev machine name | `Pop OS`, `staging`, `dev-server` |

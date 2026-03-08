@@ -182,11 +182,11 @@ in-repo markdown.
 If you use a different documentation platform, update agent prompts to reference
 your platform instead. For example:
 
-| Original Reference | Replacement (Notion) | Replacement (GitHub Wiki) |
-|---|---|---|
-| `claude_ai_Atlassian` | Your Notion MCP or API integration | `github-wiki` or in-repo `docs/` |
-| Confluence page links | Notion page links | Wiki page links or file paths |
-| "Publish to Confluence" | "Update Notion page" | "Commit to `docs/`" |
+| Original Reference      | Replacement (Notion)               | Replacement (GitHub Wiki)        |
+| ----------------------- | ---------------------------------- | -------------------------------- |
+| `claude_ai_Atlassian`   | Your Notion MCP or API integration | `github-wiki` or in-repo `docs/` |
+| Confluence page links   | Notion page links                  | Wiki page links or file paths    |
+| "Publish to Confluence" | "Update Notion page"               | "Commit to `docs/`"              |
 
 If you keep documentation entirely in-repo (recommended for smaller teams),
 no MCP server replacement is needed -- agents will simply read and write
@@ -345,14 +345,14 @@ replace RLS patterns with your chosen authorization approach:
 Your project still needs an authorization layer. Choose one that fits your
 database:
 
-| Database | Recommended Authorization Approach |
-|---|---|
-| PostgreSQL (without RLS) | Application-level middleware + ORM query filters |
-| MongoDB | Document-level access control with Mongoose middleware |
-| MySQL / MariaDB | Application-level authorization middleware |
-| Firebase | Firebase Security Rules |
-| Supabase | Supabase RLS (similar to this template -- keep most patterns) |
-| PlanetScale / Turso | Application-level authorization with edge middleware |
+| Database                 | Recommended Authorization Approach                            |
+| ------------------------ | ------------------------------------------------------------- |
+| PostgreSQL (without RLS) | Application-level middleware + ORM query filters              |
+| MongoDB                  | Document-level access control with Mongoose middleware        |
+| MySQL / MariaDB          | Application-level authorization middleware                    |
+| Firebase                 | Firebase Security Rules                                       |
+| Supabase                 | Supabase RLS (similar to this template -- keep most patterns) |
+| PlanetScale / Turso      | Application-level authorization with edge middleware          |
 
 After removing RLS patterns, create a replacement `docs/security/AUTHORIZATION_GUIDE.md`
 that documents your chosen approach. Update agent prompts to reference the new
@@ -477,14 +477,14 @@ Supabase Auth, Firebase Auth, Lucia, or custom JWT-based auth.
 Replace Clerk-specific patterns with equivalent patterns for your auth
 provider. Here is a quick mapping:
 
-| Clerk Pattern | Auth0 Equivalent | NextAuth.js Equivalent |
-|---|---|---|
-| `import { auth } from '@clerk/nextjs/server'` | `import { getSession } from '@auth0/nextjs-auth0'` | `import { getServerSession } from 'next-auth'` |
-| `const { userId } = await auth()` | `const session = await getSession()` | `const session = await getServerSession(authOptions)` |
-| `<SignIn />` component | Auth0 Universal Login redirect | `<signIn />` or custom form |
-| `<UserButton />` component | Custom user menu | Custom user menu with `useSession()` |
-| Clerk webhook (`svix` signatures) | Auth0 Actions / Hooks | NextAuth.js callbacks |
-| `clerkMiddleware()` | `withMiddlewareAuthRequired()` | NextAuth.js `middleware.ts` |
+| Clerk Pattern                                 | Auth0 Equivalent                                   | NextAuth.js Equivalent                                |
+| --------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------- |
+| `import { auth } from '@clerk/nextjs/server'` | `import { getSession } from '@auth0/nextjs-auth0'` | `import { getServerSession } from 'next-auth'`        |
+| `const { userId } = await auth()`             | `const session = await getSession()`               | `const session = await getServerSession(authOptions)` |
+| `<SignIn />` component                        | Auth0 Universal Login redirect                     | `<signIn />` or custom form                           |
+| `<UserButton />` component                    | Custom user menu                                   | Custom user menu with `useSession()`                  |
+| Clerk webhook (`svix` signatures)             | Auth0 Actions / Hooks                              | NextAuth.js callbacks                                 |
+| `clerkMiddleware()`                           | `withMiddlewareAuthRequired()`                     | NextAuth.js `middleware.ts`                           |
 
 Create or update `docs/security/AUTHENTICATION_GUIDE.md` with your provider's
 patterns and link to it from `CLAUDE.md`.
@@ -539,13 +539,13 @@ grep -r "{{AUTH_PROVIDER}}" CLAUDE.md
 
 ### Harness Components for Agent Teams
 
-| Component | Path | Purpose |
-|-----------|------|---------|
-| Team Coordination Skill | `.claude/skills/team-coordination/` | Patterns for TeamCreate, SendMessage, TaskList |
-| TDM Agent (Team Lead) | `.claude/agents/tdm.md` | Team lead orchestration patterns |
-| Team Config | `.claude/team-config.json` (agent_teams section) | Gate dependencies, team sizing |
-| Settings Template | `.claude/settings.template.json` | Experimental flag configuration |
-| Onboarding Guide | `docs/onboarding/AGENT-TEAMS-GUIDE.md` | Setup and usage guide |
+| Component               | Path                                             | Purpose                                        |
+| ----------------------- | ------------------------------------------------ | ---------------------------------------------- |
+| Team Coordination Skill | `.claude/skills/team-coordination/`              | Patterns for TeamCreate, SendMessage, TaskList |
+| TDM Agent (Team Lead)   | `.claude/agents/tdm.md`                          | Team lead orchestration patterns               |
+| Team Config             | `.claude/team-config.json` (agent_teams section) | Gate dependencies, team sizing                 |
+| Settings Template       | `.claude/settings.template.json`                 | Experimental flag configuration                |
+| Onboarding Guide        | `docs/onboarding/AGENT-TEAMS-GUIDE.md`           | Setup and usage guide                          |
 
 ### Removing Agent Teams Support
 
@@ -623,17 +623,17 @@ grep "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" .claude/settings.json 2>/dev/null \
 
 ### Dark Factory Components
 
-| Component | Path | Purpose |
-|-----------|------|---------|
-| Setup Script | `dark-factory/scripts/factory-setup.sh` | One-time setup with merge queue readiness gate |
-| Start Script | `dark-factory/scripts/factory-start.sh` | Launch tmux session with agent team |
-| Stop Script | `dark-factory/scripts/factory-stop.sh` | Graceful shutdown with log archiving |
-| Status Script | `dark-factory/scripts/factory-status.sh` | Dashboard for running sessions |
-| Attach Script | `dark-factory/scripts/factory-attach.sh` | Quick attach to session/pane |
-| Team Layouts | `dark-factory/templates/team-layouts/` | Story (3), Feature (5), Epic (9) pane layouts |
-| tmux Config | `dark-factory/templates/tmux.conf` | Agent-optimized tmux settings |
-| Merge Queue Ruleset | `dark-factory/templates/github/merge-queue-ruleset.json` | GitHub ruleset for merge queue enforcement |
-| Guides | `dark-factory/docs/` | Setup guide, Cursor SSH guide, merge queue policy |
+| Component           | Path                                                     | Purpose                                           |
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------- |
+| Setup Script        | `dark-factory/scripts/factory-setup.sh`                  | One-time setup with merge queue readiness gate    |
+| Start Script        | `dark-factory/scripts/factory-start.sh`                  | Launch tmux session with agent team               |
+| Stop Script         | `dark-factory/scripts/factory-stop.sh`                   | Graceful shutdown with log archiving              |
+| Status Script       | `dark-factory/scripts/factory-status.sh`                 | Dashboard for running sessions                    |
+| Attach Script       | `dark-factory/scripts/factory-attach.sh`                 | Quick attach to session/pane                      |
+| Team Layouts        | `dark-factory/templates/team-layouts/`                   | Story (3), Feature (5), Epic (9) pane layouts     |
+| tmux Config         | `dark-factory/templates/tmux.conf`                       | Agent-optimized tmux settings                     |
+| Merge Queue Ruleset | `dark-factory/templates/github/merge-queue-ruleset.json` | GitHub ruleset for merge queue enforcement        |
+| Guides              | `dark-factory/docs/`                                     | Setup guide, Cursor SSH guide, merge queue policy |
 
 ### Removing Dark Factory
 
@@ -689,14 +689,14 @@ diff <(ls .claude/skills/ | grep -v README.md | sort) \
 
 ## Summary
 
-| Integration | Difficulty | Key Directories to Remove |
-|---|---|---|
-| Stripe / Payments | Low | `.claude/skills/stripe-patterns/`, `.gemini/skills/stripe-patterns/` |
-| Confluence | Low | `.claude/skills/confluence-docs/`, `.gemini/skills/confluence-docs/`, `agent_providers/augment/rules/confluence-standards.md` |
-| RLS / PostgreSQL | High | `.claude/skills/rls-patterns/`, `.gemini/skills/rls-patterns/`, `docs/database/RLS_*.md`, `patterns_library/database/rls-migration.md`, RLS hooks |
-| Clerk / Auth | Medium | Pattern library auth examples, skill auth references, agent prompt auth patterns |
-| Agent Teams | Low | `.claude/skills/team-coordination/`, `.claude/settings.template.json`, `docs/onboarding/AGENT-TEAMS-GUIDE.md` |
-| Dark Factory | Low | `dark-factory/` (entire directory) |
+| Integration       | Difficulty | Key Directories to Remove                                                                                                                         |
+| ----------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stripe / Payments | Low        | `.claude/skills/stripe-patterns/`, `.gemini/skills/stripe-patterns/`                                                                              |
+| Confluence        | Low        | `.claude/skills/confluence-docs/`, `.gemini/skills/confluence-docs/`, `agent_providers/augment/rules/confluence-standards.md`                     |
+| RLS / PostgreSQL  | High       | `.claude/skills/rls-patterns/`, `.gemini/skills/rls-patterns/`, `docs/database/RLS_*.md`, `patterns_library/database/rls-migration.md`, RLS hooks |
+| Clerk / Auth      | Medium     | Pattern library auth examples, skill auth references, agent prompt auth patterns                                                                  |
+| Agent Teams       | Low        | `.claude/skills/team-coordination/`, `.claude/settings.template.json`, `docs/onboarding/AGENT-TEAMS-GUIDE.md`                                     |
+| Dark Factory      | Low        | `dark-factory/` (entire directory)                                                                                                                |
 
 When in doubt, keep a file and customize it rather than deleting it. The
 patterns in this template encode hard-won conventions -- even if you swap out

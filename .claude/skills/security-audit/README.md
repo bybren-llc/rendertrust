@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Validate RLS policies
 - Audit API routes for auth
 - Run vulnerability scanning
@@ -30,12 +31,12 @@ Guides security validation with RLS enforcement, OWASP compliance checking, and 
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| security | audit |
-| RLS | vulnerability |
-| OWASP | credentials |
-| auth check | exposure |
+| Primary    | Secondary     |
+| ---------- | ------------- |
+| security   | audit         |
+| RLS        | vulnerability |
+| OWASP      | credentials   |
+| auth check | exposure      |
 
 ## Related Skills
 
@@ -44,11 +45,11 @@ Guides security validation with RLS enforcement, OWASP compliance checking, and 
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

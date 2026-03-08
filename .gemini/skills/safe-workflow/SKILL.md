@@ -36,14 +36,14 @@ john-new-feature            (personal naming)
 
 **Format**: `type(scope): description [REN-XXX]`
 
-| Type       | When to Use                   |
-| ---------- | ----------------------------- |
-| `feat`     | New feature                   |
-| `fix`      | Bug fix                       |
-| `docs`     | Documentation only            |
-| `refactor` | Code restructuring            |
-| `test`     | Adding or updating tests      |
-| `chore`    | Maintenance, dependencies     |
+| Type       | When to Use               |
+| ---------- | ------------------------- |
+| `feat`     | New feature               |
+| `fix`      | Bug fix                   |
+| `docs`     | Documentation only        |
+| `refactor` | Code restructuring        |
+| `test`     | Adding or updating tests  |
+| `chore`    | Maintenance, dependencies |
 
 ```text
 feat(harness): create safe-workflow skill [REN-447]

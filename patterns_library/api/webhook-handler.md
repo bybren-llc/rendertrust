@@ -275,13 +275,13 @@ export async function POST(req: NextRequest) {
     const event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
 
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
-      await withSystemContext(prisma, "webhook_stripe", async (client) => {
+      await withSystemContext(prisma, "webhook_stripe", async client => {
         await client.payments.create({
           data: {
             stripe_payment_id: paymentIntent.id,
@@ -299,7 +299,7 @@ export async function POST(req: NextRequest) {
     console.error("Stripe webhook error:", error);
     return NextResponse.json(
       { error: "Webhook processing failed" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }

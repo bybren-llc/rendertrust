@@ -52,6 +52,7 @@ Host dark-factory
 ### 4. Open the Project
 
 Once connected:
+
 1. File > Open Folder
 2. Navigate to your project directory (`{{PROJECT_PATH}}`)
 3. Cursor now shows the remote filesystem
@@ -76,12 +77,14 @@ tmux attach -t factory-REN-123 -r
 ```
 
 **Tip**: Use Cursor's terminal split (Ctrl+Shift+5) to watch multiple agents:
+
 - Terminal 1: `tmux attach -t <session> -r` (full session view)
 - Terminal 2: `tail -f ~/.dark-factory/logs/<session>/*.log` (live logs)
 
 ### File Explorer: Watch Changes
 
 If agents use git worktrees, open the worktree directory:
+
 ```
 ~/.dark-factory/worktrees/<session-name>/agent-1/
 ```
@@ -92,6 +95,7 @@ Source Control panel (Ctrl+Shift+G) to see diffs in real-time.
 ### Status Dashboard
 
 Run the status dashboard in a dedicated terminal:
+
 ```bash
 watch -n 5 ./dark-factory/scripts/factory-status.sh
 ```
