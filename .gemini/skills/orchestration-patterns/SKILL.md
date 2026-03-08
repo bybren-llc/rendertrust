@@ -93,23 +93,28 @@ Codify evidence-based delivery and iterative agent loop for orchestrating comple
 ## QA Review - PR #XXX for REN-YYY
 
 ### Commit Message Validation
+
 - [ ] Ticket reference in subject line
 - [ ] Proper format: `type(scope): description [REN-XXX]`
 
 ### Code Pattern Validation
+
 - [ ] RLS context helpers used (no direct Prisma)
 - [ ] Naming conventions followed
 - [ ] File structure matches patterns
 
 ### CI Status
+
 - [ ] All checks passing
 - [ ] No new lint warnings
 
 ### Evidence Verification
+
 - [ ] Dev evidence attached to Linear
 - [ ] Acceptance criteria addressed
 
 ### Verdict
+
 - [ ] APPROVED for merge
 - [ ] CHANGES REQUESTED (list below)
 ```

@@ -10,7 +10,8 @@
 
 ## Abstract
 
-The SAFe Agentic Workflow harness was not designed in a vacuum. Its architecture reflects principles that Anthropic has articulated through published research, engineering documentation, and model behavior guidelines. This document maps those published insights to specific harness components, giving adopters a clear understanding of *why* the harness is structured the way it is and how its design decisions are grounded in the model provider's own recommendations.
+The SAFe Agentic Workflow harness was not designed in a vacuum. Its architecture reflects principles that Anthropic has articulated through published research, engineering documentation, and model behavior guidelines.
+This document maps those published insights to specific harness components, giving adopters a clear understanding of _why_ the harness is structured the way it is and how its design decisions are grounded in the model provider's own recommendations.
 
 This is not a summary of Anthropic's research. It is a bridge: a side-by-side alignment showing that the harness implements, in concrete infrastructure, the abstract principles Anthropic has found to produce the best outcomes from Claude-based systems.
 
@@ -31,13 +32,13 @@ By grounding harness design in the model provider's own published guidance, adop
 ## Mapping Overview
 
 | Anthropic Research Domain | Harness Component | Section |
-|---|---|---|
-| Claude's Character (soul, personality guidelines) | Round Table Philosophy, stop-the-line authority | [1. Character and Collaboration](#1-claudes-character--round-table-collaboration) |
-| Tool Use Best Practices | Three-layer architecture (Hooks, Commands, Skills) | [2. Tool Use and the Three-Layer Architecture](#2-tool-use-best-practices--three-layer-architecture) |
-| Multi-Agent Orchestration | 11-agent team with SAFe methodology | [3. Multi-Agent Orchestration](#3-multi-agent-orchestration--the-11-agent-team) |
-| Prompt Engineering (system prompts, context) | CLAUDE.md progressive disclosure, agent prompt templates | [4. Prompt Engineering and Progressive Disclosure](#4-prompt-engineering--progressive-disclosure) |
-| Safety and Alignment (Constitutional AI, RLHF) | Security-first architecture, RLS enforcement, evidence-based delivery | [5. Safety and Alignment](#5-safety-and-alignment--security-first-architecture) |
-| Extended Thinking (chain of thought reasoning) | Metacognitive tags (#PATH_DECISION, #PLAN_UNCERTAINTY, #EXPORT_CRITICAL) | [6. Extended Thinking and Metacognitive Tags](#6-extended-thinking--metacognitive-tags) |
+| --- | --- | --- |
+| Claude's Character | Round Table Philosophy, stop-the-line authority | [Section 1](#1-claudes-character-and-round-table-collaboration) |
+| Tool Use Best Practices | Three-layer architecture (Hooks, Commands, Skills) | [Section 2](#2-tool-use-best-practices-and-the-three-layer-architecture) |
+| Multi-Agent Orchestration | 11-agent team with SAFe methodology | [Section 3](#3-multi-agent-orchestration-and-the-11-agent-team) |
+| Prompt Engineering | CLAUDE.md progressive disclosure, agent prompt templates | [Section 4](#4-prompt-engineering-and-progressive-disclosure) |
+| Safety and Alignment | Security-first architecture, RLS enforcement, evidence-based delivery | [Section 5](#5-safety-and-alignment-and-security-first-architecture) |
+| Extended Thinking | Metacognitive tags (#PATH_DECISION, #PLAN_UNCERTAINTY, #EXPORT_CRITICAL) | [Section 6](#6-extended-thinking-and-metacognitive-tags) |
 
 ---
 
@@ -49,10 +50,10 @@ Anthropic publishes guidelines on Claude's character --- sometimes referred to i
 
 - **Genuine helpfulness over sycophancy**: Claude should give honest assessments, including disagreement, rather than reflexively agreeing with the user.
 - **Intellectual honesty**: Claude should acknowledge uncertainty, flag risks, and express reservations when it detects problems.
-- **Collaborative disposition**: Claude is designed to work *with* humans as a capable partner, not as an obedient tool that silences its own judgment.
+- **Collaborative disposition**: Claude is designed to work _with_ humans as a capable partner, not as an obedient tool that silences its own judgment.
 - **Ethical grounding**: Claude has standing to raise concerns about safety, correctness, and harmful outcomes, even when not explicitly asked.
 
-These character traits are not accidental. They result from deliberate training decisions (RLHF, Constitutional AI) intended to produce an agent that humans can trust precisely *because* it will push back when pushing back is warranted.
+These character traits are not accidental. They result from deliberate training decisions (RLHF, Constitutional AI) intended to produce an agent that humans can trust precisely _because_ it will push back when pushing back is warranted.
 
 ### The Harness Implementation
 
@@ -67,7 +68,7 @@ The harness defines human-AI collaboration on a "round table" model with explici
 - **Shared Responsibility**: Every participant shares accountability for project outcomes.
 - **Constructive Disagreement**: Disagreement is explicitly welcomed when it leads to better solutions.
 
-This directly mirrors Anthropic's character training. A model trained to be honestly helpful rather than sycophantic needs an organizational structure that *rewards* honest input. The round table provides that structure.
+This directly mirrors Anthropic's character training. A model trained to be honestly helpful rather than sycophantic needs an organizational structure that _rewards_ honest input. The round table provides that structure.
 
 **Stop-the-Line Authority**
 
@@ -83,7 +84,8 @@ This authority is not theoretical. It is documented in `AGENTS.md` and enforced 
 
 ### Why the Alignment Matters
 
-Anthropic trained Claude to speak up about problems. A harness that ignores this --- that treats agent output as disposable suggestions --- wastes the model's most valuable safety behavior. The round table structure ensures that when Claude flags a risk, the workflow architecture *forces* that flag to be addressed rather than allowing it to be silently overridden.
+Anthropic trained Claude to speak up about problems. A harness that ignores this --- that treats agent output as disposable suggestions --- wastes the model's most valuable safety behavior.
+The round table structure ensures that when Claude flags a risk, the workflow architecture _forces_ that flag to be addressed rather than allowing it to be silently overridden.
 
 ---
 
@@ -136,7 +138,8 @@ This maps to Anthropic's principle of context-appropriate activation. Skills sur
 
 ### Why the Alignment Matters
 
-Anthropic's tool use research demonstrates that well-structured tools dramatically improve model output quality. The three-layer architecture is not an arbitrary organizational choice --- it is a direct implementation of the provider's own guidance on how to maximize tool effectiveness. Teams that flatten this hierarchy (putting everything into a single layer) will see degraded performance because they violate the progressive disclosure model that the tool use research validates.
+Anthropic's tool use research demonstrates that well-structured tools dramatically improve model output quality. The three-layer architecture is not an arbitrary organizational choice --- it is a direct implementation of the provider's own guidance on how to maximize tool effectiveness.
+Teams that flatten this hierarchy (putting everything into a single layer) will see degraded performance because they violate the progressive disclosure model that the tool use research validates.
 
 ---
 
@@ -183,7 +186,9 @@ Each agent has:
 
 ### Why the Alignment Matters
 
-Anthropic's multi-agent research demonstrates that the quality gains from specialization and independent verification outweigh the coordination costs. The 11-agent structure is not complexity for its own sake --- it is a direct response to the research finding that unbounded single-agent autonomy leads to error compounding, context exhaustion, and quality degradation. The non-collapsible gate pattern (QAS and SecEng remain independent) directly implements the "independent verification" principle that Anthropic's research identifies as critical.
+Anthropic's multi-agent research demonstrates that the quality gains from specialization and independent verification outweigh the coordination costs.
+The 11-agent structure is not complexity for its own sake --- it is a direct response to the research finding that unbounded single-agent autonomy leads to error compounding, context exhaustion, and quality degradation.
+The non-collapsible gate pattern (QAS and SecEng remain independent) directly implements the "independent verification" principle that Anthropic's research identifies as critical.
 
 ---
 
@@ -246,7 +251,8 @@ Individual task specifications in `specs/` provide the current session's goal:
 
 ### Why the Alignment Matters
 
-Anthropic's prompt engineering research consistently shows that context quality determines output quality. The harness's layered approach --- system context, role context, task context, session context --- directly implements the progressive disclosure model that Anthropic's research validates. Teams that dump all instructions into a single flat prompt will experience the degradation that the research predicts.
+Anthropic's prompt engineering research consistently shows that context quality determines output quality. The harness's layered approach --- system context, role context, task context, session context --- directly implements the progressive disclosure model that Anthropic's research validates.
+Teams that dump all instructions into a single flat prompt will experience the degradation that the research predicts.
 
 ---
 
@@ -304,7 +310,8 @@ The final merge always requires human approval. This implements Anthropic's prin
 
 ### Why the Alignment Matters
 
-Anthropic's safety research is the foundation of Claude's behavior. A harness that ignores these principles --- allowing unchecked autonomous action, trusting claims without evidence, or relying on a single point of verification --- undermines the safety guarantees that make Claude trustworthy in production. The harness's defense-in-depth architecture mirrors the layered safety approach that Anthropic applies to the model itself.
+Anthropic's safety research is the foundation of Claude's behavior. A harness that ignores these principles --- allowing unchecked autonomous action, trusting claims without evidence, or relying on a single point of verification --- undermines the safety guarantees that make Claude trustworthy in production.
+The harness's defense-in-depth architecture mirrors the layered safety approach that Anthropic applies to the model itself.
 
 ---
 
@@ -329,13 +336,14 @@ Documents an architectural path that was chosen, including alternatives that wer
 
 ```markdown
 #PATH_DECISION: Use Prisma ORM for database access
+
 - Alternative considered: Raw SQL queries
 - Alternative considered: TypeORM
 - Rationale: Type safety, migration tooling, RLS integration
 - Trade-off accepted: Slightly higher abstraction overhead
 ```
 
-This tag makes the reasoning behind architectural choices explicit and auditable. When a future agent or human revisits the decision, they see not just what was chosen but *why*, and what was deliberately excluded.
+This tag makes the reasoning behind architectural choices explicit and auditable. When a future agent or human revisits the decision, they see not just what was chosen but _why_, and what was deliberately excluded.
 
 **#PLAN_UNCERTAINTY**
 
@@ -343,6 +351,7 @@ Flags areas where the plan involves assumptions that have not been validated:
 
 ```markdown
 #PLAN_UNCERTAINTY: Stripe webhook delivery order
+
 - Assumption: Events arrive in chronological order
 - Risk: Out-of-order delivery could cause state inconsistency
 - Mitigation: Implement idempotency keys and event ordering checks
@@ -357,6 +366,7 @@ Marks security and compliance requirements that must be enforced without excepti
 
 ```markdown
 #EXPORT_CRITICAL: User data must be isolated by organization_id
+
 - Enforcement: RLS policy on all user-facing tables
 - Validation: QAS must test cross-organization data access attempt
 - Compliance: GDPR Article 25 (Data Protection by Design)
@@ -366,7 +376,8 @@ This tag implements the "constitutional constraint" concept at the specification
 
 ### Why the Alignment Matters
 
-Anthropic's extended thinking research shows that structured reasoning produces better outcomes than implicit reasoning. The metacognitive tags are the harness's mechanism for making Claude's reasoning process explicit, auditable, and actionable. Without them, critical decisions, uncertainties, and constraints remain buried in free-form text where they are easy to overlook. The tags create a structured protocol that matches the model's own internal reasoning capabilities.
+Anthropic's extended thinking research shows that structured reasoning produces better outcomes than implicit reasoning. The metacognitive tags are the harness's mechanism for making Claude's reasoning process explicit, auditable, and actionable.
+Without them, critical decisions, uncertainties, and constraints remain buried in free-form text where they are easy to overlook. The tags create a structured protocol that matches the model's own internal reasoning capabilities.
 
 ---
 
@@ -374,16 +385,16 @@ Anthropic's extended thinking research shows that structured reasoning produces 
 
 The mappings above reveal a consistent pattern: the harness does not invent new principles. It operationalizes principles that Anthropic has already validated through research and published in its documentation.
 
-| Anthropic Principle | Harness Mechanism | Effect |
-|---|---|---|
-| Honest helpfulness over sycophancy | Round Table + stop-the-line authority | Agent concerns cannot be silently overridden |
-| Tools should reduce cognitive load | Three-layer progressive architecture | Right expertise at the right time |
-| Specialization outperforms generalization | 11 role-specific agents | Higher quality through focused domains |
-| Progressive disclosure | Layered context (CLAUDE.md, agents, skills, specs) | Context quality maintained across sessions |
-| Constitutional constraints | RLS enforcement + linting rules | Safety enforced architecturally, not by memory |
-| Evidence over claims | Mandatory evidence at every gate | Trust built on proof, not assertion |
-| Explicit reasoning improves quality | Metacognitive tags | Decisions auditable, uncertainties visible |
-| Human oversight at critical points | HITL merge gate | Irreversible actions require human judgment |
+| Anthropic Principle                       | Harness Mechanism                                  | Effect                                         |
+| ----------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
+| Honest helpfulness over sycophancy        | Round Table + stop-the-line authority              | Agent concerns cannot be silently overridden   |
+| Tools should reduce cognitive load        | Three-layer progressive architecture               | Right expertise at the right time              |
+| Specialization outperforms generalization | 11 role-specific agents                            | Higher quality through focused domains         |
+| Progressive disclosure                    | Layered context (CLAUDE.md, agents, skills, specs) | Context quality maintained across sessions     |
+| Constitutional constraints                | RLS enforcement + linting rules                    | Safety enforced architecturally, not by memory |
+| Evidence over claims                      | Mandatory evidence at every gate                   | Trust built on proof, not assertion            |
+| Explicit reasoning improves quality       | Metacognitive tags                                 | Decisions auditable, uncertainties visible     |
+| Human oversight at critical points        | HITL merge gate                                    | Irreversible actions require human judgment    |
 
 The harness is, in essence, Anthropic's published engineering research expressed as infrastructure.
 

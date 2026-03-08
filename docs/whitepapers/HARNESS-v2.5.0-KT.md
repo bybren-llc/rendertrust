@@ -10,7 +10,8 @@ v2.5.0 is the largest feature release since the harness was open-sourced. It mod
 
 ## Context
 
-After 2+ months of enterprise adoption (v2.3.0 to v2.4.0), teams identified that the harness's 17 skills used only basic YAML frontmatter (`name` and `description`) despite Claude Code 2.1+ supporting rich invocation control. Additionally, Claude Code's experimental Agent Teams feature (February 2026) offered a path to real-time multi-agent coordination --- a natural fit for the harness's 11-agent SAFe model.
+After 2+ months of enterprise adoption (v2.3.0 to v2.4.0), teams identified that the harness's 17 skills used only basic YAML frontmatter (`name` and `description`) despite Claude Code 2.1+ supporting rich invocation control.
+Additionally, Claude Code's experimental Agent Teams feature (February 2026) offered a path to real-time multi-agent coordination --- a natural fit for the harness's 11-agent SAFe model.
 
 Research was conducted on Claude Code's changelog (v2.1.0 through v2.1.69), official Skills 2.0 documentation, and Agent Teams docs. A gap analysis confirmed that zero skills used any Skills 2.0 features, and Agent Teams was not integrated at all.
 
@@ -40,12 +41,12 @@ Research was conducted on Claude Code's changelog (v2.1.0 through v2.1.69), offi
 
 All existing SKILL.md files received frontmatter updates:
 
-| Category | Skills | New Fields |
-|---|---|---|
-| Background knowledge | rls-patterns, safe-workflow, api-patterns, frontend-patterns, stripe-patterns | `user-invocable: false` |
-| Dangerous operations | deployment-sop, migration-patterns, release-patterns | `disable-model-invocation: true`, `argument-hint` |
-| Isolated execution | pattern-discovery, security-audit, spec-creation | `context: fork`, `agent: Explore`, `allowed-tools` |
-| Tool-restricted | agent-coordination, confluence-docs, git-advanced, linear-sop, orchestration-patterns, testing-patterns | `allowed-tools` (minimum necessary set) |
+| Category             | Skills                                                                                                  | New Fields                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Background knowledge | rls-patterns, safe-workflow, api-patterns, frontend-patterns, stripe-patterns                           | `user-invocable: false`                            |
+| Dangerous operations | deployment-sop, migration-patterns, release-patterns                                                    | `disable-model-invocation: true`, `argument-hint`  |
+| Isolated execution   | pattern-discovery, security-audit, spec-creation                                                        | `context: fork`, `agent: Explore`, `allowed-tools` |
+| Tool-restricted      | agent-coordination, confluence-docs, git-advanced, linear-sop, orchestration-patterns, testing-patterns | `allowed-tools` (minimum necessary set)            |
 
 #### New Skill: team-coordination
 
@@ -56,14 +57,14 @@ All existing SKILL.md files received frontmatter updates:
 
 #### Agent Teams Infrastructure
 
-| File | Purpose |
-|---|---|
-| `.claude/team-config.json` | Added `agent_teams` section with gate dependencies DAG |
-| `.claude/settings.template.json` | Template for enabling experimental flag |
-| `.claude/agents/tdm.md` | Added "Agent Teams Orchestration" section |
-| `docs/onboarding/AGENT-TEAMS-GUIDE.md` | Comprehensive onboarding (548 lines) |
-| `docs/guides/OPTIONAL-FEATURES.md` | Added Section 5: Agent Teams removal checklist |
-| `docs/guides/SKILL_AUTHORING_GUIDE.md` | Updated for Skills 2.0 (7 new sections) |
+| File                                   | Purpose                                                |
+| -------------------------------------- | ------------------------------------------------------ |
+| `.claude/team-config.json`             | Added `agent_teams` section with gate dependencies DAG |
+| `.claude/settings.template.json`       | Template for enabling experimental flag                |
+| `.claude/agents/tdm.md`                | Added "Agent Teams Orchestration" section              |
+| `docs/onboarding/AGENT-TEAMS-GUIDE.md` | Comprehensive onboarding (548 lines)                   |
+| `docs/guides/OPTIONAL-FEATURES.md`     | Added Section 5: Agent Teams removal checklist         |
+| `docs/guides/SKILL_AUTHORING_GUIDE.md` | Updated for Skills 2.0 (7 new sections)                |
 
 #### GitHub-Linear Auto-Sync Documentation
 
@@ -131,16 +132,16 @@ test -f docs/releases/v2.5.0-UPGRADE.md && echo "Upgrade Guide: EXISTS"
 
 ## Related Tickets
 
-| Ticket | Title | Status |
-|---|---|---|
-| WOR-540 | v2.5.0 Epic: Agent Teams + Skills 2.0 | Done |
-| WOR-541 | Feature A: Skills 2.0 Modernization | Done |
-| WOR-542 | Feature B: Agent Teams Integration | Done |
-| WOR-543 | Feature C: Documentation Updates | Done |
-| WOR-544-547 | Skills 2.0 Stories (4) | Done |
-| WOR-548-552 | Agent Teams Stories (5) | Done |
-| WOR-553-555 | Documentation Stories (3) | Done |
-| WOR-556 | v2.5.0 KT: Root Docs + Upgrade Guide + Confluence | In Progress |
+| Ticket      | Title                                             | Status      |
+| ----------- | ------------------------------------------------- | ----------- |
+| WOR-540     | v2.5.0 Epic: Agent Teams + Skills 2.0             | Done        |
+| WOR-541     | Feature A: Skills 2.0 Modernization               | Done        |
+| WOR-542     | Feature B: Agent Teams Integration                | Done        |
+| WOR-543     | Feature C: Documentation Updates                  | Done        |
+| WOR-544-547 | Skills 2.0 Stories (4)                            | Done        |
+| WOR-548-552 | Agent Teams Stories (5)                           | Done        |
+| WOR-553-555 | Documentation Stories (3)                         | Done        |
+| WOR-556     | v2.5.0 KT: Root Docs + Upgrade Guide + Confluence | In Progress |
 
 ## Future Work
 
@@ -152,4 +153,4 @@ test -f docs/releases/v2.5.0-UPGRADE.md && echo "Upgrade Guide: EXISTS"
 
 ---
 
-*This KT document is part of the [REN SAFe Agentic Workflow](https://github.com/{{GITHUB_ORG}}/{{PROJECT_REPO}}) harness. For upgrade instructions, see [v2.5.0-UPGRADE.md](../releases/v2.5.0-UPGRADE.md).*
+_This KT document is part of the [REN SAFe Agentic Workflow](https://github.com/{{GITHUB_ORG}}/{{PROJECT_REPO}}) harness. For upgrade instructions, see [v2.5.0-UPGRADE.md](../releases/v2.5.0-UPGRADE.md)._

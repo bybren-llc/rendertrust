@@ -97,10 +97,10 @@ export async function processPayment(
     stripe_payment_id: string;
     amount: number;
     subscription_id: string;
-  },
+  }
 ) {
-  return await withUserContext(prisma, userId, async (client) => {
-    return await client.$transaction(async (tx) => {
+  return await withUserContext(prisma, userId, async client => {
+    return await client.$transaction(async tx => {
       // 1. Create payment record
       const payment = await tx.payments.create({
         data: {
@@ -151,13 +151,13 @@ export async function bulkCreateContent(
   contents: Array<{
     title: string;
     tier: "FREE" | "PRO" | "VIP";
-  }>,
+  }>
 ) {
-  return await withAdminContext(prisma, userId, async (client) => {
-    return await client.$transaction(async (tx) => {
+  return await withAdminContext(prisma, userId, async client => {
+    return await client.$transaction(async tx => {
       // Use createMany for bulk inserts
       const result = await tx.course_content.createMany({
-        data: contents.map((content) => ({
+        data: contents.map(content => ({
           ...content,
           course_id: "default-course",
           status: "draft",
@@ -188,10 +188,10 @@ export async function bulkCreateContent(
  */
 export async function upgradeUserTier(
   userId: string,
-  newTier: "FREE" | "PRO" | "VIP",
+  newTier: "FREE" | "PRO" | "VIP"
 ) {
-  return await withUserContext(prisma, userId, async (client) => {
-    return await client.$transaction(async (tx) => {
+  return await withUserContext(prisma, userId, async client => {
+    return await client.$transaction(async tx => {
       // 1. Check current enrollment
       const enrollment = await tx.course_enrollments.findUnique({
         where: {
@@ -254,10 +254,10 @@ export async function upgradeUserTier(
 export async function decrementInventory(
   userId: string,
   productId: string,
-  quantity: number,
+  quantity: number
 ) {
-  return await withSystemContext(prisma, "inventory", async (client) => {
-    return await client.$transaction(async (tx) => {
+  return await withSystemContext(prisma, "inventory", async client => {
+    return await client.$transaction(async tx => {
       // 1. Lock row for update
       const product = await tx.products.findUnique({
         where: { id: productId },
@@ -328,7 +328,7 @@ return await withUserContext(prisma, userId, async (client) => {
 ```typescript
 try {
   return await client.$transaction(
-    async (tx) => {
+    async tx => {
       // Operations...
       return result;
     },
@@ -336,7 +336,7 @@ try {
       maxWait: 5000, // Max wait time to start tx
       timeout: 10000, // Max tx duration
       isolationLevel: "ReadCommitted",
-    },
+    }
   );
 } catch (error) {
   if (error.code === "P2034") {
@@ -402,14 +402,14 @@ export async function createOrder(
   userId: string,
   data: {
     items: Array<{ product_id: string; quantity: number; price: number }>;
-  },
+  }
 ) {
-  return await withUserContext(prisma, userId, async (client) => {
-    return await client.$transaction(async (tx) => {
+  return await withUserContext(prisma, userId, async client => {
+    return await client.$transaction(async tx => {
       // 1. Calculate total
       const total = data.items.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0,
+        0
       );
 
       // 2. Create order
@@ -424,7 +424,7 @@ export async function createOrder(
 
       // 3. Create order items
       await tx.order_items.createMany({
-        data: data.items.map((item) => ({
+        data: data.items.map(item => ({
           order_id: order.id,
           product_id: item.product_id,
           quantity: item.quantity,

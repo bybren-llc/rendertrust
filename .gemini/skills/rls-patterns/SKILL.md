@@ -28,26 +28,30 @@ const user = await prisma.user.findUnique({ where: { user_id } });
 ### ALWAYS Do This
 
 ```typescript
-import { withUserContext, withAdminContext, withSystemContext } from "@/lib/rls-context";
+import {
+  withUserContext,
+  withAdminContext,
+  withSystemContext,
+} from "@/lib/rls-context";
 
 // ✅ CORRECT - User context for user operations
-const user = await withUserContext(prisma, userId, async (client) => {
+const user = await withUserContext(prisma, userId, async client => {
   return client.user.findUnique({ where: { user_id: userId } });
 });
 
 // ✅ CORRECT - System context for webhooks
-await withSystemContext(prisma, "webhook", async (client) => {
+await withSystemContext(prisma, "webhook", async client => {
   return client.webhook_events.create({ data: eventData });
 });
 ```
 
 ## Context Helper Reference
 
-| Helper | Use For |
-| ------ | ------- |
-| `withUserContext` | User-facing operations (profile, payments, subscriptions) |
-| `withAdminContext` | Admin-only operations (disputes, webhook events) |
-| `withSystemContext` | Webhooks and background jobs |
+| Helper              | Use For                                                   |
+| ------------------- | --------------------------------------------------------- |
+| `withUserContext`   | User-facing operations (profile, payments, subscriptions) |
+| `withAdminContext`  | Admin-only operations (disputes, webhook events)          |
+| `withSystemContext` | Webhooks and background jobs                              |
 
 ## Common Patterns
 
@@ -57,7 +61,7 @@ await withSystemContext(prisma, "webhook", async (client) => {
 export async function GET() {
   const { userId } = await requireAuth();
 
-  const payments = await withUserContext(prisma, userId, async (client) => {
+  const payments = await withUserContext(prisma, userId, async client => {
     return client.payments.findMany({
       where: { user_id: userId },
       orderBy: { created_at: "desc" },

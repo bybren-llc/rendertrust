@@ -5,21 +5,26 @@ You are working in a **SAFe multi-agent development environment** using the REN 
 ## Key Principles
 
 ### Pattern-First Development
+
 "Search First, Reuse Always, Create Only When Necessary"
 
 Before implementing any feature:
+
 1. Search existing patterns in `patterns_library/`
 2. Check existing specs in `specs/`
 3. Review documentation in `docs/`
 4. Only create new patterns when necessary
 
 ### Evidence-Based Delivery
+
 All work requires verifiable evidence attached to Linear tickets:
+
 - **Dev Phase**: Test results, command output, PR link
 - **Staging Phase**: UAT validation or N/A with reason
 - **Done Phase**: QA report, merge confirmation
 
 ### Round Table Philosophy
+
 - Equal voice: AI and human input have equal weight
 - Mutual respect: All perspectives respected
 - Stop-the-line authority: Flag architectural or security concerns
@@ -28,31 +33,32 @@ All work requires verifiable evidence attached to Linear tickets:
 
 Skills auto-load when context matches. All 17 skills:
 
-| Skill | Trigger When |
-|-------|--------------|
-| `safe-workflow` | Starting work, commits, branches, PRs |
-| `pattern-discovery` | Before implementing features |
-| `rls-patterns` | Database operations, RLS policies |
-| `api-patterns` | Creating API endpoints |
-| `frontend-patterns` | UI components, pages |
-| `testing-patterns` | Writing tests |
-| `security-audit` | Security validation |
-| `linear-sop` | Ticket management |
-| `deployment-sop` | Deploying code |
-| `orchestration-patterns` | Multi-step workflows, pipelines |
-| `agent-coordination` | Multi-agent collaboration |
-| `spec-creation` | Writing SAFe specs (Epic/Feature/Story) |
-| `release-patterns` | Release management, versioning |
-| `git-advanced` | Rebasing, cherry-pick, conflict resolution |
-| `stripe-patterns` | Payment integration, webhooks |
-| `confluence-docs` | Confluence documentation, templates |
-| `migration-patterns` | Database migrations, schema changes |
+| Skill                    | Trigger When                               |
+| ------------------------ | ------------------------------------------ |
+| `safe-workflow`          | Starting work, commits, branches, PRs      |
+| `pattern-discovery`      | Before implementing features               |
+| `rls-patterns`           | Database operations, RLS policies          |
+| `api-patterns`           | Creating API endpoints                     |
+| `frontend-patterns`      | UI components, pages                       |
+| `testing-patterns`       | Writing tests                              |
+| `security-audit`         | Security validation                        |
+| `linear-sop`             | Ticket management                          |
+| `deployment-sop`         | Deploying code                             |
+| `orchestration-patterns` | Multi-step workflows, pipelines            |
+| `agent-coordination`     | Multi-agent collaboration                  |
+| `spec-creation`          | Writing SAFe specs (Epic/Feature/Story)    |
+| `release-patterns`       | Release management, versioning             |
+| `git-advanced`           | Rebasing, cherry-pick, conflict resolution |
+| `stripe-patterns`        | Payment integration, webhooks              |
+| `confluence-docs`        | Confluence documentation, templates        |
+| `migration-patterns`     | Database migrations, schema changes        |
 
 ## Available Commands
 
 Commands are invoked with `/namespace:command` or `/command`:
 
 ### Workflow Commands
+
 - `/workflow:start-work [ticket]` - Start work on Linear ticket
 - `/workflow:pre-pr` - Pre-PR validation checklist
 - `/workflow:end-work` - Complete work session
@@ -63,10 +69,12 @@ Commands are invoked with `/namespace:command` or `/command`:
 - `/workflow:retro` - Conduct retrospective
 
 ### Local Commands
+
 - `/local:sync` - Sync local dev environment after git pull
 - `/local:deploy` - Deploy Docker image locally
 
 ### Remote Commands
+
 - `/remote:status` - Check if remote needs updating
 - `/remote:deploy` - Deploy to remote staging
 - `/remote:health` - Health dashboard
@@ -74,11 +82,13 @@ Commands are invoked with `/namespace:command` or `/command`:
 - `/remote:rollback [sha]` - Rollback to previous version
 
 ### Other Commands
+
 - `/test-pr-docker [PR]` - Test PR Docker workflow
 - `/audit-deps` - Comprehensive dependency audit
 - `/search-pattern <pattern>` - Search codebase for patterns
 
 ### Media Commands
+
 - `/media:analyze-images <dir>` - Analyze images using vision
 - `/media:extract-pdf <file>` - Extract structured data from PDFs
 - `/media:sketch-to-code <image>` - Generate code from UI sketches
@@ -92,6 +102,7 @@ Commands are invoked with `/namespace:command` or `/command`:
 - `/media:scene-detect <file>` - Detect scene transitions with timestamps
 
 ### Built-in Commands (Gemini CLI v0.32+)
+
 - `/plan` - Enter plan mode for complex tasks
 - `/rewind` - Navigate to a previous point in the session
 - `/introspect` - Debug session state and context
@@ -104,20 +115,25 @@ Commands are invoked with `/namespace:command` or `/command`:
 ## SAFe Workflow
 
 ### Branch Naming
+
 ```
 REN-{number}-{short-description}
 ```
+
 Example: `REN-123-add-user-profile`
 
 ### Commit Format
+
 ```
 type(scope): description [REN-XXX]
 ```
+
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 Example: `feat(user): add profile editing [REN-123]`
 
 ### PR Workflow
+
 1. Create feature branch from main
 2. Implement with pattern discovery
 3. Run `/workflow:pre-pr` validation
@@ -131,7 +147,7 @@ Example: `feat(user): add profile editing [REN-123]`
 
 ```typescript
 // CORRECT - Always use context helpers
-const user = await withUserContext(prisma, userId, async (client) => {
+const user = await withUserContext(prisma, userId, async client => {
   return client.user.findUnique({ where: { user_id: userId } });
 });
 
@@ -140,6 +156,7 @@ const user = await prisma.user.findUnique({ where: { user_id } }); // NEVER DO T
 ```
 
 Context helpers:
+
 - `withUserContext` - User-facing operations
 - `withAdminContext` - Admin operations
 - `withSystemContext` - Webhooks and background jobs
@@ -147,6 +164,7 @@ Context helpers:
 ## Linear Integration
 
 Since Gemini CLI doesn't have native Linear MCP integration, use:
+
 - **Linear Web UI**: https://linear.app
 - **Linear CLI**: `linear` command (if installed)
 - **Evidence Templates**: See `linear-sop` skill
@@ -157,18 +175,18 @@ Since Gemini CLI doesn't have native Linear MCP integration, use:
 
 While Gemini doesn't have discrete agents, embody these roles as needed:
 
-| Role | Responsibility |
-|------|----------------|
-| **BSA** | Requirements, specs, acceptance criteria |
-| **System Architect** | Pattern validation, architectural decisions |
-| **FE Developer** | Frontend components, UI |
-| **BE Developer** | Backend APIs, server logic |
-| **Data Engineer** | Database, migrations, RLS |
-| **QAS** | Testing, validation |
-| **Security Engineer** | Security audits, RLS validation |
-| **Tech Writer** | Documentation |
-| **RTE** | PR creation, releases |
-| **TDM** | Coordination, blockers |
+| Role                  | Responsibility                              |
+| --------------------- | ------------------------------------------- |
+| **BSA**               | Requirements, specs, acceptance criteria    |
+| **System Architect**  | Pattern validation, architectural decisions |
+| **FE Developer**      | Frontend components, UI                     |
+| **BE Developer**      | Backend APIs, server logic                  |
+| **Data Engineer**     | Database, migrations, RLS                   |
+| **QAS**               | Testing, validation                         |
+| **Security Engineer** | Security audits, RLS validation             |
+| **Tech Writer**       | Documentation                               |
+| **RTE**               | PR creation, releases                       |
+| **TDM**               | Coordination, blockers                      |
 
 ## Stop-the-Line Conditions
 
@@ -183,11 +201,13 @@ While Gemini doesn't have discrete agents, embody these roles as needed:
 ## Plan Mode (v0.29.0+)
 
 Use `/plan` to enter plan mode before implementing complex changes. Gemini CLI will:
+
 1. Analyze the task and break it into steps
 2. Present the plan for your approval
 3. Execute the plan with tracking
 
 Settings in `settings.json`:
+
 ```json
 {
   "general": {
@@ -199,6 +219,7 @@ Settings in `settings.json`:
 ## Policy Engine (v0.30.0+)
 
 The policy engine provides fine-grained control over tool execution. Configure policies via:
+
 - `settings.json` → `policyPaths: ["path/to/policy.yaml"]`
 - CLI flag: `gemini --policy strict.yaml`
 
@@ -208,6 +229,7 @@ Replaces the deprecated `--allowed-tools` flag.
 ## Browser Agent (Experimental, v0.31.0+)
 
 An experimental subagent that interacts with web pages via accessibility tree.
+
 - Navigate, fill forms, click elements, extract content
 - Configure in `settings.json` under `agents.browser`
 - Requires explicit opt-in via experimental flags
@@ -216,20 +238,21 @@ An experimental subagent that interacts with web pages via accessibility tree.
 
 Hooks intercept Gemini CLI lifecycle events. Configure in `settings.json`:
 
-| Event | When | Use Case |
-|-------|------|----------|
-| `SessionStart` | Session begins | Load context |
-| `BeforeAgent` | Before planning | Validate input |
-| `AfterAgent` | Loop completes | Review output |
-| `BeforeTool` | Before tool exec | Block operations |
-| `AfterTool` | After tool exec | Run tests |
-| `PreCompress` | Context compression | Save state |
+| Event          | When                | Use Case         |
+| -------------- | ------------------- | ---------------- |
+| `SessionStart` | Session begins      | Load context     |
+| `BeforeAgent`  | Before planning     | Validate input   |
+| `AfterAgent`   | Loop completes      | Review output    |
+| `BeforeTool`   | Before tool exec    | Block operations |
+| `AfterTool`    | After tool exec     | Run tests        |
+| `PreCompress`  | Context compression | Save state       |
 
 Manage via `/hooks panel`, `/hooks enable-all`, `/hooks disable-all`.
 
 ## Extensions (v0.26.0+)
 
 Extensions bundle skills, MCP servers, commands, and tool restrictions into shareable packages.
+
 - Install: `gemini extensions install <source>`
 - Skills are individual capabilities; extensions are the distribution format
 - Extension skills load at the Extension tier (lowest precedence after workspace and user)
@@ -237,16 +260,17 @@ Extensions bundle skills, MCP servers, commands, and tool restrictions into shar
 ## Checkpointing (v0.30.0+)
 
 Session recovery via automatic checkpoints before file modifications.
+
 - Enable: `settings.json` → `general.checkpointing.enabled: true`
 - Restore: `/restore` command
 - Stored in `~/.gemini/tmp/<project_hash>/checkpoints`
 
 ## Model Configuration
 
-| Model | Default Since | Notes |
-|-------|--------------|-------|
-| Gemini 3 Flash | v0.29.0 | Default for all users |
-| Gemini 3.1 Pro Preview | v0.31.0 | Higher capability |
+| Model                  | Default Since | Notes                 |
+| ---------------------- | ------------- | --------------------- |
+| Gemini 3 Flash         | v0.29.0       | Default for all users |
+| Gemini 3.1 Pro Preview | v0.31.0       | Higher capability     |
 
 Configure in `settings.json` → `model.name` or use `{{GEMINI_MODEL}}` placeholder.
 Plan mode can auto-switch between Flash (planning) and Pro (execution) via `plan.modelRouting`.

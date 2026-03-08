@@ -44,12 +44,12 @@ Skills are loaded in this priority order (highest to lowest):
 
 ### Primary Documentation
 
-| Resource | Description |
-|----------|-------------|
-| [Agent Skills Docs](https://code.claude.com/docs/en/skills) | Official installation, structure, and usage guide |
-| [anthropics/skills](https://github.com/anthropics/skills) | Official skill marketplace repository |
+| Resource                                                                                                        | Description                                          |
+| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [Agent Skills Docs](https://code.claude.com/docs/en/skills)                                                     | Official installation, structure, and usage guide    |
+| [anthropics/skills](https://github.com/anthropics/skills)                                                       | Official skill marketplace repository                |
 | [Engineering Blog](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) | Deep-dive on skill architecture and real-world usage |
-| [Skills Announcement](https://www.anthropic.com/news/skills) | Feature introduction and overview |
+| [Skills Announcement](https://www.anthropic.com/news/skills)                                                    | Feature introduction and overview                    |
 
 ### Installing Official Skills
 
@@ -67,18 +67,18 @@ Skills are loaded in this priority order (highest to lowest):
 
 ### Quality Checklist
 
-| Resource | Description |
-|----------|-------------|
-| [jezweb/claude-skills Checklist](https://github.com/jezweb/claude-skills/blob/main/ONE_PAGE_CHECKLIST.md) | Comprehensive skill quality checklist |
-| [awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills) | Curated list of community skills |
-| [SkillsMP](https://skillsmp.com) | Community skill aggregator and discovery |
+| Resource                                                                                                  | Description                              |
+| --------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [jezweb/claude-skills Checklist](https://github.com/jezweb/claude-skills/blob/main/ONE_PAGE_CHECKLIST.md) | Comprehensive skill quality checklist    |
+| [awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills)                                | Curated list of community skills         |
+| [SkillsMP](https://skillsmp.com)                                                                          | Community skill aggregator and discovery |
 
 ### Community Skill Factories
 
-| Resource | Description |
-|----------|-------------|
+| Resource                                                                                 | Description                                  |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------- |
 | [claude-code-skill-factory](https://github.com/alirezarezvani/claude-code-skill-factory) | Toolkit for building production-ready skills |
-| [Jamie-BitFlight/claude_skills](https://github.com/Jamie-BitFlight/claude_skills) | Skills plugin for Claude Code |
+| [Jamie-BitFlight/claude_skills](https://github.com/Jamie-BitFlight/claude_skills)        | Skills plugin for Claude Code                |
 
 ---
 
@@ -106,8 +106,8 @@ my-skill/
 ---
 name: my-skill-name
 description: Brief description of what this skill does. Use when [trigger conditions].
-allowed-tools: [Read, Grep, Glob]  # Optional - restrict available tools
-model: opus                        # Optional - force specific model
+allowed-tools: [Read, Grep, Glob] # Optional - restrict available tools
+model: opus # Optional - force specific model
 ---
 
 ## Purpose
@@ -133,24 +133,25 @@ Invoke this skill when:
 
 ### YAML Frontmatter Reference
 
-| Field | Required | Max Length | Description |
-|-------|----------|------------|-------------|
-| `name` | No | 64 chars | Lowercase letters, numbers, hyphens only. If omitted, uses directory name. |
-| `description` | Recommended | 1024 chars | What it does + when to use it (Claude uses this for activation) |
-| `argument-hint` | No | - | Hint shown during autocomplete (e.g., `[issue-number]`, `[filename] [format]`) |
-| `disable-model-invocation` | No | - | Set `true` to prevent Claude from auto-loading. Users invoke manually with `/name`. |
-| `user-invocable` | No | - | Set `false` to hide from `/` menu. Use for background knowledge Claude loads automatically. |
-| `allowed-tools` | No | - | Comma-separated tools Claude can use when skill is active (e.g., `Read, Grep, Glob`) |
-| `model` | No | - | Force specific Claude model when active |
-| `context` | No | - | Set to `fork` to run in isolated subagent context |
-| `agent` | No | - | Subagent type when `context: fork` is set (e.g., `Explore`, `Plan`, `general-purpose`, or custom agent name) |
-| `hooks` | No | - | Hook configurations scoped to skill lifecycle (PreToolUse, PostToolUse, Stop) |
+| Field                      | Required    | Max Length | Description                                                                                                  |
+| -------------------------- | ----------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| `name`                     | No          | 64 chars   | Lowercase letters, numbers, hyphens only. If omitted, uses directory name.                                   |
+| `description`              | Recommended | 1024 chars | What it does + when to use it (Claude uses this for activation)                                              |
+| `argument-hint`            | No          | -          | Hint shown during autocomplete (e.g., `[issue-number]`, `[filename] [format]`)                               |
+| `disable-model-invocation` | No          | -          | Set `true` to prevent Claude from auto-loading. Users invoke manually with `/name`.                          |
+| `user-invocable`           | No          | -          | Set `false` to hide from `/` menu. Use for background knowledge Claude loads automatically.                  |
+| `allowed-tools`            | No          | -          | Comma-separated tools Claude can use when skill is active (e.g., `Read, Grep, Glob`)                         |
+| `model`                    | No          | -          | Force specific Claude model when active                                                                      |
+| `context`                  | No          | -          | Set to `fork` to run in isolated subagent context                                                            |
+| `agent`                    | No          | -          | Subagent type when `context: fork` is set (e.g., `Explore`, `Plan`, `general-purpose`, or custom agent name) |
+| `hooks`                    | No          | -          | Hook configurations scoped to skill lifecycle (PreToolUse, PostToolUse, Stop)                                |
 
 ### Description Best Practices
 
 Your description is **critical** - Claude uses it to decide when to activate the skill.
 
 **Good descriptions include:**
+
 - **What** the skill does (specific capabilities)
 - **When** to use it (trigger keywords users would say)
 
@@ -166,11 +167,11 @@ description: Helps with database stuff.
 
 Skills 2.0 gives you fine-grained control over who can invoke a skill:
 
-| Frontmatter | User Invokes | Claude Invokes | Context Loading |
-|-------------|-------------|----------------|-----------------|
-| (default) | Yes | Yes | Description always in context, full skill loads on invoke |
-| `disable-model-invocation: true` | Yes | No | Description NOT in context, loads only when user invokes |
-| `user-invocable: false` | No | Yes | Description always in context, loads when Claude decides |
+| Frontmatter                      | User Invokes | Claude Invokes | Context Loading                                           |
+| -------------------------------- | ------------ | -------------- | --------------------------------------------------------- |
+| (default)                        | Yes          | Yes            | Description always in context, full skill loads on invoke |
+| `disable-model-invocation: true` | Yes          | No             | Description NOT in context, loads only when user invokes  |
+| `user-invocable: false`          | No           | Yes            | Description always in context, loads when Claude decides  |
 
 **When to use each**:
 
@@ -198,15 +199,18 @@ Research $ARGUMENTS thoroughly:
 ```
 
 **When to use `context: fork`**:
+
 - Research/analysis tasks that should not pollute main conversation
 - Security audits that need isolation
 - Pattern discovery that generates large intermediate output
 
 **When NOT to use it**:
+
 - Background knowledge skills (they need conversation context)
 - Skills that provide guidelines without a concrete task
 
 The `agent` field specifies the execution environment:
+
 - `Explore` — Read-only tools, optimized for codebase exploration
 - `Plan` — Read-only, for designing implementation approaches
 - `general-purpose` — Full tool access (default if omitted)
@@ -216,12 +220,12 @@ The `agent` field specifies the execution environment:
 
 Skills support dynamic value substitution:
 
-| Variable | Description |
-|----------|-------------|
-| `$ARGUMENTS` | All arguments passed when invoking the skill |
-| `$ARGUMENTS[N]` or `$N` | Access specific argument by 0-based index |
-| `${CLAUDE_SESSION_ID}` | Current session ID (useful for logging) |
-| `${CLAUDE_SKILL_DIR}` | Directory containing the SKILL.md file |
+| Variable                | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `$ARGUMENTS`            | All arguments passed when invoking the skill |
+| `$ARGUMENTS[N]` or `$N` | Access specific argument by 0-based index    |
+| `${CLAUDE_SESSION_ID}`  | Current session ID (useful for logging)      |
+| `${CLAUDE_SKILL_DIR}`   | Directory containing the SKILL.md file       |
 
 ### Dynamic Context Injection
 
@@ -267,12 +271,12 @@ hooks:
 
 Claude Code ships with built-in skills available in every session:
 
-| Skill | Description | SAFe Alignment |
-|-------|-------------|----------------|
-| `/simplify` | Spawns 3 parallel review agents (code reuse, quality, efficiency) | Complements QAS review |
-| `/batch` | Orchestrates large-scale parallel changes with git worktrees | Large refactoring / cross-cutting |
-| `/debug` | Reads session debug log for troubleshooting | Agent debugging |
-| `/claude-api` | Claude API/SDK reference (auto-activates on `anthropic` import) | For Claude-based projects |
+| Skill         | Description                                                       | SAFe Alignment                    |
+| ------------- | ----------------------------------------------------------------- | --------------------------------- |
+| `/simplify`   | Spawns 3 parallel review agents (code reuse, quality, efficiency) | Complements QAS review            |
+| `/batch`      | Orchestrates large-scale parallel changes with git worktrees      | Large refactoring / cross-cutting |
+| `/debug`      | Reads session debug log for troubleshooting                       | Agent debugging                   |
+| `/claude-api` | Claude API/SDK reference (auto-activates on `anthropic` import)   | For Claude-based projects         |
 
 ---
 
@@ -297,13 +301,13 @@ Before submitting a new skill, verify:
 
 ### Writing Guidelines
 
-| Guideline | Reason |
-|-----------|--------|
-| Keep SKILL.md under 500 lines | Optimal token efficiency |
-| Use `❌`/`✅` for forbidden/correct | Visual clarity |
-| Include language tags on code blocks | Syntax highlighting |
-| Link to authoritative docs | Traceability |
-| Use imperative voice | Clearer instructions |
+| Guideline                            | Reason                   |
+| ------------------------------------ | ------------------------ |
+| Keep SKILL.md under 500 lines        | Optimal token efficiency |
+| Use `❌`/`✅` for forbidden/correct  | Visual clarity           |
+| Include language tags on code blocks | Syntax highlighting      |
+| Link to authoritative docs           | Traceability             |
+| Use imperative voice                 | Clearer instructions     |
 
 ### README.md Template
 
@@ -320,6 +324,7 @@ Each skill should have a README.md for quick reference:
 ## Quick Start
 
 This skill activates automatically when you:
+
 - {Primary trigger 1}
 - {Primary trigger 2}
 - {Primary trigger 3}
@@ -331,8 +336,8 @@ This skill activates automatically when you:
 ## Trigger Keywords
 
 | Primary (3-5) | Secondary (5-10) |
-|---------------|------------------|
-| {keyword} | {keyword} |
+| ------------- | ---------------- |
+| {keyword}     | {keyword}        |
 
 ## Related Skills
 
@@ -340,23 +345,23 @@ This skill activates automatically when you:
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | YYYY-MM-DD |
-| Harness Version | vX.X.X |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | YYYY-MM-DD |
+| Harness Version | vX.X.X     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_
 ```
 
 ### Badge Meanings
 
-| Badge | When to Use |
-|-------|-------------|
-| ![production](https://img.shields.io/badge/status-production-green) | Stable, tested in production |
-| ![beta](https://img.shields.io/badge/status-beta-yellow) | Working but may change |
-| ![experimental](https://img.shields.io/badge/status-experimental-red) | New, use with caution |
+| Badge                                                                 | When to Use                  |
+| --------------------------------------------------------------------- | ---------------------------- |
+| ![production](https://img.shields.io/badge/status-production-green)   | Stable, tested in production |
+| ![beta](https://img.shields.io/badge/status-beta-yellow)              | Working but may change       |
+| ![experimental](https://img.shields.io/badge/status-experimental-red) | New, use with caution        |
 
 ---
 
@@ -374,7 +379,7 @@ Use lowercase with hyphens for the folder name.
 
 Start with this template:
 
-```markdown
+````markdown
 ---
 name: {skill-name}
 description: {What it does}. Use when {trigger conditions}.
@@ -406,6 +411,7 @@ Invoke this skill when:
 ```typescript
 // What NOT to do
 ```
+````
 
 ### ✅ CORRECT Patterns
 
@@ -420,7 +426,8 @@ Invoke this skill when:
 ## Authoritative References
 
 - **{Doc Name}**: `{path/to/doc}`
-```
+
+````
 
 ### Step 3: Add Implementation Patterns
 
@@ -433,14 +440,15 @@ Include concrete examples with code blocks:
 
 ```typescript
 // Example code
-```
+````
 
 ### Pattern 2: {Name}
 
 ```typescript
 // Example code
 ```
-```
+
+````
 
 ### Step 4: Add Authoritative References
 
@@ -452,7 +460,7 @@ Link to the source documentation:
 - **CONTRIBUTING.md**: `../../CONTRIBUTING.md`
 - **Database Schema**: `docs/database/DATA_DICTIONARY.md`
 - **Official Docs**: [External Link](https://example.com)
-```
+````
 
 ### Step 5: Create README.md
 
@@ -482,6 +490,7 @@ git commit -m "feat(skills): add {skill-name} skill"
 **`rls-patterns/`** - Enforces Row Level Security for all database operations
 
 Key features:
+
 - Stop-the-line authority (blocks direct Prisma calls)
 - Context helper patterns (withUserContext, withAdminContext)
 - Protected tables documentation
@@ -491,6 +500,7 @@ Key features:
 **`frontend-patterns/`** - Complete frontend development patterns
 
 Key features:
+
 - 489 lines of comprehensive patterns
 - Next.js, Clerk, shadcn/ui coverage
 - Accessibility checklist
@@ -501,6 +511,7 @@ Key features:
 **`safe-workflow/`** - SAFe development workflow enforcement
 
 Key features:
+
 - Branch naming conventions
 - Commit message format
 - Rebase-first workflow
@@ -538,4 +549,4 @@ If a skill is being replaced or removed:
 
 ---
 
-*This guide is part of the [REN SAFe Agentic Workflow](https://github.com/{{GITHUB_ORG}}/{{PROJECT_REPO}}) harness.*
+_This guide is part of the [REN SAFe Agentic Workflow](https://github.com/{{GITHUB_ORG}}/{{PROJECT_REPO}}) harness._

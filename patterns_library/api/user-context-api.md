@@ -209,11 +209,11 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
-    const payments = await withUserContext(prisma, userId, async (client) => {
+    const payments = await withUserContext(prisma, userId, async client => {
       return client.payments.findMany({
         where: { user_id: userId },
         orderBy: { created_at: "desc" },
@@ -226,7 +226,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching payments:", error);
     return NextResponse.json(
       { error: "Failed to fetch payments" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

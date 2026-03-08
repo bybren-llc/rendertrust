@@ -2,7 +2,8 @@
 
 ## What It Does
 
-Implements API rate limiting using a sliding window algorithm to protect endpoints from abuse, brute-force attacks, and resource exhaustion. Supports per-user limits (for authenticated requests), IP-based fallback (for unauthenticated requests), and configurable time windows. Provides both an in-memory implementation for single-instance deployments and a Redis-backed implementation for distributed environments.
+Implements API rate limiting using a sliding window algorithm to protect endpoints from abuse, brute-force attacks, and resource exhaustion.
+Supports per-user limits (for authenticated requests), IP-based fallback (for unauthenticated requests), and configurable time windows. Provides both an in-memory implementation for single-instance deployments and a Redis-backed implementation for distributed environments.
 
 ## When to Use
 

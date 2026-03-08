@@ -37,11 +37,11 @@ Invoke this skill when:
 
 ## Agent Teams vs Subagents vs Background Agents
 
-| Approach | Communication | Coordination | Best For |
-|----------|--------------|--------------|----------|
-| **Agent Teams** | DMs, broadcasts | Shared TaskList with dependencies | Complex multi-role SAFe workflows |
-| **Subagents** | Report back only | Main agent manages | Focused tasks, results only |
-| **Background Agents** | None | None | Fire-and-forget parallel work |
+| Approach              | Communication    | Coordination                      | Best For                          |
+| --------------------- | ---------------- | --------------------------------- | --------------------------------- |
+| **Agent Teams**       | DMs, broadcasts  | Shared TaskList with dependencies | Complex multi-role SAFe workflows |
+| **Subagents**         | Report back only | Main agent manages                | Focused tasks, results only       |
+| **Background Agents** | None             | None                              | Fire-and-forget parallel work     |
 
 **Use Agent Teams when**: teammates need to share findings, challenge each other, and coordinate via SAFe gates.
 **Use Subagents when**: you need quick, focused workers that report back.
@@ -151,6 +151,7 @@ spec before continuing."
 ```
 
 Only broadcast for:
+
 - Critical blocking issues
 - Architecture changes affecting everyone
 - Stop-the-line announcements
@@ -173,10 +174,12 @@ Validates teammates completed their work before going idle:
 ```json
 {
   "hooks": {
-    "TeammateIdle": [{
-      "command": "bash -c 'echo \"Verify all assigned tasks are completed before going idle\"'",
-      "description": "Validate teammate completed assigned work"
-    }]
+    "TeammateIdle": [
+      {
+        "command": "bash -c 'echo \"Verify all assigned tasks are completed before going idle\"'",
+        "description": "Validate teammate completed assigned work"
+      }
+    ]
   }
 }
 ```
@@ -190,10 +193,12 @@ Validates task output meets criteria before allowing completion:
 ```json
 {
   "hooks": {
-    "TaskCompleted": [{
-      "command": "bash -c 'echo \"Verify acceptance criteria met before marking complete\"'",
-      "description": "Validate task meets acceptance criteria"
-    }]
+    "TaskCompleted": [
+      {
+        "command": "bash -c 'echo \"Verify acceptance criteria met before marking complete\"'",
+        "description": "Validate task meets acceptance criteria"
+      }
+    ]
   }
 }
 ```
@@ -202,13 +207,14 @@ Exit code 2 prevents completion and sends feedback.
 
 ## Team Sizing Guidelines
 
-| Work Scope | Recommended Size | Tasks per Teammate |
-|-----------|-----------------|-------------------|
-| Single Story | 2-3 teammates | 3-4 tasks each |
-| Feature (multi-story) | 3-5 teammates | 5-6 tasks each |
-| Epic (parallel features) | 5-8 teammates | 5-6 tasks each |
+| Work Scope               | Recommended Size | Tasks per Teammate |
+| ------------------------ | ---------------- | ------------------ |
+| Single Story             | 2-3 teammates    | 3-4 tasks each     |
+| Feature (multi-story)    | 3-5 teammates    | 5-6 tasks each     |
+| Epic (parallel features) | 5-8 teammates    | 5-6 tasks each     |
 
 **Rules of thumb**:
+
 - Start with fewer teammates; scale up if needed
 - Each teammate should own different files (avoid conflicts)
 - 5-6 tasks per teammate keeps everyone productive

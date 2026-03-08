@@ -16,57 +16,57 @@ The command architecture and workflow methodology are the intellectual property 
 
 ### Workflow Commands (`/workflow:*`)
 
-| Command | Purpose |
-|---------|---------|
-| `/workflow:start-work` | Begin work on Linear ticket |
-| `/workflow:pre-pr` | Run validation before PR |
-| `/workflow:end-work` | Complete work session |
-| `/workflow:check-workflow` | Check workflow status |
-| `/workflow:update-docs` | Update documentation |
-| `/workflow:retro` | Session retrospective |
-| `/workflow:sync-linear` | Sync with Linear ticket |
-| `/workflow:quick-fix` | Fast-track small fixes |
+| Command                    | Purpose                     |
+| -------------------------- | --------------------------- |
+| `/workflow:start-work`     | Begin work on Linear ticket |
+| `/workflow:pre-pr`         | Run validation before PR    |
+| `/workflow:end-work`       | Complete work session       |
+| `/workflow:check-workflow` | Check workflow status       |
+| `/workflow:update-docs`    | Update documentation        |
+| `/workflow:retro`          | Session retrospective       |
+| `/workflow:sync-linear`    | Sync with Linear ticket     |
+| `/workflow:quick-fix`      | Fast-track small fixes      |
 
 ### Local Operations (`/local:*`)
 
-| Command | Purpose |
-|---------|---------|
-| `/local:sync` | Sync after git pull |
-| `/local:deploy` | Deploy locally |
+| Command         | Purpose             |
+| --------------- | ------------------- |
+| `/local:sync`   | Sync after git pull |
+| `/local:deploy` | Deploy locally      |
 
 ### Remote Operations (`/remote:*`)
 
-| Command | Purpose |
-|---------|---------|
-| `/remote:status` | Check remote Docker status |
-| `/remote:deploy` | Deploy to remote staging |
-| `/remote:health` | Remote health dashboard |
-| `/remote:logs` | View remote container logs |
+| Command            | Purpose                    |
+| ------------------ | -------------------------- |
+| `/remote:status`   | Check remote Docker status |
+| `/remote:deploy`   | Deploy to remote staging   |
+| `/remote:health`   | Remote health dashboard    |
+| `/remote:logs`     | View remote container logs |
 | `/remote:rollback` | Rollback remote deployment |
 
 ### Media Commands (`/media:*`)
 
-| Command | Purpose |
-|---------|---------|
-| `/media:analyze-images` | Analyze images using vision |
-| `/media:extract-pdf` | Extract structured data from PDFs |
-| `/media:sketch-to-code` | Generate code from UI sketches |
-| `/media:organize-files` | Organize files based on content |
-| `/media:transcribe-audio` | Transcribe audio to text/SRT/VTT |
-| `/media:analyze-audio` | Analyze audio content and mood |
+| Command                   | Purpose                                   |
+| ------------------------- | ----------------------------------------- |
+| `/media:analyze-images`   | Analyze images using vision               |
+| `/media:extract-pdf`      | Extract structured data from PDFs         |
+| `/media:sketch-to-code`   | Generate code from UI sketches            |
+| `/media:organize-files`   | Organize files based on content           |
+| `/media:transcribe-audio` | Transcribe audio to text/SRT/VTT          |
+| `/media:analyze-audio`    | Analyze audio content and mood            |
 | `/media:extract-dialogue` | Extract dialogue with speaker diarization |
-| `/media:analyze-video` | Analyze video scene by scene |
-| `/media:extract-frames` | Extract key frames with descriptions |
-| `/media:video-to-script` | Generate screenplay from video |
-| `/media:scene-detect` | Detect scene transitions |
+| `/media:analyze-video`    | Analyze video scene by scene              |
+| `/media:extract-frames`   | Extract key frames with descriptions      |
+| `/media:video-to-script`  | Generate screenplay from video            |
+| `/media:scene-detect`     | Detect scene transitions                  |
 
 ### Other Commands
 
-| Command | Purpose |
-|---------|---------|
+| Command           | Purpose                 |
+| ----------------- | ----------------------- |
 | `/test-pr-docker` | Test PR Docker workflow |
-| `/audit-deps` | Dependency audit |
-| `/search-pattern` | Search code patterns |
+| `/audit-deps`     | Dependency audit        |
+| `/search-pattern` | Search code patterns    |
 
 ## TOML Format
 
@@ -86,6 +86,7 @@ Use @{path} for file injection.
 ## Namespacing
 
 Commands in subdirectories become namespaced:
+
 - `workflow/start-work.toml` → `/workflow:start-work`
 - `media/analyze-images.toml` → `/media:analyze-images`
 

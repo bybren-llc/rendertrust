@@ -98,11 +98,11 @@ Create or update your project's `.claude/settings.local.json`:
 
 Search and replace in all copied files:
 
-| Find             | Replace With                       |
-| ---------------- | ---------------------------------- |
-| `REN-`           | Your ticket prefix (e.g., `PROJ-`) |
+| Find          | Replace With                       |
+| ------------- | ---------------------------------- |
+| `REN-`        | Your ticket prefix (e.g., `PROJ-`) |
 | `rendertrust` | Your project name                  |
-| `dev` branch     | Your main development branch       |
+| `dev` branch  | Your main development branch       |
 
 ### Update Linear Workspace
 
@@ -215,14 +215,14 @@ After setup, your `.claude/` directory should look like:
 
 ## Quick Command Reference
 
-| Command                           | Purpose                       |
-| --------------------------------- | ----------------------------- |
+| Command               | Purpose                       |
+| --------------------- | ----------------------------- |
 | `/start-work REN-123` | Begin work on a ticket        |
-| `/check-workflow`                 | Check current workflow status |
-| `/pre-pr`                         | Run validation before PR      |
-| `/end-work`                       | Complete work session         |
-| `/local-sync`                     | Sync after git pull           |
-| `/remote-status`                  | Check remote Docker status    |
+| `/check-workflow`     | Check current workflow status |
+| `/pre-pr`             | Run validation before PR      |
+| `/end-work`           | Complete work session         |
+| `/local-sync`         | Sync after git pull           |
+| `/remote-status`      | Check remote Docker status    |
 
 ---
 

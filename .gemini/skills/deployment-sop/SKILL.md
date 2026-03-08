@@ -116,9 +116,9 @@ If deployment fails:
 
 ## Branch → Environment Mapping
 
-| Branch   | Environment | Auto-Deploy |
-| -------- | ----------- | ----------- |
-| `dev`    | Staging     | Manual pull |
-| `main`   | Production  | Automatic   |
+| Branch | Environment | Auto-Deploy |
+| ------ | ----------- | ----------- |
+| `dev`  | Staging     | Manual pull |
+| `main` | Production  | Automatic   |
 
 **Note**: Merging to `dev` builds Docker image but requires manual pull on staging server.

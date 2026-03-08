@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Write new unit or integration tests
 - Set up test fixtures with RLS
 - Run test suites
@@ -29,12 +30,12 @@ Guides consistent and effective testing using Jest for unit/integration tests an
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| test | jest |
-| playwright | coverage |
-| unit test | integration |
-| fixture | mock |
+| Primary    | Secondary   |
+| ---------- | ----------- |
+| test       | jest        |
+| playwright | coverage    |
+| unit test  | integration |
+| fixture    | mock        |
 
 ## Related Skills
 
@@ -43,11 +44,11 @@ Guides consistent and effective testing using Jest for unit/integration tests an
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

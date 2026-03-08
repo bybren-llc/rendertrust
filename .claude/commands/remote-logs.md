@@ -291,8 +291,8 @@ Dev mode:
 
 ## Customization Guide
 
-| Placeholder                 | Description                     | Example                     |
-| --------------------------- | ------------------------------- | --------------------------- |
+| Placeholder                   | Description                     | Example                     |
+| ----------------------------- | ------------------------------- | --------------------------- |
 | `{{SSH_KEY_PATH}}`            | Path to SSH private key         | `~/.ssh/id_ed25519_staging` |
 | `{{REMOTE_USER}}`             | Username on remote host         | `deploy`                    |
 | `{{REMOTE_HOST}}`             | Remote server hostname/IP       | `staging.example.com`       |

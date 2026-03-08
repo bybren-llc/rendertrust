@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Write any Prisma database query
 - Create or modify API routes that access the database
 - Implement webhook handlers
@@ -29,12 +30,12 @@ Enforces Row Level Security (RLS) patterns for all database operations. Ensures 
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| database | prisma |
-| query | RLS |
-| user data | context |
-| findMany | findUnique |
+| Primary   | Secondary  |
+| --------- | ---------- |
+| database  | prisma     |
+| query     | RLS        |
+| user data | context    |
+| findMany  | findUnique |
 
 ## Related Skills
 
@@ -44,11 +45,11 @@ Enforces Row Level Security (RLS) patterns for all database operations. Ensures 
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

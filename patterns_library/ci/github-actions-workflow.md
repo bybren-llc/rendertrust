@@ -2,7 +2,8 @@
 
 ## What It Does
 
-Defines a standard continuous integration workflow for GitHub Actions that enforces code quality gates before any pull request can be merged. Includes lint, type-check, unit test, integration test, and build stages with matrix testing for multiple runtime versions, dependency caching for fast execution, and artifact upload for build outputs and test reports.
+Defines a standard continuous integration workflow for GitHub Actions that enforces code quality gates before any pull request can be merged.
+Includes lint, type-check, unit test, integration test, and build stages with matrix testing for multiple runtime versions, dependency caching for fast execution, and artifact upload for build outputs and test reports.
 
 ## When to Use
 

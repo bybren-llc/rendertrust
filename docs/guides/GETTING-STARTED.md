@@ -71,14 +71,14 @@ tokens automatically.
 
 Replace placeholders across the repository. The essential ones:
 
-| Placeholder | What It Is | Example |
-|-------------|-----------|---------|
-| `RenderTrust` | Your project name | `my-saas-app` |
-| `{{GITHUB_ORG}}` | GitHub org or username | `acme-corp` |
-| `REN` | Linear/issue prefix | `ACM` |
-| `{{MAIN_BRANCH}}` | Main branch name | `main` |
-| `J. Scott Graham` | Your name | `Jane Smith` |
-| `{{AUTHOR_HANDLE}}` | GitHub handle | `janesmith` |
+| Placeholder         | What It Is             | Example       |
+| ------------------- | ---------------------- | ------------- |
+| `RenderTrust`       | Your project name      | `my-saas-app` |
+| `{{GITHUB_ORG}}`    | GitHub org or username | `acme-corp`   |
+| `REN`               | Linear/issue prefix    | `ACM`         |
+| `{{MAIN_BRANCH}}`   | Main branch name       | `main`        |
+| `J. Scott Graham`   | Your name              | `Jane Smith`  |
+| `{{AUTHOR_HANDLE}}` | GitHub handle          | `janesmith`   |
 
 See [TEMPLATE_SETUP.md](../../TEMPLATE_SETUP.md) for the full placeholder
 reference (50+ tokens).
@@ -137,6 +137,7 @@ claude
 ```
 
 The TDM agent will:
+
 1. Read the Linear ticket
 2. Identify which agents are needed
 3. Guide you through the SAFe workflow
@@ -159,12 +160,12 @@ Implement the API endpoint for REN-1.
 
 ### Key Workflow Commands
 
-| Command | Purpose |
-|---------|---------|
-| `/start-work TICKET` | Begin work on a ticket |
-| `/check-workflow` | Check current workflow state |
-| `/pre-pr` | Run all validations before PR |
-| `/end-work` | Complete work session |
+| Command              | Purpose                       |
+| -------------------- | ----------------------------- |
+| `/start-work TICKET` | Begin work on a ticket        |
+| `/check-workflow`    | Check current workflow state  |
+| `/pre-pr`            | Run all validations before PR |
+| `/end-work`          | Complete work session         |
 
 ---
 
@@ -211,6 +212,7 @@ gh pr create \
 ### Review Pipeline
 
 Your PR goes through the three-stage review:
+
 1. **System Architect** — Pattern and architectural compliance
 2. **ARCHitect-in-CLI** — Comprehensive architecture review
 3. **HITL** — Final human merge authority
@@ -231,7 +233,7 @@ For parallel multi-agent work on larger features:
 }
 ```
 
-2. **Start a team session**:
+1. **Start a team session**:
 
 ```
 Create an agent team for REN-5. I need:
@@ -282,24 +284,24 @@ See [dark-factory/README.md](../../dark-factory/README.md) for the full guide.
 
 ### Essential Reading
 
-| Doc | When to Read |
-|-----|-------------|
-| [CONTRIBUTING.md](../../CONTRIBUTING.md) | Before your first commit |
-| [AGENTS.md](../../AGENTS.md) | To understand all 11 agent roles |
-| [CLAUDE.md](../../CLAUDE.md) | Your project's AI assistant context |
-| [Day 1 Checklist](../onboarding/DAY-1-CHECKLIST.md) | Structured first-day walkthrough |
+| Doc                                                 | When to Read                        |
+| --------------------------------------------------- | ----------------------------------- |
+| [CONTRIBUTING.md](../../CONTRIBUTING.md)            | Before your first commit            |
+| [AGENTS.md](../../AGENTS.md)                        | To understand all 11 agent roles    |
+| [CLAUDE.md](../../CLAUDE.md)                        | Your project's AI assistant context |
+| [Day 1 Checklist](../onboarding/DAY-1-CHECKLIST.md) | Structured first-day walkthrough    |
 
 ### Deep Dives
 
-| Doc | Topic |
-|-----|-------|
-| [Skill Authoring Guide](SKILL_AUTHORING_GUIDE.md) | Creating custom skills |
-| [Gemini CLI Guide](GEMINI_CLI_AUTHORING_GUIDE.md) | Using Gemini CLI harness |
-| [Round Table Philosophy](ROUND-TABLE-PHILOSOPHY.md) | Collaboration principles |
-| [Agent Teams Guide](../onboarding/AGENT-TEAMS-GUIDE.md) | Multi-agent orchestration |
-| [Dark Factory Guide](../../dark-factory/docs/DARK-FACTORY-GUIDE.md) | Persistent agent sessions |
-| [Harness Sync Guide](../HARNESS_SYNC_GUIDE.md) | Keeping harness up to date |
-| [Optional Features](OPTIONAL-FEATURES.md) | Removing unneeded integrations |
+| Doc                                                                 | Topic                          |
+| ------------------------------------------------------------------- | ------------------------------ |
+| [Skill Authoring Guide](SKILL_AUTHORING_GUIDE.md)                   | Creating custom skills         |
+| [Gemini CLI Guide](GEMINI_CLI_AUTHORING_GUIDE.md)                   | Using Gemini CLI harness       |
+| [Round Table Philosophy](ROUND-TABLE-PHILOSOPHY.md)                 | Collaboration principles       |
+| [Agent Teams Guide](../onboarding/AGENT-TEAMS-GUIDE.md)             | Multi-agent orchestration      |
+| [Dark Factory Guide](../../dark-factory/docs/DARK-FACTORY-GUIDE.md) | Persistent agent sessions      |
+| [Harness Sync Guide](../HARNESS_SYNC_GUIDE.md)                      | Keeping harness up to date     |
+| [Optional Features](OPTIONAL-FEATURES.md)                           | Removing unneeded integrations |
 
 ### Workflow Reference
 

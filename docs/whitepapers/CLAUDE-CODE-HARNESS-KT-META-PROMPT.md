@@ -299,15 +299,15 @@ Location: docs/sop/, docs/workflow/, docs/ci-cd/, docs/database/
 
 ### What's REN-Specific (Must Replace)
 
-| Component        | REN Value                    | Replace With                       |
-| ---------------- | ----------------------------- | ---------------------------------- |
-| Ticket prefix    | `REN-`                        | `REN-` or parameterize |
-| Branch pattern   | `REN-{number}-{desc}`         | `{{PREFIX}}-{number}-{desc}`         |
-| Team name        | `REN`                        | `RenderTrust`                   |
-| Slack channels   | `#github-feed`                | `{{SLACK_CHANNEL}}`                  |
-| Linear workspace | REN workspace                | Generic Linear setup               |
-| Docker registry  | `{{CONTAINER_REGISTRY}}/{{LINEAR_WORKSPACE}}-app` | `{{REGISTRY}}/{{PROJECT}}`             |
-| Database         | `{{DB_NAME}}`, `{{DB_USER}}`       | `{{PROJECT}}_dev`, `{{PROJECT}}_user`  |
+| Component        | REN Value                                         | Replace With                          |
+| ---------------- | ------------------------------------------------- | ------------------------------------- |
+| Ticket prefix    | `REN-`                                            | `REN-` or parameterize                |
+| Branch pattern   | `REN-{number}-{desc}`                             | `{{PREFIX}}-{number}-{desc}`          |
+| Team name        | `REN`                                             | `RenderTrust`                         |
+| Slack channels   | `#github-feed`                                    | `{{SLACK_CHANNEL}}`                   |
+| Linear workspace | REN workspace                                     | Generic Linear setup                  |
+| Docker registry  | `{{CONTAINER_REGISTRY}}/{{LINEAR_WORKSPACE}}-app` | `{{REGISTRY}}/{{PROJECT}}`            |
+| Database         | `{{DB_NAME}}`, `{{DB_USER}}`                      | `{{PROJECT}}_dev`, `{{PROJECT}}_user` |
 
 ### What's Generalizable (Copy As-Is)
 

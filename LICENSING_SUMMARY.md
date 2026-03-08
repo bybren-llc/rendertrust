@@ -53,17 +53,17 @@
 
 ## Directory License Mapping
 
-| Directory | License |
-|-----------|---------|
-| `sdk/` | MIT |
-| `loadtest/` | MIT |
-| `ci/` | MIT |
-| `docs/` | MIT |
-| `diagrams/` | MIT |
-| `core/` | Apache 2.0 |
-| `edgekit/relay/` | Apache 2.0 |
-| `sdk/mcp/` | Apache 2.0 |
-| `rollup_anchor/paymaster/` | Enterprise |
+| Directory                        | License    |
+| -------------------------------- | ---------- |
+| `sdk/`                           | MIT        |
+| `loadtest/`                      | MIT        |
+| `ci/`                            | MIT        |
+| `docs/`                          | MIT        |
+| `diagrams/`                      | MIT        |
+| `core/`                          | Apache 2.0 |
+| `edgekit/relay/`                 | Apache 2.0 |
+| `sdk/mcp/`                       | Apache 2.0 |
+| `rollup_anchor/paymaster/`       | Enterprise |
 | `edgekit/workers/premium_voice/` | Enterprise |
-| `edgekit/workers/studio_llm/` | Enterprise |
-| `core/gateway/web/enterprise/` | Enterprise |
+| `edgekit/workers/studio_llm/`    | Enterprise |
+| `core/gateway/web/enterprise/`   | Enterprise |

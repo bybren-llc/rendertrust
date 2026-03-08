@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Create new Linear issues
 - Update ticket status
 - Attach evidence to tickets
@@ -30,12 +31,12 @@ Guides consistent Linear ticket management with evidence templates for the manda
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| ticket | Linear |
-| evidence | status |
-| issue | acceptance criteria |
-| UUID | swimlane |
+| Primary  | Secondary           |
+| -------- | ------------------- |
+| ticket   | Linear              |
+| evidence | status              |
+| issue    | acceptance criteria |
+| UUID     | swimlane            |
 
 ## Related Skills
 
@@ -44,11 +45,11 @@ Guides consistent Linear ticket management with evidence templates for the manda
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

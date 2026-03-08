@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Create pull requests
 - Run pre-PR validation (`yarn ci:validate`)
 - Check CI/CD status
@@ -29,11 +30,11 @@ Ensures consistent PR creation with proper ticket references, validates CI/CD pi
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| release | merge |
-| CI | CD |
-| deploy | pipeline |
+| Primary   | Secondary   |
+| --------- | ----------- |
+| release   | merge       |
+| CI        | CD          |
+| deploy    | pipeline    |
 | PR create | ci:validate |
 
 ## Related Skills
@@ -43,11 +44,11 @@ Ensures consistent PR creation with proper ticket references, validates CI/CD pi
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Create Architecture Decision Records (ADRs)
 - Write operational runbooks
 - Document system architecture
@@ -30,12 +31,12 @@ Provides standardized templates for creating technical documentation. Ensures co
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| documentation | ADR |
-| runbook | architecture |
-| Confluence | KT document |
-| technical spec | template |
+| Primary        | Secondary    |
+| -------------- | ------------ |
+| documentation  | ADR          |
+| runbook        | architecture |
+| Confluence     | KT document  |
+| technical spec | template     |
 
 ## Related Skills
 
@@ -43,11 +44,11 @@ Provides standardized templates for creating technical documentation. Ensures co
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

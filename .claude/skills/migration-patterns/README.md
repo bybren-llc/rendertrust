@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Create database migrations
 - Add new tables (all tables need RLS)
 - Update Prisma schema
@@ -29,11 +30,11 @@ Guides database migration creation with mandatory RLS policies following securit
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| migration | schema |
-| database | prisma |
-| table | GRANT |
+| Primary    | Secondary      |
+| ---------- | -------------- |
+| migration  | schema         |
+| database   | prisma         |
+| table      | GRANT          |
 | RLS policy | data migration |
 
 ## Related Skills
@@ -43,11 +44,11 @@ Guides database migration creation with mandatory RLS policies following securit
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

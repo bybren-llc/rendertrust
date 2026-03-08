@@ -5,12 +5,14 @@ This directory contains the configuration for [Gemini CLI](https://geminicli.com
 ## Quick Start
 
 1. **Install Gemini CLI**
+
    ```bash
    # See https://geminicli.com/docs/get-started/installation/
    npm install -g @google/gemini-cli
    ```
 
 2. **Authenticate**
+
    ```bash
    # Option 1: API Key (recommended for quick start)
    export GEMINI_API_KEY="your-api-key"
@@ -18,6 +20,7 @@ This directory contains the configuration for [Gemini CLI](https://geminicli.com
    # Option 2: Google Cloud ADC (for GCP users)
    gcloud auth application-default login
    ```
+
    See https://geminicli.com/docs/get-started/authentication/ for details.
 
 3. **Run Gemini in your project**
@@ -67,25 +70,25 @@ gemini /skills
 
 ### Included Skills (17)
 
-| Skill | Description |
-|-------|-------------|
-| `safe-workflow` | SAFe development workflow, branch naming, commits |
-| `pattern-discovery` | Pattern library discovery |
-| `rls-patterns` | Row Level Security patterns |
-| `api-patterns` | API route implementation |
-| `frontend-patterns` | Next.js, shadcn/ui patterns |
-| `testing-patterns` | Jest and Playwright testing |
-| `security-audit` | Security validation, OWASP |
-| `linear-sop` | Linear ticket management |
-| `migration-patterns` | Database migrations with RLS |
-| `deployment-sop` | Deployment workflows |
-| `orchestration-patterns` | Multi-step task orchestration |
-| `agent-coordination` | Agent assignment matrix |
-| `spec-creation` | Spec creation templates |
-| `release-patterns` | PR and release coordination |
-| `git-advanced` | Rebase, bisect, cherry-pick |
-| `stripe-patterns` | Payment integration |
-| `confluence-docs` | ADRs, runbooks, architecture docs |
+| Skill                    | Description                                       |
+| ------------------------ | ------------------------------------------------- |
+| `safe-workflow`          | SAFe development workflow, branch naming, commits |
+| `pattern-discovery`      | Pattern library discovery                         |
+| `rls-patterns`           | Row Level Security patterns                       |
+| `api-patterns`           | API route implementation                          |
+| `frontend-patterns`      | Next.js, shadcn/ui patterns                       |
+| `testing-patterns`       | Jest and Playwright testing                       |
+| `security-audit`         | Security validation, OWASP                        |
+| `linear-sop`             | Linear ticket management                          |
+| `migration-patterns`     | Database migrations with RLS                      |
+| `deployment-sop`         | Deployment workflows                              |
+| `orchestration-patterns` | Multi-step task orchestration                     |
+| `agent-coordination`     | Agent assignment matrix                           |
+| `spec-creation`          | Spec creation templates                           |
+| `release-patterns`       | PR and release coordination                       |
+| `git-advanced`           | Rebase, bisect, cherry-pick                       |
+| `stripe-patterns`        | Payment integration                               |
+| `confluence-docs`        | ADRs, runbooks, architecture docs                 |
 
 ## Commands
 
@@ -98,6 +101,7 @@ gemini /help
 ### Command Namespaces
 
 **Workflow** (`/workflow:*`):
+
 - `start-work [ticket]` - Start work on Linear ticket
 - `pre-pr` - Pre-PR validation checklist
 - `end-work` - Complete work session
@@ -108,10 +112,12 @@ gemini /help
 - `retro` - Conduct retrospective
 
 **Local** (`/local:*`):
+
 - `sync` - Sync local dev environment
 - `deploy` - Deploy Docker image locally
 
 **Remote** (`/remote:*`):
+
 - `status` - Check if update needed
 - `deploy` - Deploy to remote staging
 - `health` - Health dashboard
@@ -119,11 +125,13 @@ gemini /help
 - `rollback [sha]` - Rollback to previous version
 
 **Root** (`/*`):
+
 - `test-pr-docker [PR]` - Test PR Docker workflow
 - `audit-deps` - Dependency audit
 - `search-pattern <pattern>` - Search codebase
 
 **Media** (`/media:*`) - Multimodal Commands:
+
 - `analyze-images <dir>` - Analyze and describe images using vision
 - `extract-pdf <file>` - Extract structured data from PDFs
 - `sketch-to-code <image>` - Generate code from UI sketches/wireframes
@@ -142,12 +150,12 @@ Gemini CLI supports multimodal input for images, audio, and documents.
 
 ### Supported Formats
 
-| Category | Formats | Max Size |
-|----------|---------|----------|
-| **Images** | PNG, JPG, GIF, WEBP, SVG, BMP | 100MB (Gemini 3) |
-| **Audio** | MP3, WAV, AIFF, AAC, OGG, FLAC | 100MB (Gemini 3) |
-| **Video** | MP4, MOV, AVI, MKV, WEBM, FLV | 100MB (Gemini 3) |
-| **Documents** | PDF | 100MB (Gemini 3) |
+| Category      | Formats                        | Max Size         |
+| ------------- | ------------------------------ | ---------------- |
+| **Images**    | PNG, JPG, GIF, WEBP, SVG, BMP  | 100MB (Gemini 3) |
+| **Audio**     | MP3, WAV, AIFF, AAC, OGG, FLAC | 100MB (Gemini 3) |
+| **Video**     | MP4, MOV, AVI, MKV, WEBM, FLV  | 100MB (Gemini 3) |
+| **Documents** | PDF                            | 100MB (Gemini 3) |
 
 ### Using Multimodal in Commands
 
@@ -262,12 +270,12 @@ Use @{file} for file injection.
 
 Gemini CLI includes built-in tools (no configuration required):
 
-| Tool Category | Capabilities |
-|---------------|--------------|
+| Tool Category       | Capabilities                                |
+| ------------------- | ------------------------------------------- |
 | **File operations** | Read, write, search, edit, list directories |
-| **Shell execution** | Run arbitrary commands |
-| **Web interaction** | Fetch URLs, web search |
-| **Memory** | AI memory system for context persistence |
+| **Shell execution** | Run arbitrary commands                      |
+| **Web interaction** | Fetch URLs, web search                      |
+| **Memory**          | AI memory system for context persistence    |
 
 These are accessed automatically through commands using `!{command}` and `@{file}` syntax.
 
@@ -290,19 +298,19 @@ Add to your `settings.json`:
 
 ### Hook Events
 
-| Event | Trigger Point | Use Cases |
-|-------|---------------|-----------|
-| `SessionStart` | Session begins | Initialize resources, load context |
-| `SessionEnd` | Session ends | Clean up, save state |
-| `BeforeAgent` | After prompt, before planning | Add context, validate input |
-| `AfterAgent` | Agent loop completes | Review output, force continuation |
-| `BeforeModel` | Before LLM request | Modify prompts, add instructions |
-| `AfterModel` | After LLM response | Filter responses, log interactions |
-| `BeforeToolSelection` | Before tool filtering | Restrict available tools |
-| `BeforeTool` | Before tool execution | Validate arguments, block operations |
-| `AfterTool` | After tool execution | Process results, run tests |
-| `PreCompress` | Before context compression | Save state, notify user |
-| `Notification` | Permission events occur | Auto-approve decisions |
+| Event                 | Trigger Point                 | Use Cases                            |
+| --------------------- | ----------------------------- | ------------------------------------ |
+| `SessionStart`        | Session begins                | Initialize resources, load context   |
+| `SessionEnd`          | Session ends                  | Clean up, save state                 |
+| `BeforeAgent`         | After prompt, before planning | Add context, validate input          |
+| `AfterAgent`          | Agent loop completes          | Review output, force continuation    |
+| `BeforeModel`         | Before LLM request            | Modify prompts, add instructions     |
+| `AfterModel`          | After LLM response            | Filter responses, log interactions   |
+| `BeforeToolSelection` | Before tool filtering         | Restrict available tools             |
+| `BeforeTool`          | Before tool execution         | Validate arguments, block operations |
+| `AfterTool`           | After tool execution          | Process results, run tests           |
+| `PreCompress`         | Before context compression    | Save state, notify user              |
+| `Notification`        | Permission events occur       | Auto-approve decisions               |
 
 ### Migrating from Claude Code
 
@@ -418,12 +426,12 @@ Extensions bundle skills, MCP servers, commands, and tool restrictions into inst
 
 ### Extensions vs Skills
 
-| Aspect | Skills | Extensions |
-|--------|--------|------------|
-| Scope | Single knowledge domain | Bundled package of skills, MCP servers, commands |
-| Installation | Manual file creation | `gemini extensions install` |
-| Configuration | `SKILL.md` frontmatter | `settings.json` extensions section |
-| Distribution | Copy files | Package registry |
+| Aspect        | Skills                  | Extensions                                       |
+| ------------- | ----------------------- | ------------------------------------------------ |
+| Scope         | Single knowledge domain | Bundled package of skills, MCP servers, commands |
+| Installation  | Manual file creation    | `gemini extensions install`                      |
+| Configuration | `SKILL.md` frontmatter  | `settings.json` extensions section               |
+| Distribution  | Copy files              | Package registry                                 |
 
 ### Management
 
@@ -518,20 +526,21 @@ Gemini CLI provides native integration with Google services through OAuth authen
 
 ### Available Services
 
-| Service | Capabilities |
-|---------|-------------|
-| **Google Drive** | List files, read/write documents, search, share |
-| **Google Docs** | Create, edit, format documents |
-| **Google Sheets** | Read/write spreadsheets, formulas, charts |
+| Service             | Capabilities                                      |
+| ------------------- | ------------------------------------------------- |
+| **Google Drive**    | List files, read/write documents, search, share   |
+| **Google Docs**     | Create, edit, format documents                    |
+| **Google Sheets**   | Read/write spreadsheets, formulas, charts         |
 | **Google Calendar** | Create events, check availability, manage invites |
-| **Gmail** | Read, search, compose, send emails |
-| **Google Tasks** | Create, list, complete tasks |
-| **YouTube** | Search videos, get transcripts, analyze content |
-| **Google Maps** | Geocoding, directions, place information |
+| **Gmail**           | Read, search, compose, send emails                |
+| **Google Tasks**    | Create, list, complete tasks                      |
+| **YouTube**         | Search videos, get transcripts, analyze content   |
+| **Google Maps**     | Geocoding, directions, place information          |
 
 ### Enabling Google Services
 
 1. **Authenticate with Google Cloud**
+
    ```bash
    gcloud auth application-default login
    ```
@@ -584,19 +593,19 @@ See [Google Cloud Authentication](https://cloud.google.com/docs/authentication) 
 
 This `.gemini/` directory works alongside `.claude/` for teams using both tools:
 
-| Feature | Claude Code | Gemini CLI |
-|---------|-------------|------------|
-| Skills | `.claude/skills/SKILL.md` | `.gemini/skills/SKILL.md` |
-| Commands | `.claude/commands/*.md` (YAML) | `.gemini/commands/*.toml` (TOML) |
-| Agents | `.claude/agents/` | Skills (no discrete agents) |
-| Hooks | `.claude/hooks-config.json` | `settings.json` hooks section |
-| MCP Servers | `settings.local.json` | `settings.json` mcpServers |
-| System Instructions | `CLAUDE.md` | `GEMINI.md` |
-| Plan Mode | N/A | `/plan` command, plan-then-execute |
-| Policy Engine | N/A | YAML policies, seatbelt profiles |
-| Browser Agent | MCP (claude-in-chrome) | Built-in experimental agent |
-| Extensions | N/A | Bundled skill/MCP/command packages |
-| Checkpointing | N/A | `/restore` session recovery |
+| Feature             | Claude Code                    | Gemini CLI                         |
+| ------------------- | ------------------------------ | ---------------------------------- |
+| Skills              | `.claude/skills/SKILL.md`      | `.gemini/skills/SKILL.md`          |
+| Commands            | `.claude/commands/*.md` (YAML) | `.gemini/commands/*.toml` (TOML)   |
+| Agents              | `.claude/agents/`              | Skills (no discrete agents)        |
+| Hooks               | `.claude/hooks-config.json`    | `settings.json` hooks section      |
+| MCP Servers         | `settings.local.json`          | `settings.json` mcpServers         |
+| System Instructions | `CLAUDE.md`                    | `GEMINI.md`                        |
+| Plan Mode           | N/A                            | `/plan` command, plan-then-execute |
+| Policy Engine       | N/A                            | YAML policies, seatbelt profiles   |
+| Browser Agent       | MCP (claude-in-chrome)         | Built-in experimental agent        |
+| Extensions          | N/A                            | Bundled skill/MCP/command packages |
+| Checkpointing       | N/A                            | `/restore` session recovery        |
 
 Both tools can coexist in the same repository.
 

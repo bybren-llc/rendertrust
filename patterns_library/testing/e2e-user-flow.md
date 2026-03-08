@@ -63,7 +63,7 @@ test.describe("{Feature} Workflow", () => {
 
     // Step 5: Verify success
     await expect(
-      page.locator("text={Feature} created successfully"),
+      page.locator("text={Feature} created successfully")
     ).toBeVisible();
 
     // Step 6: Verify item appears in list
@@ -92,7 +92,7 @@ test.describe("{Feature} Workflow", () => {
     await page.click("text=Delete");
 
     // Confirm deletion
-    page.on("dialog", (dialog) => dialog.accept());
+    page.on("dialog", dialog => dialog.accept());
     await page.click('button:has-text("Delete")');
 
     // Verify item removed

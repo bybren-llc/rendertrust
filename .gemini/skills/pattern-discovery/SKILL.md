@@ -41,16 +41,16 @@ See `patterns_library/README.md` for the complete index.
 
 ## Pattern Matching Guide
 
-| If you need to...                  | Use this pattern                  |
-| ---------------------------------- | --------------------------------- |
-| Create authenticated API endpoint  | `api/user-context-api.md`         |
-| Create admin-only API endpoint     | `api/admin-context-api.md`        |
-| Handle external webhooks           | `api/webhook-handler.md`          |
-| Validate API input with Zod        | `api/zod-validation-api.md`       |
-| Create protected page              | `ui/authenticated-page.md`        |
-| Build form with validation         | `ui/form-with-validation.md`      |
-| Add new table with RLS             | `database/rls-migration.md`       |
-| Test API endpoints                 | `testing/api-integration-test.md` |
+| If you need to...                 | Use this pattern                  |
+| --------------------------------- | --------------------------------- |
+| Create authenticated API endpoint | `api/user-context-api.md`         |
+| Create admin-only API endpoint    | `api/admin-context-api.md`        |
+| Handle external webhooks          | `api/webhook-handler.md`          |
+| Validate API input with Zod       | `api/zod-validation-api.md`       |
+| Create protected page             | `ui/authenticated-page.md`        |
+| Build form with validation        | `ui/form-with-validation.md`      |
+| Add new table with RLS            | `database/rls-migration.md`       |
+| Test API endpoints                | `testing/api-integration-test.md` |
 
 ## Reference
 

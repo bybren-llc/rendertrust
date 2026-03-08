@@ -60,7 +60,7 @@ which claude-code
 claude-code --version
 ```
 
-If not installed, visit: https://docs.anthropic.com/claude/docs/claude-code
+If not installed, visit: <https://docs.anthropic.com/claude/docs/claude-code>
 
 **Step 2: Clone the Repository**
 
@@ -110,7 +110,7 @@ Expected output:
 which augment
 ```
 
-If not installed, visit: https://www.augmentcode.com/
+If not installed, visit: <https://www.augmentcode.com/>
 
 **Step 2: Clone the Repository**
 

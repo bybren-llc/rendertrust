@@ -15,7 +15,7 @@ Welcome to RenderTrust! This guide covers everything you need to know to contrib
 - [Branch Naming Conventions](#branch-naming-conventions)
 - [Commit Message Guidelines](#commit-message-guidelines)
 - [Workflow Process](#workflow-process)
-- [Pull Request Process](#pull-request-process)
+- [Create Pull Request](#5-create-pull-request)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Local Development](#local-development)
 - [Troubleshooting](#troubleshooting)
@@ -76,6 +76,7 @@ RenderTrust uses a **multi-license model**. When contributing new code, follow t
 ### MIT License
 
 Apply the MIT License to code in these directories:
+
 - `sdk/` (except `sdk/mcp/`)
 - `loadtest/`
 - `ci/`
@@ -92,6 +93,7 @@ Add the following header to your source files:
 ### Apache License 2.0
 
 Apply the Apache License 2.0 to code in these directories:
+
 - `core/`
 - `edgekit/relay/`
 - `sdk/mcp/`
@@ -117,6 +119,7 @@ Add the following header to your source files:
 ### Enterprise License
 
 The following directories contain proprietary code and are subject to the Enterprise License:
+
 - `rollup_anchor/paymaster/`
 - `edgekit/workers/premium_voice/`
 - `edgekit/workers/studio_llm/`
@@ -437,7 +440,7 @@ git push --force-with-lease origin your-branch
 
 ## Questions?
 
-If you have any questions about contributing or licensing, please contact us at contributors@rendertrust.com.
+If you have any questions about contributing or licensing, please contact us at <contributors@rendertrust.com>.
 
 ---
 

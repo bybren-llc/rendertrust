@@ -21,6 +21,7 @@ SAFe® is a registered trademark of Scaled Agile, Inc.
 ## Quick Start
 
 This skill activates automatically when you mention:
+
 - Branch naming, commits, PRs
 - Linear tickets
 - Contributing guidelines
@@ -31,9 +32,9 @@ Enforces SAFe-compliant development workflow with proper branch naming, standard
 
 ## Provider Compatibility
 
-| Provider | Status |
-|----------|--------|
-| Gemini CLI | ✅ Native |
+| Provider    | Status                                   |
+| ----------- | ---------------------------------------- |
+| Gemini CLI  | ✅ Native                                |
 | Claude Code | ✅ Equivalent skill in `.claude/skills/` |
 
 ## Related Skills
@@ -43,11 +44,11 @@ Enforces SAFe-compliant development workflow with proper branch naming, standard
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-14 |
+| Field           | Value               |
+| --------------- | ------------------- |
+| Last Updated    | 2026-01-14          |
 | Harness Version | {{HARNESS_VERSION}} |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

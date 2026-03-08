@@ -118,6 +118,6 @@ This validates the entire PR Docker workflow before relying on it for future PRs
 
 To adapt this command for your infrastructure, replace these placeholders:
 
-| Placeholder       | Description               | Example               |
-| ----------------- | ------------------------- | --------------------- |
-| `REN` | Your Linear ticket prefix | `WOR`, `PROJ`, `TASK` |
+| Placeholder | Description               | Example               |
+| ----------- | ------------------------- | --------------------- |
+| `REN`       | Your Linear ticket prefix | `WOR`, `PROJ`, `TASK` |

@@ -215,26 +215,26 @@ type(scope): description [REN-XXX]
 
 **Types**:
 
-| Type       | When to Use                               |
-| ---------- | ----------------------------------------- |
-| `feat`     | New feature or capability                 |
-| `fix`      | Bug fix                                   |
-| `refactor` | Code restructuring (no behavior change)   |
-| `test`     | Adding or updating tests                  |
-| `docs`     | Documentation changes                     |
-| `style`    | Code formatting (no logic change)         |
-| `chore`    | Maintenance, dependency updates           |
-| `ci`       | CI/CD pipeline changes                    |
+| Type       | When to Use                             |
+| ---------- | --------------------------------------- |
+| `feat`     | New feature or capability               |
+| `fix`      | Bug fix                                 |
+| `refactor` | Code restructuring (no behavior change) |
+| `test`     | Adding or updating tests                |
+| `docs`     | Documentation changes                   |
+| `style`    | Code formatting (no logic change)       |
+| `chore`    | Maintenance, dependency updates         |
+| `ci`       | CI/CD pipeline changes                  |
 
 **Scopes** (use the area you are changing):
 
-| Scope      | Area                    |
-| ---------- | ----------------------- |
-| `api`      | API routes and backend  |
-| `ui`       | User interface          |
-| `auth`     | Authentication          |
-| `payments` | Payment features        |
-| `db`       | Database changes        |
+| Scope      | Area                   |
+| ---------- | ---------------------- |
+| `api`      | API routes and backend |
+| `ui`       | User interface         |
+| `auth`     | Authentication         |
+| `payments` | Payment features       |
+| `db`       | Database changes       |
 
 **Examples**:
 

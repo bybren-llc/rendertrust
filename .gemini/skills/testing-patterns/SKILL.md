@@ -26,14 +26,16 @@ const user = await prisma.user.findUnique({ where: { user_id } });
 
 // Shared test state causes flaky tests
 let sharedUser: User;
-beforeAll(() => { sharedUser = createUser(); });
+beforeAll(() => {
+  sharedUser = createUser();
+});
 ```
 
 ### ✅ CORRECT
 
 ```typescript
 // Use RLS context helpers
-const user = await withSystemContext(prisma, "test", async (client) => {
+const user = await withSystemContext(prisma, "test", async client => {
   return client.user.findUnique({ where: { user_id } });
 });
 
@@ -67,24 +69,29 @@ __tests__/
 
 ## Evidence Template
 
-```markdown
+````markdown
 **Test Execution Evidence**
 
 **Test Suite**: [unit/integration/e2e]
 **Files Changed**: [list files]
 
 **Test Results:**
+
 - Total Tests: [X]
 - Passed: [X]
 - Failed: [0]
 
 **Commands Run:**
+
 ```bash
 yarn test:unit --coverage
 ```
+````
+
 ```
 
 ## Reference
 
 - **Jest Config**: `jest.config.js`
 - **RLS Context**: `lib/rls-context.ts`
+```

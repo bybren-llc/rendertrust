@@ -252,11 +252,11 @@ What should be done next.
 
 ## Documentation Output Locations
 
-| Doc Type       | Location                             | Naming                                 |
-| -------------- | ------------------------------------ | -------------------------------------- |
-| ADRs           | `docs/adr/`                          | `ADR-XXX-{description}.md`             |
-| Runbooks       | `docs/runbooks/`                     | `{operation}-runbook.md`               |
-| Architecture   | `docs/architecture/`                 | `{system}-architecture.md`             |
+| Doc Type       | Location                             | Naming                     |
+| -------------- | ------------------------------------ | -------------------------- |
+| ADRs           | `docs/adr/`                          | `ADR-XXX-{description}.md` |
+| Runbooks       | `docs/runbooks/`                     | `{operation}-runbook.md`   |
+| Architecture   | `docs/architecture/`                 | `{system}-architecture.md` |
 | KT Docs        | `docs/`                              | `KT-REN-XXX-{topic}.md`    |
 | Technical Docs | `docs/agent-outputs/technical-docs/` | `REN-XXX-{description}.md` |
 

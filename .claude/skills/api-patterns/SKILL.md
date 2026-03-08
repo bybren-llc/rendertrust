@@ -23,8 +23,8 @@ Invoke this skill when:
 
 ## Authoritative References (MUST READ)
 
-| Pattern           | Location                                      | Purpose                     |
-| ----------------- | --------------------------------------------- | --------------------------- |
+| Pattern           | Location                                         | Purpose                     |
+| ----------------- | ------------------------------------------------ | --------------------------- |
 | User Context API  | `patterns_library/api/user-context-api.md`       | User-scoped operations      |
 | Admin Context API | `patterns_library/api/admin-context-api.md`      | Admin-scoped operations     |
 | Zod Validation    | `patterns_library/api/zod-validation-api.md`     | Request/response validation |
@@ -64,7 +64,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const data = await withUserContext(prisma, userId, async (client) => {
+  const data = await withUserContext(prisma, userId, async client => {
     return client.user.findUnique({ where: { user_id: userId } });
   });
 
@@ -81,7 +81,7 @@ const result = schema.safeParse(body);
 if (!result.success) {
   return NextResponse.json(
     { error: "Validation failed", details: result.error.flatten() },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -114,7 +114,7 @@ return NextResponse.json(
     code: "ERROR_CODE",
     details: optional_details,
   },
-  { status: 400 | 401 | 403 | 404 | 500 },
+  { status: 400 | 401 | 403 | 404 | 500 }
 );
 ```
 
@@ -158,12 +158,12 @@ export async function POST(req: Request) {
     if (!result.success) {
       return NextResponse.json(
         { error: "Validation failed", details: result.error.flatten() },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // 3. Execute with RLS context
-    const data = await withUserContext(prisma, userId, async (client) => {
+    const data = await withUserContext(prisma, userId, async client => {
       return client.resource.create({ data: result.data });
     });
 
@@ -173,7 +173,7 @@ export async function POST(req: Request) {
     console.error("API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

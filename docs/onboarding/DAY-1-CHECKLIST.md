@@ -39,7 +39,7 @@ cat README.md
 
 **Option A: Use GitIngest** (Recommended)
 
-1. Visit: https://gitingest.com/{{GITHUB_ORG}}/{{GITHUB_REPO}}
+1. Visit: <https://gitingest.com/{{GITHUB_ORG}}/{{GITHUB_REPO}}>
 2. Copy the generated context
 3. Paste into your AI assistant (Claude, ChatGPT, etc.)
 4. Ask: "Explain the SAFe multi-agent methodology in 3 paragraphs"
@@ -64,13 +64,13 @@ cat README.md
 **Option A: Claude Code** (Recommended)
 
 - Best for: Teams using Claude API
-- Installation: https://docs.anthropic.com/claude/docs/claude-code
+- Installation: <https://docs.anthropic.com/claude/docs/claude-code>
 - Agent files location: `.claude/agents/`
 
 **Option B: Augment Code**
 
 - Best for: Teams using Augment
-- Installation: https://www.augmentcode.com/
+- Installation: <https://www.augmentcode.com/>
 - Agent files location: `agent_providers/augment/`
 
 **Decision**:
@@ -257,7 +257,7 @@ Use the BSA agent workflow from .claude/agents/bsa.md
 
 **Manual Creation** (for now):
 
-1. Go to Linear: https://linear.app
+1. Go to Linear: <https://linear.app>
 2. Create new issue
 3. Title: `REN-1: Add Hello World endpoint for agent workflow validation`
 4. Description: Paste BSA output
@@ -524,6 +524,7 @@ cd /path/to/RenderTrust
 ```
 
 The setup script will:
+
 - Check all prerequisites
 - Create `~/.dark-factory/` configuration directory
 - Copy `env.template` for you to customize

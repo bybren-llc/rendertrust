@@ -1,6 +1,6 @@
 # RenderTrust – Architect Instruction Manual
 
-*Oliver Insight IV • Rev 2 • May 2025*
+_Oliver Insight IV • Rev 2 • May 2025_
 
 ---
 
@@ -32,13 +32,13 @@
 
 ### 2.1 Logical Layers
 
-| Layer | Function | Primary Tech |
-|-------|----------|--------------|
-| **UX Layer** | Desktop app, Fleet dashboard, Marketplace | Electron, React, Tailwind |
-| **Control Plane** | Scheduling, Identity, Billing | FastAPI, Postgres, Stripe |
-| **Data Plane** | Job storage, Audit ledger | Cloudflare R2, ERC-4337 roll-up |
-| **Edge Plane** | GPU/CPU workers, relays, tunnels | Docker, Coolify agents |
-| **Observability** | Metrics, logs, traces | InfluxDB 3, Grafana 10, Loki |
+| Layer             | Function                                  | Primary Tech                    |
+| ----------------- | ----------------------------------------- | ------------------------------- |
+| **UX Layer**      | Desktop app, Fleet dashboard, Marketplace | Electron, React, Tailwind       |
+| **Control Plane** | Scheduling, Identity, Billing             | FastAPI, Postgres, Stripe       |
+| **Data Plane**    | Job storage, Audit ledger                 | Cloudflare R2, ERC-4337 roll-up |
+| **Edge Plane**    | GPU/CPU workers, relays, tunnels          | Docker, Coolify agents          |
+| **Observability** | Metrics, logs, traces                     | InfluxDB 3, Grafana 10, Loki    |
 
 ### 2.2 Traffic Flow (Latency budget ≤ 400 ms p95)
 
@@ -47,7 +47,7 @@
 3. Edge container runs job (**variable**)
 4. Artefacts encrypted → back through Tunnel → Creator (**80 ms**)
 5. Ledger & metrics fire async (**≤5 ms**)
-   *Total control-plane round trip ≤215 ms; remainder is compute‐bound.*
+   _Total control-plane round trip ≤215 ms; remainder is compute‐bound._
 
 ---
 
@@ -83,11 +83,11 @@
 
 ### 4.2 Workload Containers
 
-| Job Type | Base Image | GPU RAM | ETA Example |
-|----------|------------|---------|-------------|
-| Storyboard (SD-XL) | `cheddarfox/rendertrust-comfyui:cu12.1` | 12 GB | 4 s / frame |
-| LLM (Ollama Mixtral) | `ollama/ollama:0.1` | 0 / CPU opt | 80 tokens/s |
-| Voice (OpenVoice) | `cheddarfox/rendertrust-voice:onnx` | 6 GB | 30 s / 10 s clip |
+| Job Type             | Base Image                              | GPU RAM     | ETA Example      |
+| -------------------- | --------------------------------------- | ----------- | ---------------- |
+| Storyboard (SD-XL)   | `cheddarfox/rendertrust-comfyui:cu12.1` | 12 GB       | 4 s / frame      |
+| LLM (Ollama Mixtral) | `ollama/ollama:0.1`                     | 0 / CPU opt | 80 tokens/s      |
+| Voice (OpenVoice)    | `cheddarfox/rendertrust-voice:onnx`     | 6 GB        | 30 s / 10 s clip |
 
 ### 4.3 Node Poller
 
@@ -99,12 +99,12 @@
 
 ## 5. Security Architecture
 
-| Threat | Control | Residual Risk |
-|--------|---------|---------------|
-| Rogue node exfiltrates script | AES-GCM encryption + audit hash | Low (must break AES) |
-| JWT stolen | 24 h TTL, device fingerprint, revocation list | Very Low |
-| Supply-chain attack | Image digest pin + Trivy scan in CI | Low |
-| Edge container escape | Rootless Docker + seccomp | Medium (will move to Firecracker) |
+| Threat                        | Control                                       | Residual Risk                     |
+| ----------------------------- | --------------------------------------------- | --------------------------------- |
+| Rogue node exfiltrates script | AES-GCM encryption + audit hash               | Low (must break AES)              |
+| JWT stolen                    | 24 h TTL, device fingerprint, revocation list | Very Low                          |
+| Supply-chain attack           | Image digest pin + Trivy scan in CI           | Low                               |
+| Edge container escape         | Rootless Docker + seccomp                     | Medium (will move to Firecracker) |
 
 Pen-tests scheduled each quarter; last report (04-2025) zero critical findings.
 
@@ -155,11 +155,11 @@ Ledger -- revShare--> WTFB
 
 ## 9. Disaster Recovery
 
-| Asset | Backup | RPO | Restore |
-|-------|--------|-----|---------|
-| Postgres | WAL + nightly snapshot | 15 min | Ansible script `pg-restore.yml` |
-| S3 Jobs | R2 CRR to EU | 1 h | Point app to secondary bucket |
-| Vault | Raft snapshots hourly | 1 h | `vault operator raft snapshot restore` |
+| Asset    | Backup                 | RPO    | Restore                                |
+| -------- | ---------------------- | ------ | -------------------------------------- |
+| Postgres | WAL + nightly snapshot | 15 min | Ansible script `pg-restore.yml`        |
+| S3 Jobs  | R2 CRR to EU           | 1 h    | Point app to secondary bucket          |
+| Vault    | Raft snapshots hourly  | 1 h    | `vault operator raft snapshot restore` |
 
 DR drill every 6 months.
 
@@ -181,4 +181,4 @@ DR drill every 6 months.
 - **Ops Runbook** – [https://runbooks.rendertrust.com](https://runbooks.rendertrust.com)
 - **Sponsor** – [Words To Film By](https://www.wordstofilmby.com)
 
-*—— End of Architect Manual ——*
+_—— End of Architect Manual ——_

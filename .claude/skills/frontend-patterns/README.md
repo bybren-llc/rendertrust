@@ -18,6 +18,7 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
+
 - Build new UI components or pages
 - Implement authentication flows
 - Add forms with validation
@@ -30,12 +31,12 @@ Ensures consistent frontend development using established patterns for Next.js A
 
 ## Trigger Keywords
 
-| Primary | Secondary |
-|---------|-----------|
-| component | UI |
-| page | Next.js |
-| Clerk | auth flow |
-| shadcn | PostHog |
+| Primary   | Secondary |
+| --------- | --------- |
+| component | UI        |
+| page      | Next.js   |
+| Clerk     | auth flow |
+| shadcn    | PostHog   |
 
 ## Related Skills
 
@@ -44,11 +45,11 @@ Ensures consistent frontend development using established patterns for Next.js A
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-04 |
-| Harness Version | v2.6.0 |
+| Field           | Value      |
+| --------------- | ---------- |
+| Last Updated    | 2026-01-04 |
+| Harness Version | v2.6.0     |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_

@@ -62,7 +62,7 @@ To set up your development environment:
 
 ```bash
 # Clone the repository
-# NOT ACTIVE git clone https://github.com/cheddarfox/rendertrust.git 
+# NOT ACTIVE git clone https://github.com/cheddarfox/rendertrust.git
 
 # Run the bootstrap script
 # NOT ACTIVE curl -sL https://raw.githubusercontent.com/cheddarfox/rendertrust/dev/tools/bootstrap.sh | bash
@@ -83,6 +83,7 @@ RenderTrust's architecture is illustrated through several key diagrams:
 ## Documentation
 
 Comprehensive documentation is available in the `docs/` directory, including:
+
 - Implementation guides
 - Architecture overview
 - API references
@@ -96,20 +97,20 @@ RenderTrust is a hybrid open‑source and proprietary platform with a dual-licen
 
 These modules are fully open‑source. Contributors and operators can fork, modify, and redistribute under permissive terms:
 
-* **A2A Protocol & SDKs** (`sdk/`): MIT License
-* **Core Scheduler, Gateway, Relay** (`core/`, `edgekit/relay/`): Apache License 2.0
-* **Load‑Test & CI Tools** (`loadtest/`, `ci/`): MIT License
-* **Documentation & Diagrams** (`docs/`, `diagrams/`): CC0 or MIT
-* **MCP Client Adapters** (`sdk/mcp/`): Apache 2.0
+- **A2A Protocol & SDKs** (`sdk/`): MIT License
+- **Core Scheduler, Gateway, Relay** (`core/`, `edgekit/relay/`): Apache License 2.0
+- **Load‑Test & CI Tools** (`loadtest/`, `ci/`): MIT License
+- **Documentation & Diagrams** (`docs/`, `diagrams/`): CC0 or MIT
+- **MCP Client Adapters** (`sdk/mcp/`): Apache 2.0
 
 ### Proprietary / Enterprise Components (Commercial License)
 
 These services remain RenderTrust proprietary, licensed to enterprises under a commercial agreement:
 
-* **Paymaster & Bundler Service** (`rollup_anchor/paymaster/`)
-* **Premium Modules & Voice/LLM Models** (`edgekit/workers/premium_voice/`, `edgekit/workers/studio_llm/`)
-* **Hosted Monitoring & Analytics** (Cloud services, not in repo)
-* **Enterprise UIs & Branding Extensions** (`core/gateway/web/enterprise/`)
+- **Paymaster & Bundler Service** (`rollup_anchor/paymaster/`)
+- **Premium Modules & Voice/LLM Models** (`edgekit/workers/premium_voice/`, `edgekit/workers/studio_llm/`)
+- **Hosted Monitoring & Analytics** (Cloud services, not in repo)
+- **Enterprise UIs & Branding Extensions** (`core/gateway/web/enterprise/`)
 
 See [LICENSE-MIT](./LICENSE-MIT), [LICENSE-APACHE-2.0](./LICENSE-APACHE-2.0), and [LICENSE-ENTERPRISE](./LICENSE-ENTERPRISE) for full license texts.
 

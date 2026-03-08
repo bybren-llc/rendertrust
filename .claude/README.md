@@ -54,7 +54,7 @@ The vNext workflow defines role separation (Implementation → QAS → RTE → H
 | RTE                       | Coordination/Automation | ✅ Yes          | PR creation, CI shepherding          |
 | QAS                       | Independence Gate       | ❌ No\*         | \*See Self-QA exception below        |
 | SecEng                    | Independence Gate       | ❌ No\*         | Security audit requires independence |
-| HITL                      | Final Authority         | ❌ Never        | J. Scott Graham merges                         |
+| HITL                      | Final Authority         | ❌ Never        | J. Scott Graham merges               |
 
 ### Collapsed Roles (In-Flow with HITL)
 
@@ -149,8 +149,8 @@ These commands are thin wrappers pointing to canonical `/remote-*` commands. **U
 
 Pop OS supports two deployment modes. **Use canonical terminology:**
 
-| Mode        | Container Name     | Port | Use Case                     |
-| ----------- | ------------------ | ---- | ---------------------------- |
+| Mode        | Container Name          | Port | Use Case                     |
+| ----------- | ----------------------- | ---- | ---------------------------- |
 | **Dev**     | `{{DEV_CONTAINER}}`     | 3000 | Daily development (STANDARD) |
 | **Staging** | `{{STAGING_CONTAINER}}` | 3001 | Release validation/UAT       |
 
@@ -245,30 +245,31 @@ Skills are model-invoked expertise packs that Claude loads automatically when re
 
 ### Skills Index (18 Skills)
 
-| Skill | Purpose | Related Skills |
-|-------|---------|----------------|
-| [safe-workflow](skills/safe-workflow/) | Branch naming, commit format, PR workflow | release-patterns, git-advanced |
-| [release-patterns](skills/release-patterns/) | PR creation, CI/CD validation | safe-workflow, deployment-sop |
-| [pattern-discovery](skills/pattern-discovery/) | Search patterns before implementing | api-patterns, frontend-patterns |
-| [agent-coordination](skills/agent-coordination/) | Agent assignment, blocker escalation | orchestration-patterns, linear-sop |
-| [rls-patterns](skills/rls-patterns/) | Row Level Security for database ops | api-patterns, security-audit |
-| [spec-creation](skills/spec-creation/) | Specs with acceptance criteria | pattern-discovery, testing-patterns |
-| [orchestration-patterns](skills/orchestration-patterns/) | Multi-step task orchestration | agent-coordination, linear-sop |
-| [testing-patterns](skills/testing-patterns/) | Jest and Playwright patterns | api-patterns, spec-creation |
-| [security-audit](skills/security-audit/) | RLS validation, vulnerability scanning | rls-patterns, api-patterns |
-| [linear-sop](skills/linear-sop/) | Linear ticket management | orchestration-patterns |
-| [migration-patterns](skills/migration-patterns/) | Database migrations with RLS | rls-patterns |
-| [frontend-patterns](skills/frontend-patterns/) | Next.js, Clerk, shadcn/ui | api-patterns, testing-patterns |
-| [api-patterns](skills/api-patterns/) | API routes with Zod validation | rls-patterns, testing-patterns |
-| [git-advanced](skills/git-advanced/) | Rebase, bisect, cherry-pick | safe-workflow |
-| [stripe-patterns](skills/stripe-patterns/) | Payment integration, webhooks | api-patterns, security-audit |
-| [team-coordination](skills/team-coordination/) | Agent Teams orchestration (experimental) | agent-coordination, orchestration-patterns |
-| [deployment-sop](skills/deployment-sop/) | Deployment workflows, smoke tests | release-patterns |
-| [confluence-docs](skills/confluence-docs/) | ADRs, runbooks, architecture docs | spec-creation |
+| Skill                                                    | Purpose                                   | Related Skills                             |
+| -------------------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
+| [safe-workflow](skills/safe-workflow/)                   | Branch naming, commit format, PR workflow | release-patterns, git-advanced             |
+| [release-patterns](skills/release-patterns/)             | PR creation, CI/CD validation             | safe-workflow, deployment-sop              |
+| [pattern-discovery](skills/pattern-discovery/)           | Search patterns before implementing       | api-patterns, frontend-patterns            |
+| [agent-coordination](skills/agent-coordination/)         | Agent assignment, blocker escalation      | orchestration-patterns, linear-sop         |
+| [rls-patterns](skills/rls-patterns/)                     | Row Level Security for database ops       | api-patterns, security-audit               |
+| [spec-creation](skills/spec-creation/)                   | Specs with acceptance criteria            | pattern-discovery, testing-patterns        |
+| [orchestration-patterns](skills/orchestration-patterns/) | Multi-step task orchestration             | agent-coordination, linear-sop             |
+| [testing-patterns](skills/testing-patterns/)             | Jest and Playwright patterns              | api-patterns, spec-creation                |
+| [security-audit](skills/security-audit/)                 | RLS validation, vulnerability scanning    | rls-patterns, api-patterns                 |
+| [linear-sop](skills/linear-sop/)                         | Linear ticket management                  | orchestration-patterns                     |
+| [migration-patterns](skills/migration-patterns/)         | Database migrations with RLS              | rls-patterns                               |
+| [frontend-patterns](skills/frontend-patterns/)           | Next.js, Clerk, shadcn/ui                 | api-patterns, testing-patterns             |
+| [api-patterns](skills/api-patterns/)                     | API routes with Zod validation            | rls-patterns, testing-patterns             |
+| [git-advanced](skills/git-advanced/)                     | Rebase, bisect, cherry-pick               | safe-workflow                              |
+| [stripe-patterns](skills/stripe-patterns/)               | Payment integration, webhooks             | api-patterns, security-audit               |
+| [team-coordination](skills/team-coordination/)           | Agent Teams orchestration (experimental)  | agent-coordination, orchestration-patterns |
+| [deployment-sop](skills/deployment-sop/)                 | Deployment workflows, smoke tests         | release-patterns                           |
+| [confluence-docs](skills/confluence-docs/)               | ADRs, runbooks, architecture docs         | spec-creation                              |
 
 ### Skill Structure
 
 Each skill folder contains:
+
 - `SKILL.md` - Main skill definition (Claude loads this)
 - `README.md` - Quick reference and metadata
 
@@ -277,6 +278,7 @@ Skills live in `.claude/skills/{skill-name}/`.
 ### Creating New Skills
 
 See the **[Skill Authoring Guide](../docs/guides/SKILL_AUTHORING_GUIDE.md)** for:
+
 - Official Anthropic resources
 - Community checklists (jezweb/claude-skills)
 - Our harness quality standards

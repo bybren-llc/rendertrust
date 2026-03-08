@@ -21,6 +21,7 @@ SAFe® is a registered trademark of Scaled Agile, Inc.
 ## Quick Start
 
 This skill activates automatically when you mention:
+
 - Creating API routes
 - Implementing endpoints
 - Adding server-side validation
@@ -31,9 +32,9 @@ API route implementation patterns with RLS, Zod validation, and error handling.
 
 ## Provider Compatibility
 
-| Provider | Status |
-|----------|--------|
-| Gemini CLI | ✅ Native |
+| Provider    | Status                                   |
+| ----------- | ---------------------------------------- |
+| Gemini CLI  | ✅ Native                                |
 | Claude Code | ✅ Equivalent skill in `.claude/skills/` |
 
 ## Related Skills
@@ -43,11 +44,11 @@ API route implementation patterns with RLS, Zod validation, and error handling.
 
 ## Maintenance
 
-| Field | Value |
-|-------|-------|
-| Last Updated | 2026-01-14 |
+| Field           | Value               |
+| --------------- | ------------------- |
+| Last Updated    | 2026-01-14          |
 | Harness Version | {{HARNESS_VERSION}} |
 
 ---
 
-*Full implementation details in [SKILL.md](SKILL.md)*
+_Full implementation details in [SKILL.md](SKILL.md)_
