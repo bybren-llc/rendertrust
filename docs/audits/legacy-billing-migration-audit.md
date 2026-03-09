@@ -16,10 +16,11 @@ these files can execute in the current RenderTrust project. All must be migrated
 project's SQLAlchemy 2.x + Alembic async patterns before any billing or fleet functionality
 is operational.
 
-No `core/database.py` module exists yet. No SQLAlchemy ORM models exist for `Ledger`,
-`UsageEvent`, or `Creator`. The only database artifacts are raw SQL migration files at
-`core/billing/migrations/20240501_usage_events.sql` and
-`core/gateway/web/ui/migrations/20240503_fleet_view.sql`.
+**Infrastructure status** (as of REN-61 merge): `core/database.py` exists with async
+engine, session factory, `Base`, and `get_db_session` dependency. `core/models/base.py`
+defines `User` and `Project` models. `alembic/` is configured with `env.py`. However,
+no ORM models exist for `Ledger`, `UsageEvent`, or `Creator` — these legacy models
+referenced by the `db` module were never ported to the new architecture.
 
 ## File-by-File Analysis
 
@@ -230,7 +231,8 @@ No `core/database.py` module exists yet. No SQLAlchemy ORM models exist for `Led
 ## Missing Models
 
 The following ORM models are referenced by the legacy code but do not exist anywhere in
-the codebase. No SQLAlchemy model classes or Alembic migrations exist.
+the codebase. While `core/database.py` and `core/models/base.py` (User, Project) exist,
+no ORM models for billing-specific tables (Ledger, UsageEvent) have been created yet.
 
 | Model | Referenced In | DB Table | Raw SQL Migration |
 |-------|--------------|----------|-------------------|
@@ -262,10 +264,15 @@ CREATE TABLE IF NOT EXISTS ledger_entries (
 
 ### Missing Database Infrastructure
 
-- No `core/database.py` module (async engine, session factory, Base)
-- No `core/models/` directory or model files
-- No `alembic/` directory or Alembic configuration
-- No `__init__.py` files in any `core/` subdirectory (Python package structure incomplete)
+**Resolved in REN-61** (now available on dev):
+- `core/database.py` — async engine, session factory, `Base`, `get_db_session` dependency
+- `core/models/base.py` — `User` and `Project` ORM models
+- `alembic/` — configured with `env.py` and `alembic.ini`
+- `core/__init__.py` and all `core/` subdirectory `__init__.py` files
+
+**Still missing** (required for billing migration):
+- ORM models for `Ledger`, `UsageEvent`, `Creator` (legacy models not yet ported)
+- Alembic migration for billing-specific tables (usage_events, ledger_entries)
 
 ---
 
@@ -299,16 +306,18 @@ GROUP BY n.id;
 | 5 | `core/billing/invoice/invoice_builder.py` | HIGH | REN-20 | Heavy rewrite; external deps (weasyprint, boto3); S3 refactor |
 | 6 | `core/billing/invoice/cron_monthly.py` | HIGH | REN-20 | Depends on invoice_builder; needs Creator model; session scope bug |
 
-### Prerequisite Work (Must Complete First)
+### Prerequisite Work
 
-These enablers must be completed before any file migration can begin:
+**Already complete** (delivered in REN-61):
+- ~~Create `core/database.py`~~ — async engine, session factory, Base (DONE)
+- ~~Create Alembic configuration~~ — `alembic/env.py` + `alembic.ini` (DONE)
+- ~~Add `__init__.py` files~~ — all `core/` subdirectories (DONE)
+- ~~Baseline migration~~ — REN-86 (users + projects tables) (DONE)
 
-1. **Create `core/database.py`** -- async engine, `async_session_factory`, `Base`
-   declarative base (part of REN-29)
-2. **Create `Ledger` SQLAlchemy model** in `core/models/ledger.py` (part of REN-21)
-3. **Create `UsageEvent` SQLAlchemy model** in `core/models/usage_event.py` (part of REN-21)
-4. **Create Alembic configuration** and initial migration (part of REN-29)
-5. **Add `__init__.py` files** throughout `core/` for proper Python packaging
+**Still required** before billing migration:
+1. **Create `Ledger` SQLAlchemy model** in `core/models/ledger.py` (part of REN-47/REN-75)
+2. **Create `UsageEvent` SQLAlchemy model** in `core/models/usage_event.py` (part of REN-21)
+3. **Create Alembic migration** for billing tables (part of REN-75)
 
 ---
 
@@ -390,12 +399,10 @@ These packages are imported by legacy files but are not in any `requirements.txt
 
 ### Immediate Actions
 
-1. **Create REN-29 sub-task**: Define and implement `core/database.py` with async
-   engine configuration, session factory, and SQLAlchemy `Base`.
-2. **Create REN-21 sub-task**: Define `Ledger` and `UsageEvent` SQLAlchemy models
+1. ~~Create `core/database.py`~~ — **DONE** (REN-61)
+2. **Create REN-47/REN-75 sub-task**: Define `Ledger` and `UsageEvent` SQLAlchemy models
    based on the existing raw SQL schema in `20240501_usage_events.sql`.
-3. **Create enabler story**: Add `__init__.py` files and establish Python package
-   structure across `core/`.
+3. ~~Add `__init__.py` files~~ — **DONE** (REN-61)
 
 ### Migration Strategy
 
