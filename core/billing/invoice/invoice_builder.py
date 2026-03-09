@@ -4,7 +4,8 @@ import os
 import jinja2
 import weasyprint
 from boto3 import client as s3
-from db import async_session
+from db import async_session  # TODO(REN-87): Migrate from legacy db module to core.database
+from sqlalchemy import text
 
 S3 = s3(
     "s3",
@@ -19,7 +20,7 @@ PERIOD = (datetime.date.today().replace(day=1) - datetime.timedelta(days=1)).str
 async def build(account_id: str):
     async with async_session() as s:
         rows = await s.execute(
-            """SELECT created_at, delta_usd FROM ledger_entries WHERE account_id=:a AND date_trunc('month', created_at)=date_trunc('month', now()-interval '1 month')""",
+            text("SELECT created_at, delta_usd FROM ledger_entries WHERE account_id=:a AND date_trunc('month', created_at)=date_trunc('month', now()-interval '1 month')"),
             {"a": account_id},
         )
         items = [
