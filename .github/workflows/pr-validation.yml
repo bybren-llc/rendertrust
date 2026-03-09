@@ -1,0 +1,68 @@
+# RenderTrust PR Validation
+# Enforces branch naming and commit message conventions
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [dev]
+
+jobs:
+  validate-branch:
+    name: Branch Naming
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ ! "$BRANCH" =~ ^REN-[0-9]+-[a-z0-9-]+$ ]]; then
+            echo "::error::Branch name '$BRANCH' does not match pattern: REN-{number}-{description}"
+            echo "Example: REN-61-safe-audit-pi-planning"
+            exit 1
+          fi
+          echo "Branch name '$BRANCH' is valid"
+
+  validate-commits:
+    name: Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check commit messages
+        run: |
+          COMMITS=$(git log --format="%s" origin/${{ github.base_ref }}..${{ github.sha }})
+          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+ \[REN-[0-9]+\]$"
+          FAILED=0
+          while IFS= read -r msg; do
+            if [[ -z "$msg" ]]; then continue; fi
+            if [[ ! "$msg" =~ $PATTERN ]]; then
+              echo "::warning::Non-standard commit: '$msg'"
+              echo "Expected: type(scope): description [REN-XXX]"
+              FAILED=1
+            fi
+          done <<< "$COMMITS"
+          if [[ $FAILED -eq 1 ]]; then
+            echo "::warning::Some commits don't follow convention. Please use: type(scope): description [REN-XXX]"
+          fi
+
+  validate-pr-size:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR size
+        run: |
+          ADDITIONS=$(git diff --stat origin/${{ github.base_ref }}..HEAD | tail -1 | awk '{print $4}')
+          DELETIONS=$(git diff --stat origin/${{ github.base_ref }}..HEAD | tail -1 | awk '{print $6}')
+          TOTAL=$((${ADDITIONS:-0} + ${DELETIONS:-0}))
+          echo "PR size: +${ADDITIONS:-0} -${DELETIONS:-0} (total: $TOTAL lines)"
+          if [[ $TOTAL -gt 1000 ]]; then
+            echo "::warning::Large PR ($TOTAL lines changed). Consider splitting into smaller PRs."
+          fi
