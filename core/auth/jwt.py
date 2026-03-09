@@ -81,7 +81,8 @@ def create_access_token(data: dict[str, Any]) -> str:
         "iat": now,
         "token_type": TokenType.ACCESS.value,
     }
-    return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    encoded: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    return encoded
 
 
 def create_refresh_token(data: dict[str, Any]) -> str:
@@ -102,7 +103,8 @@ def create_refresh_token(data: dict[str, Any]) -> str:
         "iat": now,
         "token_type": TokenType.REFRESH.value,
     }
-    return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    encoded: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    return encoded
 
 
 def verify_token(token: str) -> TokenPayload:
@@ -145,8 +147,8 @@ def verify_token(token: str) -> TokenPayload:
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(_bearer_scheme),  # noqa: B008
-    session: AsyncSession = Depends(get_db_session),  # noqa: B008
+    credentials: HTTPAuthorizationCredentials = Depends(_bearer_scheme),
+    session: AsyncSession = Depends(get_db_session),
 ) -> User:
     """FastAPI dependency that extracts and validates the current user.
 

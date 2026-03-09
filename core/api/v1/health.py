@@ -47,7 +47,7 @@ async def health_check() -> dict[str, str]:
 
 @router.get("/health/ready")
 async def readiness_check(
-    session: AsyncSession = Depends(get_db_session),  # noqa: B008
+    session: AsyncSession = Depends(get_db_session),
 ) -> dict[str, Any]:
     """Readiness probe. Checks database and Redis connectivity.
 
@@ -61,18 +61,18 @@ async def readiness_check(
     try:
         await session.execute(text("SELECT 1"))
         checks["database"] = "connected"
-    except Exception:  # noqa: BLE001
+    except Exception:
         logger.warning("readiness_check_db_failed")
         checks["database"] = "unavailable"
 
     # Check Redis
     try:
         settings = get_settings()
-        r = aioredis.from_url(settings.redis_url)
+        r = aioredis.from_url(settings.redis_url)  # type: ignore[no-untyped-call]
         await r.ping()
         await r.aclose()
         checks["redis"] = "connected"
-    except Exception:  # noqa: BLE001
+    except Exception:
         logger.warning("readiness_check_redis_failed")
         checks["redis"] = "unavailable"
 
