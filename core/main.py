@@ -29,6 +29,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from core.api.v1.router import api_v1_router
 from core.config import get_settings
 from core.database import engine
+from core.middleware.request_id import RequestIdMiddleware
 
 logger = structlog.get_logger(__name__)
 
@@ -117,6 +118,9 @@ def create_app() -> FastAPI:
 
     # Security headers middleware (wraps CORS so it runs on all responses)
     application.add_middleware(SecurityHeadersMiddleware)
+
+    # Request ID must be outermost (added last) so all logging has request_id
+    application.add_middleware(RequestIdMiddleware)
 
     # Include API v1 routes
     application.include_router(api_v1_router)
