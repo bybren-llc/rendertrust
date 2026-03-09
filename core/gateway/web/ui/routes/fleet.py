@@ -1,6 +1,7 @@
+from db import async_session
 from fastapi import APIRouter
 from sqlalchemy import text
-from db import async_session
+
 router=APIRouter()
 @router.get('/fleet')
 async def fleet():

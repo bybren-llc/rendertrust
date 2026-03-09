@@ -1,4 +1,8 @@
-import hvac, jwt, os, datetime
+import datetime
+import os
+
+import hvac
+import jwt
 from fastapi import FastAPI
 
 app=FastAPI()

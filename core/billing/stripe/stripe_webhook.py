@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Request, HTTPException
-import stripe, os
+import os
+
+import stripe
+from fastapi import APIRouter, HTTPException, Request
 from ledger.credit import credit
+
 router = APIRouter()
 stripe.api_key = os.environ['STRIPE_SECRET']
 ENDPOINT_SECRET = os.environ['STRIPE_WEBHOOK_SECRET']

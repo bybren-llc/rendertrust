@@ -1,6 +1,10 @@
-import asyncio, os, postmarker
-from invoice_builder import build, PERIOD
-from db import async_session, Creator
+import asyncio
+import os
+
+import postmarker
+from db import async_session
+from invoice_builder import PERIOD, build
+
 client=postmarker.PostmarkClient(server_token=os.environ['POSTMARK_KEY'])
 async def main():
     async with async_session() as s:

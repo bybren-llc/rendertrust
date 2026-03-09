@@ -1,6 +1,11 @@
-import weasyprint, jinja2, os, datetime
-from db import async_session, Ledger
+import datetime
+import os
+
+import jinja2
+import weasyprint
 from boto3 import client as s3
+from db import async_session
+
 S3=s3('s3',endpoint_url=os.environ['S3_URL'],aws_access_key_id=os.environ['S3_KEY'],aws_secret_access_key=os.environ['S3_SEC'])
 TEMPL=jinja2.Environment(loader=jinja2.FileSystemLoader('templates')).get_template('invoice.html')
 PERIOD=(datetime.date.today().replace(day=1)-datetime.timedelta(days=1)).strftime('%B %Y')

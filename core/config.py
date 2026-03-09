@@ -42,7 +42,7 @@ class AppSettings(BaseSettings):
     app_name: str = "rendertrust"
     app_env: str = "development"
     app_debug: bool = False
-    app_host: str = "0.0.0.0"  # noqa: S104
+    app_host: str = "0.0.0.0"
     app_port: int = 8000
     secret_key: str = "change-me-in-production"  # noqa: S105
 
