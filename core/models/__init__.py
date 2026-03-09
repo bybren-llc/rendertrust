@@ -18,6 +18,20 @@ Import all models here so Alembic autogenerate can discover them.
 """
 
 from core.database import Base, BaseModel
-from core.models.base import Project, User
+from core.models.base import (
+    CreditLedgerEntry,
+    Project,
+    TransactionDirection,
+    TransactionSource,
+    User,
+)
 
-__all__ = ["Base", "BaseModel", "Project", "User"]
+__all__ = [
+    "Base",
+    "BaseModel",
+    "CreditLedgerEntry",
+    "Project",
+    "TransactionDirection",
+    "TransactionSource",
+    "User",
+]
