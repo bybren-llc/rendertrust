@@ -25,18 +25,27 @@ The RenderTrust codebase uses two different JWT libraries: `python-jose` (declar
 
 ## 2. Current State Analysis
 
-### 2.1 python-jose (declared dependency)
+### 2.1 python-jose (declared dependency — actively used)
 
 **Declared in**: `pyproject.toml` line 29 -- `"python-jose[cryptography]>=3.3.0,<4.0"`
 
 **Mypy config**: `pyproject.toml` line 141 lists `jose.*` in `ignore_missing_imports`,
 confirming this is the intended standard library.
 
-**Actual usage in code**: No files currently import from `jose`. The `core/auth/jwt.py`
-module referenced in project documentation does not yet exist. This means python-jose is
-declared as a dependency but has zero runtime usage today.
+**Active usage in core auth** (added in REN-61):
 
-**python-jose API surface** (for reference):
+- **`core/auth/jwt.py`** (line 28): `from jose import JWTError, jwt` — primary JWT
+  implementation (170+ LOC). Handles access/refresh token creation, verification,
+  and the `get_current_user` FastAPI dependency. Uses `jwt.encode()`, `jwt.decode()`,
+  and `JWTError` exception handling.
+- **`core/auth/middleware.py`** (line 24): `from jose import JWTError` — auth middleware
+  for additional JWT verification.
+
+python-jose is the **actively used standard** for the core auth system. ADR-001
+Section 6 established python-jose as the project standard, citing JWE support for
+edge node token encryption.
+
+**python-jose API surface**:
 ```python
 from jose import jwt, JWTError
 token = jwt.encode({"sub": "user"}, secret, algorithm="HS256")
@@ -137,8 +146,9 @@ This is the most critical issue to resolve.
 
 ### Rationale
 
-1. **Already declared**: `python-jose[cryptography]` is the declared project dependency.
-   PyJWT is undeclared and used by accident.
+1. **Already declared and actively used**: `python-jose[cryptography]` is the declared
+   dependency and is actively used in `core/auth/jwt.py` and `core/auth/middleware.py`.
+   PyJWT is undeclared and used only in legacy edge modules.
 2. **JWE support**: RenderTrust's trust envelope architecture may require JWE for encrypted
    tokens in edge node communication. Only python-jose provides this natively.
 3. **Consistency**: The mypy configuration already accounts for `jose.*` imports.
