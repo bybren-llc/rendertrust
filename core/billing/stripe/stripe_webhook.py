@@ -38,8 +38,8 @@ Testing:
 
 from __future__ import annotations
 
-import structlog
 import stripe
+import structlog
 from fastapi import APIRouter, HTTPException, Request, status
 
 from core.config import get_settings
