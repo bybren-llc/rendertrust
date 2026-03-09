@@ -30,10 +30,13 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlalchemy import select
 
 if TYPE_CHECKING:
+    from fastapi.security import HTTPAuthorizationCredentials
     from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.auth.blacklist import token_blacklist
 from core.auth.jwt import (
     TokenType,
+    _bearer_scheme,
     create_access_token,
     create_refresh_token,
     verify_token,
@@ -253,7 +256,7 @@ async def refresh(
     Raises:
         HTTPException 401: Invalid, expired, or wrong-type token.
     """
-    token_data = verify_token(payload.refresh_token)
+    token_data = await verify_token(payload.refresh_token)
 
     # Ensure this is actually a refresh token, not an access token
     if token_data.token_type != TokenType.REFRESH:
@@ -299,19 +302,22 @@ async def refresh(
     "/logout",
     response_model=MessageResponse,
 )
-async def logout() -> MessageResponse:
-    """Log out the current user.
+async def logout(
+    credentials: HTTPAuthorizationCredentials = Depends(_bearer_scheme),
+) -> MessageResponse:
+    """Revoke the current access token.
 
-    .. note::
-        This is a placeholder. Actual token revocation (server-side
-        blocklist) will be implemented in REN-72.
+    Decodes the Bearer token and adds its JTI to a Redis blacklist
+    with a TTL matching the token's remaining lifetime.  Subsequent
+    calls to ``verify_token`` will reject the blacklisted token.
 
     Returns:
-        Confirmation message.
+        Confirmation message (always succeeds from the caller's perspective).
     """
-    # TODO(REN-72): Implement token revocation via Redis blocklist.
-    # Accept the Authorization header, decode the token, and add its
-    # ``jti`` to a Redis set with TTL matching the token's remaining
-    # lifetime. ``verify_token`` should then check the blocklist.
-    logger.info("logout_placeholder_called")
+    token_data = await verify_token(credentials.credentials)
+    revoked = await token_blacklist.revoke(token_data.jti, token_data.exp)
+    if revoked:
+        logger.info("token_revoked", jti=token_data.jti)
+    else:
+        logger.warning("token_revocation_failed_redis", jti=token_data.jti)
     return MessageResponse(message="Logged out successfully")
