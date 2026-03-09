@@ -20,14 +20,19 @@ Bearer token; unauthenticated requests receive a 401 response.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import structlog
 from fastapi import APIRouter, Depends
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.auth.jwt import get_current_user
 from core.database import get_db_session
-from core.models.base import User
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from core.models.base import User
 
 logger = structlog.get_logger(__name__)
 
