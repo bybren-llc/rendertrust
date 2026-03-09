@@ -35,7 +35,8 @@ jobs:
         run: pip install ".[dev]"
 
       - name: Run pip-audit
-        run: pip-audit --desc on
+        # CVE-2024-23342: ecdsa timing attack — no fix available, upstream considers OOS
+        run: pip-audit --desc on --ignore-vuln CVE-2024-23342
 
   sast:
     name: Static Analysis (Semgrep)
