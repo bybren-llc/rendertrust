@@ -27,6 +27,7 @@ BATCH_SIZE = int(os.environ.get("BATCH_SIZE", "200"))
 with open("LedgerAnchor.abi.json") as f:
     CONTRACT_ABI = json.load(f)
 
+
 class MerkleTree:
     """Simple Merkle tree implementation for ledger entries"""
 
@@ -54,7 +55,7 @@ class MerkleTree:
             # Process pairs of nodes
             for i in range(0, len(level), 2):
                 if i + 1 < len(level):
-                    next_level.append(self._hash_pair(level[i], level[i+1]))
+                    next_level.append(self._hash_pair(level[i], level[i + 1]))
                 else:
                     # Odd number of nodes, duplicate the last one
                     next_level.append(level[i])
@@ -88,6 +89,7 @@ class MerkleTree:
 
         return proof
 
+
 def get_unanchored_entries() -> list[dict[str, Any]]:
     """Fetch unanchored entries from the database"""
     conn = psycopg2.connect(PG_DSN)
@@ -95,12 +97,13 @@ def get_unanchored_entries() -> list[dict[str, Any]]:
         with conn.cursor() as cur:
             cur.execute(
                 "SELECT id, sha256 FROM ledger_entries WHERE anchored = FALSE ORDER BY id LIMIT %s",
-                (BATCH_SIZE,)
+                (BATCH_SIZE,),
             )
             entries = [{"id": row[0], "sha256": row[1]} for row in cur.fetchall()]
         return entries
     finally:
         conn.close()
+
 
 def update_anchored_entries(entry_ids: list[int], tx_hash: str) -> None:
     """Mark entries as anchored in the database"""
@@ -109,11 +112,12 @@ def update_anchored_entries(entry_ids: list[int], tx_hash: str) -> None:
         with conn.cursor() as cur:
             cur.execute(
                 "UPDATE ledger_entries SET anchored = TRUE, anchor_tx = %s WHERE id = ANY(%s)",
-                (tx_hash, entry_ids)
+                (tx_hash, entry_ids),
             )
             conn.commit()
     finally:
         conn.close()
+
 
 def anchor_to_blockchain(merkle_root: str, entry_count: int) -> str:
     """Anchor the Merkle root to the blockchain"""
@@ -125,14 +129,15 @@ def anchor_to_blockchain(merkle_root: str, entry_count: int) -> str:
 
     # Prepare transaction
     tx = contract.functions.anchorRoot(
-        Web3.to_bytes(hexstr=merkle_root),
-        entry_count
-    ).build_transaction({
-        'from': account.address,
-        'nonce': w3.eth.get_transaction_count(account.address),
-        'gas': 200000,
-        'gasPrice': w3.eth.gas_price
-    })
+        Web3.to_bytes(hexstr=merkle_root), entry_count
+    ).build_transaction(
+        {
+            "from": account.address,
+            "nonce": w3.eth.get_transaction_count(account.address),
+            "gas": 200000,
+            "gasPrice": w3.eth.gas_price,
+        }
+    )
 
     # Sign and send transaction
     signed_tx = w3.eth.account.sign_transaction(tx, PRIVATE_KEY)
@@ -142,6 +147,7 @@ def anchor_to_blockchain(merkle_root: str, entry_count: int) -> str:
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
     return receipt.transactionHash.hex()
+
 
 def main():
     """Main bundler process"""
@@ -172,6 +178,7 @@ def main():
 
         # Sleep before next batch
         time.sleep(300)  # 5 minutes
+
 
 if __name__ == "__main__":
     main()

@@ -29,14 +29,16 @@ from core.auth.jwt import verify_token
 logger = structlog.get_logger(__name__)
 
 # Paths that skip authentication
-_PUBLIC_PATHS = frozenset({
-    "/health",
-    "/health/ready",
-    "/version",
-    "/docs",
-    "/redoc",
-    "/openapi.json",
-})
+_PUBLIC_PATHS = frozenset(
+    {
+        "/health",
+        "/health/ready",
+        "/version",
+        "/docs",
+        "/redoc",
+        "/openapi.json",
+    }
+)
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -61,7 +63,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
-            token = auth_header[len("Bearer "):]
+            token = auth_header[len("Bearer ") :]
             try:
                 payload = verify_token(token)
                 request.state.user_id = payload.sub
