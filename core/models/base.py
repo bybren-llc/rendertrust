@@ -14,13 +14,24 @@
 
 """Core domain models for RenderTrust.
 
-Defines the foundational User and Project models.
+Defines the foundational User, Project, and CreditLedgerEntry models.
 All models use UUID primary keys and include created_at/updated_at timestamps.
 """
 
+import enum
 import uuid
+from decimal import Decimal
 
-from sqlalchemy import Boolean, ForeignKey, String, Text
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Enum,
+    ForeignKey,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import BaseModel
@@ -108,3 +119,89 @@ class Project(BaseModel):
 
     def __repr__(self) -> str:
         return f"<Project(id={self.id}, name={self.name})>"
+
+
+class TransactionDirection(enum.Enum):
+    """Direction of a credit ledger transaction."""
+
+    CREDIT = "CREDIT"
+    DEBIT = "DEBIT"
+
+
+class TransactionSource(enum.Enum):
+    """Source/reason for a credit ledger transaction."""
+
+    STRIPE = "STRIPE"
+    USAGE = "USAGE"
+    ADJUSTMENT = "ADJUSTMENT"
+    REFUND = "REFUND"
+
+
+class CreditLedgerEntry(BaseModel):
+    """Credit ledger entry tracking user credit transactions.
+
+    Implements double-entry style tracking with idempotency via
+    UNIQUE(reference_id, direction) constraint.
+
+    Attributes:
+        user_id: FK to the owning User.
+        amount: Transaction amount (positive value).
+        direction: CREDIT or DEBIT.
+        source: Origin of the transaction (STRIPE, USAGE, ADJUSTMENT, REFUND).
+        reference_id: External reference for idempotency (e.g. Stripe charge ID).
+        balance_after: User's credit balance after this transaction.
+        description: Optional human-readable description.
+        user: Relationship to the User who owns this entry.
+    """
+
+    __tablename__ = "credit_ledger_entries"
+    __table_args__ = (
+        UniqueConstraint(
+            "reference_id",
+            "direction",
+            name="uq_ledger_reference_direction",
+        ),
+        CheckConstraint(
+            "balance_after >= 0",
+            name="ck_ledger_balance_non_negative",
+        ),
+    )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    amount: Mapped[Decimal] = mapped_column(
+        Numeric(12, 4),
+        nullable=False,
+    )
+    direction: Mapped[TransactionDirection] = mapped_column(
+        Enum(TransactionDirection, name="transaction_direction"),
+        nullable=False,
+    )
+    source: Mapped[TransactionSource] = mapped_column(
+        Enum(TransactionSource, name="transaction_source"),
+        nullable=False,
+    )
+    reference_id: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        index=True,
+    )
+    balance_after: Mapped[Decimal] = mapped_column(
+        Numeric(12, 4),
+        nullable=False,
+    )
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    user: Mapped["User"] = relationship("User")
+
+    def __repr__(self) -> str:
+        return (
+            f"<CreditLedgerEntry(id={self.id}, user_id={self.user_id}, "
+            f"amount={self.amount}, direction={self.direction.value})>"
+        )
