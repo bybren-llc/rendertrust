@@ -38,11 +38,21 @@ Testing:
 
 from __future__ import annotations
 
+from decimal import Decimal
+from typing import TYPE_CHECKING
+from uuid import UUID
+
 import stripe
 import structlog
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from core.config import get_settings
+from core.database import get_db_session
+from core.ledger.service import allocate_credits
+from core.models.base import TransactionSource
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = structlog.get_logger(__name__)
 
@@ -54,7 +64,10 @@ CREDIT_MAP: dict[str, int] = {"cred10": 100, "cred50": 550}
 
 
 @router.post("/webhooks/stripe")
-async def stripe_hook(req: Request) -> dict[str, object]:
+async def stripe_hook(
+    req: Request,
+    session: AsyncSession = Depends(get_db_session),
+) -> dict[str, object]:
     """Handle incoming Stripe webhook events.
 
     Verifies the webhook signature using the endpoint secret,
@@ -62,6 +75,10 @@ async def stripe_hook(req: Request) -> dict[str, object]:
     acknowledged with ``{"received": True}`` to prevent Stripe
     retries for successfully received (but possibly unhandled)
     event types.
+
+    Credit allocation for ``checkout.session.completed`` events is
+    idempotent -- Stripe retries are safe because the ledger service
+    uses the checkout session ID as a deduplication key.
 
     Returns:
         dict: ``{"received": True}`` on successful processing.
@@ -112,10 +129,61 @@ async def stripe_hook(req: Request) -> dict[str, object]:
 
     # -- 4. Route to event-specific handlers --
     if event["type"] == "checkout.session.completed":
-        logger.info("stripe_checkout_completed", event_id=event["id"])
-        # TODO(REN-79): Implement credit allocation via event handler.
-        # The previous implementation used `from ledger.credit import credit`
-        # which no longer exists. Credit allocation with idempotency
-        # checks will be implemented in REN-79.
+        await _handle_checkout_completed(event, session)
 
     return {"received": True}
+
+
+async def _handle_checkout_completed(
+    event: dict[str, object],
+    session: AsyncSession,
+) -> None:
+    """Allocate credits after a successful Stripe checkout session.
+
+    Extracts the user UUID from ``client_reference_id`` and the credit
+    SKU from session metadata, then delegates to the ledger service.
+    Unknown or missing SKUs are logged as warnings but do NOT cause
+    the webhook to fail (Stripe would retry indefinitely).
+    """
+    sess_obj: dict[str, object] = event["data"]["object"]  # type: ignore[index]
+    checkout_session_id: str = sess_obj.get("id", "")  # type: ignore[assignment]
+
+    # Extract user ID from Stripe's client_reference_id field.
+    client_reference_id = sess_obj.get("client_reference_id")
+    if not client_reference_id:
+        logger.warning(
+            "stripe_checkout_missing_client_reference_id",
+            event_id=event["id"],
+        )
+        return
+
+    # Determine the credit SKU from session metadata.
+    metadata: dict[str, str] = sess_obj.get("metadata") or {}  # type: ignore[assignment]
+    sku = metadata.get("sku")
+    if not sku or sku not in CREDIT_MAP:
+        logger.warning(
+            "stripe_checkout_unknown_sku",
+            event_id=event["id"],
+            sku=sku,
+        )
+        return
+
+    credit_amount = CREDIT_MAP[sku]
+
+    logger.info(
+        "stripe_checkout_completed",
+        event_id=event["id"],
+        sku=sku,
+        credit_amount=credit_amount,
+        user_id=client_reference_id,
+    )
+
+    await allocate_credits(
+        session=session,
+        user_id=UUID(str(client_reference_id)),
+        amount=Decimal(credit_amount),
+        source=TransactionSource.STRIPE,
+        reference_id=str(checkout_session_id),
+        description=f"Stripe checkout: {sku}",
+    )
+    await session.commit()
