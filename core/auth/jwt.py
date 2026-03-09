@@ -168,6 +168,15 @@ async def get_current_user(
     """
     token_data = verify_token(credentials.credentials)
 
+    # Reject refresh tokens used as access tokens (OWASP A01)
+    if token_data.token_type != TokenType.ACCESS:
+        logger.warning("non_access_token_used", token_type=token_data.token_type)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     result = await session.execute(
         select(User).where(User.id == token_data.sub),
     )
