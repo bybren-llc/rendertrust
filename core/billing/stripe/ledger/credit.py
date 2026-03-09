@@ -1,4 +1,4 @@
-from db import Ledger, async_session
+from db import Ledger, async_session  # TODO(REN-87): Migrate from legacy db module to core.database
 
 
 async def credit(creator_id: str, amount: float):

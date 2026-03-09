@@ -1,4 +1,8 @@
-from db import Ledger, UsageEvent, async_session
+from db import (  # TODO(REN-87): Migrate from legacy db module to core.database
+    Ledger,
+    UsageEvent,
+    async_session,
+)
 from fastapi import APIRouter, Request
 from sqlalchemy import func, select
 
