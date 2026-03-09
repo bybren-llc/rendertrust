@@ -18,9 +18,12 @@ Handles access and refresh token lifecycle with proper error handling.
 Tokens are never logged or exposed in error messages.
 """
 
+from __future__ import annotations
+
 import datetime
+import uuid
 from enum import StrEnum
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import structlog
 from fastapi import Depends, HTTPException, status
@@ -28,11 +31,13 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from pydantic import BaseModel
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import get_settings
 from core.database import get_db_session
 from core.models.base import User
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = structlog.get_logger(__name__)
 
@@ -55,12 +60,14 @@ class TokenPayload(BaseModel):
         exp: Expiration timestamp.
         iat: Issued-at timestamp.
         token_type: Discriminator for access vs. refresh tokens.
+        jti: JWT ID -- unique token identifier for revocation.
     """
 
     sub: str
     exp: datetime.datetime
     iat: datetime.datetime
     token_type: TokenType
+    jti: str
 
 
 def create_access_token(data: dict[str, Any]) -> str:
@@ -80,6 +87,7 @@ def create_access_token(data: dict[str, Any]) -> str:
         "exp": expires,
         "iat": now,
         "token_type": TokenType.ACCESS.value,
+        "jti": str(uuid.uuid4()),
     }
     encoded: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
     return encoded
@@ -102,12 +110,13 @@ def create_refresh_token(data: dict[str, Any]) -> str:
         "exp": expires,
         "iat": now,
         "token_type": TokenType.REFRESH.value,
+        "jti": str(uuid.uuid4()),
     }
     encoded: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
     return encoded
 
 
-def verify_token(token: str) -> TokenPayload:
+async def verify_token(token: str) -> TokenPayload:
     """Verify and decode a JWT token.
 
     Args:
@@ -117,7 +126,7 @@ def verify_token(token: str) -> TokenPayload:
         Validated TokenPayload.
 
     Raises:
-        HTTPException: If the token is invalid, expired, or malformed.
+        HTTPException: If the token is invalid, expired, malformed, or revoked.
     """
     settings = get_settings()
     credentials_exception = HTTPException(
@@ -135,15 +144,26 @@ def verify_token(token: str) -> TokenPayload:
         if sub is None:
             logger.warning("jwt_verification_failed", reason="missing_sub")
             raise credentials_exception
-        return TokenPayload(
+
+        payload_data = TokenPayload(
             sub=sub,
             exp=payload["exp"],
             iat=payload["iat"],
             token_type=payload.get("token_type", TokenType.ACCESS.value),
+            jti=payload.get("jti", ""),
         )
     except JWTError as err:
         logger.warning("jwt_verification_failed", reason="decode_error")
         raise credentials_exception from err
+
+    # Check blacklist (after decode, before return)
+    from core.auth.blacklist import token_blacklist
+
+    if payload_data.jti and await token_blacklist.is_revoked(payload_data.jti):
+        logger.warning("revoked_token_used", jti=payload_data.jti)
+        raise credentials_exception
+
+    return payload_data
 
 
 async def get_current_user(
@@ -166,7 +186,7 @@ async def get_current_user(
     Raises:
         HTTPException: 401 if authentication fails.
     """
-    token_data = verify_token(credentials.credentials)
+    token_data = await verify_token(credentials.credentials)
 
     # Reject refresh tokens used as access tokens (OWASP A01)
     if token_data.token_type != TokenType.ACCESS:

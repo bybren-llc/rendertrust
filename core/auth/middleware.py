@@ -65,7 +65,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header[len("Bearer ") :]
             try:
-                payload = verify_token(token)
+                payload = await verify_token(token)
                 request.state.user_id = payload.sub
             except (JWTError, Exception):
                 # Token is invalid; request.state.user_id stays None.
