@@ -22,8 +22,9 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import structlog
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from core.api.v1.router import api_v1_router
 from core.config import get_settings
@@ -68,6 +69,26 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     await engine.dispose()
 
 
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Add OWASP-recommended security headers to all responses."""
+
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        # HSTS only in production (requires HTTPS)
+        if get_settings().is_production:
+            response.headers["Strict-Transport-Security"] = (
+                "max-age=31536000; includeSubDomains"
+            )
+        return response
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application.
 
@@ -90,9 +111,12 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.cors_origins,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=settings.cors_allow_methods,
+        allow_headers=settings.cors_allow_headers,
     )
+
+    # Security headers middleware (wraps CORS so it runs on all responses)
+    application.add_middleware(SecurityHeadersMiddleware)
 
     # Include API v1 routes
     application.include_router(api_v1_router)
