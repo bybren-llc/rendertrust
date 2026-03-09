@@ -47,21 +47,24 @@ os.environ.setdefault("REDIS_URL", "redis://localhost:6379/1")
 os.environ.setdefault("STRIPE_SECRET_KEY", "sk_test_fake")
 os.environ.setdefault("STRIPE_WEBHOOK_SECRET", "whsec_test_fake")
 
-from collections.abc import AsyncGenerator  # noqa: E402
+from typing import TYPE_CHECKING
 
-import pytest  # noqa: E402
-from httpx import ASGITransport, AsyncClient  # noqa: E402
-from passlib.hash import bcrypt  # noqa: E402
-from sqlalchemy.ext.asyncio import (  # noqa: E402
+import pytest
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+from httpx import ASGITransport, AsyncClient
+from passlib.hash import bcrypt
+from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
 
-from core.auth.jwt import create_access_token  # noqa: E402
-from core.database import Base, get_db_session  # noqa: E402
-from core.main import create_app  # noqa: E402
-from core.models.base import User  # noqa: E402
+from core.auth.jwt import create_access_token
+from core.database import Base, get_db_session
+from core.main import create_app
+from core.models.base import User
 
 # ---------------------------------------------------------------------------
 # Test database URL -- uses in-memory SQLite so no external DB server needed.
@@ -101,9 +104,16 @@ async def test_engine():
 async def db_session(
     test_engine,
 ) -> AsyncGenerator[AsyncSession, None]:
-    """Yield a per-test database session that rolls back after each test."""
+    """Yield a per-test database session that rolls back after each test.
+
+    Uses a nested transaction (savepoint) so that even if test code
+    calls ``session.commit()``, the outer transaction still rolls back.
+    """
     async with test_engine.connect() as connection:
         transaction = await connection.begin()
+        # Use begin_nested() for savepoint isolation — prevents commit()
+        # inside tests from breaking the rollback strategy.
+        nested = await connection.begin_nested()
         session_factory = async_sessionmaker(
             bind=connection,
             class_=AsyncSession,
@@ -113,6 +123,9 @@ async def db_session(
         async with session_factory() as session:
             yield session
 
+        # Roll back the savepoint, then the outer transaction.
+        if nested.is_active:
+            await nested.rollback()
         await transaction.rollback()
 
 
