@@ -142,7 +142,8 @@ jobs:
         run: alembic upgrade head
 
       - name: Run integration tests
-        run: pytest tests/ -v --tb=short -m "integration" --junitxml=integration-results.xml
+        # Exit code 5 = no tests collected (OK when none exist yet)
+        run: pytest tests/ -v --tb=short -m "integration" --junitxml=integration-results.xml || [ $? -eq 5 ]
 
       - name: Upload test results
         if: always()
