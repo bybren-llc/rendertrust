@@ -68,8 +68,8 @@ async def readiness_check(
     # Check Redis
     try:
         settings = get_settings()
-        r: aioredis.Redis = aioredis.from_url(settings.redis_url)
-        await r.ping()  # type: ignore[misc]
+        r: aioredis.Redis = aioredis.from_url(settings.redis_url)  # type: ignore[no-untyped-call]
+        await r.ping()
         await r.aclose()
         checks["redis"] = "connected"
     except Exception:
