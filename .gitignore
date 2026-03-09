@@ -96,6 +96,10 @@ ENV/
 # Docker
 docker-compose.override.yml
 
+# Agent worktrees and outputs
+.claude/worktrees/
+docs/agent-outputs/
+
 # Planning workflow - keep only templates and completed docs
 specs/wip/
 specs/todo/
