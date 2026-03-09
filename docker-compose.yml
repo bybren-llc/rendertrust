@@ -14,6 +14,12 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - rendertrust-network
     restart: unless-stopped
