@@ -1,6 +1,9 @@
+import datetime
+import os
+
+import jwt
 from fastapi import FastAPI, Header
 from influxdb_client import InfluxDBClient, Point
-import jwt, os, datetime
 
 app = FastAPI()
 client = InfluxDBClient(url="http://influxdb:8086", token="root:root", org="wtfb")

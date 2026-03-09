@@ -1,5 +1,8 @@
+import asyncio
+import random
+
 from fastapi import FastAPI
-import asyncio,random
+
 app=FastAPI()
 @app.post('/execute')
 async def exec(job:dict):

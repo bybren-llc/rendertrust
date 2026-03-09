@@ -1,4 +1,6 @@
 from scheduler.cpu_filter import pick_node
+
+
 class Job: pass
 class Node:
     def __init__(self,id,cpu,gpu,free_cores,vram,load=0): self.id=id; self.cpu=cpu; self.gpu=gpu; self.free_cores=free_cores; self.vram=vram; self.load=load

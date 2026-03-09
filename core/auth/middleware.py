@@ -65,7 +65,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             try:
                 payload = verify_token(token)
                 request.state.user_id = payload.sub
-            except (JWTError, Exception):  # noqa: BLE001
+            except (JWTError, Exception):
                 # Token is invalid; request.state.user_id stays None.
                 # Endpoints requiring auth will return 401 via Depends().
                 logger.debug("auth_middleware_token_invalid", path=request.url.path)
