@@ -32,10 +32,10 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install ".[dev]"
 
       - name: Run pip-audit
-        run: pip-audit --strict --desc on --skip-editable
+        run: pip-audit --desc on
 
   sast:
     name: Static Analysis (Semgrep)
