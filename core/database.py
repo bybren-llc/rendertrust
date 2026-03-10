@@ -42,6 +42,17 @@ class Base(DeclarativeBase):
     """
 
 
+def _utcnow() -> datetime.datetime:
+    """Return current UTC time with microsecond precision.
+
+    Used as Python-level default for timestamps. This ensures entries
+    created in quick succession (e.g. in tests with SQLite) have
+    distinct timestamps, unlike server_default=func.now() which may
+    have only second-level precision in SQLite.
+    """
+    return datetime.datetime.now(tz=datetime.UTC)
+
+
 class TimestampMixin:
     """Mixin providing created_at and updated_at timestamp columns.
 
@@ -51,13 +62,15 @@ class TimestampMixin:
 
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
+        default=_utcnow,
         server_default=func.now(),
         nullable=False,
     )
     updated_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
+        default=_utcnow,
         server_default=func.now(),
-        onupdate=func.now(),
+        onupdate=_utcnow,
         nullable=False,
     )
 
@@ -81,15 +94,18 @@ def _create_engine() -> AsyncEngine:
     """Create an async SQLAlchemy engine from application settings.
 
     Pool size and overflow are configured from environment variables.
-    Echo is enabled in debug mode for SQL logging.
+    SQLite (used in tests) does not support pool_size/max_overflow,
+    so those parameters are omitted for sqlite:// URLs.
     """
     settings = get_settings()
-    return create_async_engine(
-        settings.database_url,
-        pool_size=settings.db_pool_size,
-        max_overflow=settings.db_max_overflow,
-        echo=settings.app_debug,
-    )
+    kwargs: dict[str, object] = {"echo": settings.app_debug}
+
+    # SQLite uses StaticPool and doesn't accept pool_size/max_overflow.
+    if not settings.database_url.startswith("sqlite"):
+        kwargs["pool_size"] = settings.db_pool_size
+        kwargs["max_overflow"] = settings.db_max_overflow
+
+    return create_async_engine(settings.database_url, **kwargs)
 
 
 # Module-level engine and session factory.

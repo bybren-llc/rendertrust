@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import datetime
 
+import redis.asyncio as aioredis
 import structlog
 
 from core.config import get_settings
@@ -63,8 +64,6 @@ class TokenBlacklist:
             True if the token was successfully blacklisted, False if
             the token is already expired or Redis is unavailable.
         """
-        import redis.asyncio as aioredis
-
         now = datetime.datetime.now(tz=datetime.UTC)
 
         # Ensure expires_at is timezone-aware for comparison
@@ -103,8 +102,6 @@ class TokenBlacklist:
             True if the token is blacklisted, False if it is not or
             if Redis is unavailable (fail-open).
         """
-        import redis.asyncio as aioredis
-
         settings = get_settings()
         key = f"{_KEY_PREFIX}{jti}"
 

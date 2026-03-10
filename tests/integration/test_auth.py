@@ -195,10 +195,10 @@ class TestTokenVerification:
 class TestAuthenticatedEndpoints:
     """Test endpoint authentication via get_current_user dependency."""
 
-    async def test_missing_auth_header_returns_403(self, auth_client: AsyncClient):
-        """HTTPBearer returns 403 when no Authorization header is present."""
+    async def test_missing_auth_header_returns_unauthorized(self, auth_client: AsyncClient):
+        """Missing Authorization header returns 401 or 403 depending on FastAPI version."""
         response = await auth_client.get("/test-auth")
-        assert response.status_code == 403
+        assert response.status_code in (401, 403)
 
     async def test_invalid_token_returns_401(self, auth_client: AsyncClient):
         response = await auth_client.get(
