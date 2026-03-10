@@ -22,12 +22,13 @@ dependencies = [
     "alembic>=1.14.0,<2.0",
 
     # Configuration & validation
-    "pydantic>=2.10.0,<3.0",
+    "pydantic[email]>=2.10.0,<3.0",
     "pydantic-settings>=2.7.0,<3.0",
 
     # Authentication
     "python-jose[cryptography]>=3.3.0,<4.0",
     "passlib[bcrypt]>=1.7.4,<2.0",
+    "bcrypt>=4.0,<4.1",
 
     # Payments
     "stripe>=11.0.0,<12.0",

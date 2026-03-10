@@ -32,6 +32,7 @@ from jose import JWTError, jwt
 from pydantic import BaseModel
 from sqlalchemy import select
 
+from core.auth.blacklist import token_blacklist
 from core.config import get_settings
 from core.database import get_db_session
 from core.models.base import User
@@ -157,8 +158,6 @@ async def verify_token(token: str) -> TokenPayload:
         raise credentials_exception from err
 
     # Check blacklist (after decode, before return)
-    from core.auth.blacklist import token_blacklist
-
     if payload_data.jti and await token_blacklist.is_revoked(payload_data.jti):
         logger.warning("revoked_token_used", jti=payload_data.jti)
         raise credentials_exception
@@ -197,8 +196,20 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    import uuid as _uuid
+
+    try:
+        user_id = _uuid.UUID(token_data.sub)
+    except (ValueError, AttributeError):
+        logger.warning("invalid_user_id_format", user_id=token_data.sub)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid user ID",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from None
+
     result = await session.execute(
-        select(User).where(User.id == token_data.sub),
+        select(User).where(User.id == user_id),
     )
     user = result.scalar_one_or_none()
 
