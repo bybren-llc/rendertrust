@@ -1,0 +1,71 @@
+# RenderTrust E2E Test Infrastructure
+# Ephemeral Docker Compose stack for running the full test suite against
+# real PostgreSQL 16 and Redis 7 instances.
+#
+# Usage:
+#   ./scripts/run-e2e.sh            # recommended wrapper
+#   make test-e2e                    # Makefile target
+#
+# This file is intentionally independent of docker-compose.yml: different
+# container names, ports, networks, and volumes so the two can coexist.
+
+services:
+  test-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+      POSTGRES_DB: rendertrust_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    # tmpfs for ephemeral storage -- no data survives container removal
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - test-network
+
+  test-redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - test-network
+
+  test-runner:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      SECRET_KEY: test-secret-key-not-for-production
+      JWT_SECRET_KEY: test-jwt-secret-not-for-production
+      DATABASE_URL: "postgresql+asyncpg://test_user:test_pass@test-db:5432/rendertrust_test"
+      TEST_DATABASE_URL: "postgresql+asyncpg://test_user:test_pass@test-db:5432/rendertrust_test"
+      REDIS_URL: "redis://test-redis:6379/1"
+      STRIPE_SECRET_KEY: sk_test_fake
+      STRIPE_WEBHOOK_SECRET: whsec_test_fake
+    depends_on:
+      test-db:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    command: >
+      bash -c "
+        apt-get update -qq && apt-get install -y -qq libpq-dev gcc > /dev/null 2>&1 &&
+        pip install -q -e '.[dev]' &&
+        python -m pytest tests/ -v --tb=short
+      "
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

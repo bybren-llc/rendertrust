@@ -154,6 +154,20 @@ jobs:
           retention-days: 7
 
   # ──────────────────────────────────────────────────────────────
+  # Stage 2b: E2E Tests (full Docker Compose stack)
+  # ──────────────────────────────────────────────────────────────
+  e2e-tests:
+    name: E2E Docker Tests
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run E2E test suite
+        run: ./scripts/run-e2e.sh
+
+  # ──────────────────────────────────────────────────────────────
   # Stage 3: Build (depends on tests)
   # ──────────────────────────────────────────────────────────────
   build:

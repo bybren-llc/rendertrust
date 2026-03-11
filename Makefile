@@ -1,4 +1,4 @@
-.PHONY: dev test test-cov lint lint-fix security migrate migrate-create ci clean
+.PHONY: dev test test-cov test-e2e lint lint-fix security migrate migrate-create ci clean
 
 dev:
 	docker compose up -d
@@ -9,6 +9,9 @@ test:
 
 test-cov:
 	pytest tests/ -v --cov=core --cov-report=term-missing --cov-report=html
+
+test-e2e:
+	./scripts/run-e2e.sh
 
 lint:
 	ruff check .
