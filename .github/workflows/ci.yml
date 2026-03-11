@@ -142,8 +142,7 @@ jobs:
         run: alembic upgrade head
 
       - name: Run integration tests
-        # Exit code 5 = no tests collected (OK when none exist yet)
-        run: pytest tests/ -v --tb=short -m "integration" --junitxml=integration-results.xml || [ $? -eq 5 ]
+        run: pytest tests/integration/ -v --tb=short --junitxml=integration-results.xml
 
       - name: Upload test results
         if: always()
@@ -158,7 +157,7 @@ jobs:
   # ──────────────────────────────────────────────────────────────
   e2e-tests:
     name: E2E Docker Tests
-    needs: [lint]
+    needs: [lint, unit-tests, type-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -172,7 +171,7 @@ jobs:
   # ──────────────────────────────────────────────────────────────
   build:
     name: Docker Build
-    needs: [unit-tests, type-check]
+    needs: [unit-tests, integration-tests, type-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
