@@ -25,11 +25,21 @@ from core.models.base import (
     TransactionSource,
     User,
 )
+from core.scheduler.models import (
+    EdgeNode,
+    JobDispatch,
+    JobStatus,
+    NodeStatus,
+)
 
 __all__ = [
     "Base",
     "BaseModel",
     "CreditLedgerEntry",
+    "EdgeNode",
+    "JobDispatch",
+    "JobStatus",
+    "NodeStatus",
     "Project",
     "TransactionDirection",
     "TransactionSource",
