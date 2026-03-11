@@ -141,6 +141,7 @@ module = [
     "web3.*",
     "postmarker.*",
     "jose.*",
+    "x402.*",
     "jinja2.*",
     "boto3.*",
     "db.*",
@@ -151,6 +152,7 @@ ignore_missing_imports = true
 module = [
     "core.billing.*",
     "core.gateway.web.*",
+    "core.gateway.x402.*",
     "core.ledger.*",
     "core.scheduler.*",
     "edgekit.*",

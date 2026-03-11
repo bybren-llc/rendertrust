@@ -125,6 +125,25 @@ def create_app() -> FastAPI:
     # Include API v1 routes
     application.include_router(api_v1_router)
 
+    # x402 payment middleware (PoC -- disabled by default)
+    if settings.x402_enabled:
+        from core.gateway.x402.middleware import configure_x402
+        from core.gateway.x402.routes import router as x402_router
+
+        application.include_router(x402_router, prefix="/api/v1")
+        configure_x402(
+            application,
+            pay_to=settings.x402_pay_to,
+            facilitator_url=settings.x402_facilitator_url,
+            network=settings.x402_network,
+            routes={
+                "POST /api/v1/x402/compute": {
+                    "price": settings.x402_compute_price,
+                    "description": "Compute job (x402 PoC)",
+                },
+            },
+        )
+
     # Root-level convenience endpoints
     @application.get("/health")
     async def root_health() -> dict[str, str]:

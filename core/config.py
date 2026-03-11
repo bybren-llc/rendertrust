@@ -69,6 +69,13 @@ class AppSettings(BaseSettings):
     sentry_dsn: str = ""
     posthog_api_key: str = ""
 
+    # x402 Payment Protocol (PoC)
+    x402_enabled: bool = False
+    x402_pay_to: str = ""  # EVM wallet address to receive payments
+    x402_facilitator_url: str = "https://x402.org/facilitator"
+    x402_network: str = "eip155:84532"  # Base Sepolia testnet
+    x402_compute_price: str = "$0.01"
+
     # CORS
     cors_origins: list[str] = ["http://localhost:3000", "http://localhost:8000"]
     cors_allow_methods: list[str] = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
