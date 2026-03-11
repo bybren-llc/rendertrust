@@ -14,7 +14,7 @@
 
 """API v1 router aggregating all sub-routers.
 
-Includes health checks, authentication, credits, and billing.
+Includes health checks, authentication, credits, billing, and scheduler.
 """
 
 from fastapi import APIRouter
@@ -23,6 +23,7 @@ from core.api.v1.auth import router as auth_router
 from core.api.v1.credits import router as credits_router
 from core.api.v1.health import router as health_router
 from core.billing.stripe.stripe_webhook import router as stripe_webhook_router
+from core.scheduler.router import router as scheduler_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 
@@ -37,3 +38,6 @@ api_v1_router.include_router(stripe_webhook_router, tags=["billing"])
 
 # Credits
 api_v1_router.include_router(credits_router, tags=["credits"])
+
+# Scheduler (edge node management)
+api_v1_router.include_router(scheduler_router, tags=["scheduler"])
