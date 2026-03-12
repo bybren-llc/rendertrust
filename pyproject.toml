@@ -72,6 +72,7 @@ blockchain = [
 edge = [
     "influxdb-client>=1.40.0,<2.0",
     "hvac>=2.3.0,<3.0",
+    "websockets>=14.0,<15.0",
 ]
 
 [tool.setuptools.packages.find]
