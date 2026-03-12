@@ -1,4 +1,4 @@
-# Copyright 2026 ByBren, LLC
+# Copyright 2025 ByBren, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Object storage service package.
+"""Storage package for RenderTrust.
 
-Provides an S3-compatible abstraction layer for file storage operations.
-Supports MinIO (development), Cloudflare R2, and AWS S3 via boto3.
+Provides data-at-rest encryption for job payloads and results
+stored in S3-compatible storage.
+
+Usage:
+    from core.storage.encryption import EncryptionService
 """
-
-from core.storage.config import StorageSettings, get_storage_settings
-from core.storage.service import StorageService
-
-__all__ = [
-    "StorageService",
-    "StorageSettings",
-    "get_storage_settings",
-]
