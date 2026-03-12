@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
-import JobsPage from "./pages/JobsPage";
+import JobListPage from "./pages/jobs/JobListPage";
+import SubmitJobPage from "./pages/jobs/SubmitJobPage";
+import JobDetailPage from "./pages/jobs/JobDetailPage";
 import CreditsPage from "./pages/CreditsPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -20,7 +22,9 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs" element={<JobListPage />} />
+          <Route path="/jobs/new" element={<SubmitJobPage />} />
+          <Route path="/jobs/:id" element={<JobDetailPage />} />
           <Route path="/credits" element={<CreditsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
