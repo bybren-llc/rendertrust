@@ -103,8 +103,8 @@ def create_app() -> FastAPI:
         title="RenderTrust API",
         description="A general-purpose trust fabric for any computational service",
         version="0.1.0",
-        docs_url="/docs" if settings.app_debug else None,
-        redoc_url="/redoc" if settings.app_debug else None,
+        docs_url="/docs",
+        redoc_url="/redoc",
         lifespan=lifespan,
     )
 
