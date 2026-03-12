@@ -20,5 +20,11 @@ auto-discovers plugins by their ``job_type`` at init time.
 """
 
 from edgekit.workers.plugins.base import BaseWorkerPlugin, WorkerResult
+from edgekit.workers.plugins.cpu import CpuBenchmarkPlugin, EchoPlugin
 
-__all__ = ["BaseWorkerPlugin", "WorkerResult"]
+__all__ = [
+    "BaseWorkerPlugin",
+    "CpuBenchmarkPlugin",
+    "EchoPlugin",
+    "WorkerResult",
+]
