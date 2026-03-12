@@ -1,7 +1,8 @@
 # MIT License -- see LICENSE-MIT
 #
-# Docker Compose stack for Loki + Promtail + Grafana.
-# Provides structured log aggregation and visualization for RenderTrust.
+# Docker Compose stack for Loki + Promtail + Prometheus + Grafana.
+# Provides structured log aggregation, metrics collection, and
+# dashboard visualization for RenderTrust.
 #
 # Usage:
 #   docker compose -f ci/loki/docker-compose.loki.yml up -d
@@ -45,6 +46,28 @@ services:
     networks:
       - rendertrust-net
 
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    container_name: rendertrust-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../grafana/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --output-document=- http://localhost:9090/-/healthy || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - rendertrust-net
+
   grafana:
     image: grafana/grafana:10.4.2
     container_name: rendertrust-grafana
@@ -57,10 +80,14 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ../grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ../grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ../grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
     restart: unless-stopped
     depends_on:
       loki:
+        condition: service_healthy
+      prometheus:
         condition: service_healthy
     networks:
       - rendertrust-net
@@ -69,6 +96,8 @@ volumes:
   loki_data:
     driver: local
   grafana_data:
+    driver: local
+  prometheus_data:
     driver: local
 
 networks:

@@ -1,0 +1,213 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "rendertrust-job-throughput",
+    "title": "RenderTrust - Job Throughput",
+    "description": "Job dispatch rate, completion rate, success percentage, and credit consumption for the RenderTrust platform.",
+    "tags": ["rendertrust", "jobs"],
+    "timezone": "browser",
+    "editable": true,
+    "schemaVersion": 39,
+    "graphTooltip": 1,
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "10s",
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    },
+    "panels": [
+      {
+        "title": "Jobs Dispatched per Minute",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "opm",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "list", "placement": "bottom" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(jobs_dispatched_total[1m])) * 60",
+            "legendFormat": "All Jobs",
+            "refId": "A"
+          },
+          {
+            "expr": "sum by (job_type) (rate(jobs_dispatched_total[1m])) * 60",
+            "legendFormat": "{{job_type}}",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "title": "Jobs Completed per Minute",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "opm",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "list", "placement": "bottom" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(jobs_completed_total{status=\"completed\"}[1m])) * 60",
+            "legendFormat": "Completed",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(jobs_completed_total{status=\"failed\"}[1m])) * 60",
+            "legendFormat": "Failed",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "title": "Jobs Failed per Minute",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "opm",
+            "color": { "fixedColor": "red", "mode": "fixed" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "red", "value": 10 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "list", "placement": "bottom" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(jobs_completed_total{status=\"failed\"}[1m])) * 60",
+            "legendFormat": "Failed",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "title": "Job Success Rate (%)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 90 },
+                { "color": "green", "value": 99 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "list", "placement": "bottom" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(jobs_completed_total{status=\"completed\"}[5m])) / sum(rate(jobs_completed_total[5m])) * 100",
+            "legendFormat": "Success Rate",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "title": "Jobs by Type (render / inference)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "opm",
+            "custom": {
+              "fillOpacity": 15,
+              "stacking": { "mode": "normal" }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "right" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "sum by (job_type) (rate(jobs_dispatched_total[1m])) * 60",
+            "legendFormat": "Dispatched: {{job_type}}",
+            "refId": "A"
+          },
+          {
+            "expr": "sum by (job_type) (rate(jobs_completed_total[1m])) * 60",
+            "legendFormat": "Completed: {{job_type}}",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "title": "Credits Consumed Over Time",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": { "fixedColor": "purple", "mode": "fixed" },
+            "custom": {
+              "fillOpacity": 20
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": { "displayMode": "list", "placement": "bottom" },
+          "tooltip": { "mode": "multi" }
+        },
+        "targets": [
+          {
+            "expr": "rate(credits_consumed_total[5m]) * 60",
+            "legendFormat": "Credits / min",
+            "refId": "A"
+          },
+          {
+            "expr": "credits_consumed_total",
+            "legendFormat": "Cumulative Credits",
+            "refId": "B"
+          }
+        ]
+      }
+    ]
+  }
+}
