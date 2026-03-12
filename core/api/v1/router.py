@@ -15,7 +15,7 @@
 """API v1 router aggregating all sub-routers.
 
 Includes health checks, authentication, credits, billing, scheduler, dispatch,
-job status, and edge relay WebSocket server.
+job status, ledger proof verification, and edge relay WebSocket server.
 """
 
 from fastapi import APIRouter
@@ -25,6 +25,7 @@ from core.api.v1.certs import router as certs_router
 from core.api.v1.credits import router as credits_router
 from core.api.v1.health import router as health_router
 from core.api.v1.jobs import router as jobs_router
+from core.api.v1.ledger import router as ledger_router
 from core.billing.stripe.stripe_webhook import router as stripe_webhook_router
 from core.relay.server import router as relay_router
 from core.scheduler.dispatch import router as dispatch_router
@@ -58,3 +59,6 @@ api_v1_router.include_router(relay_router, tags=["relay"])
 
 # Certificate management (mTLS)
 api_v1_router.include_router(certs_router, tags=["certs"])
+
+# Ledger proof verification and anchor listing
+api_v1_router.include_router(ledger_router, tags=["ledger"])

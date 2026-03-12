@@ -47,13 +47,28 @@ class ChainReceipt:
     block_number: int
 
 
+@dataclass(frozen=True)
+class ChainVerification:
+    """Result of verifying a Merkle root against on-chain data."""
+
+    verified: bool
+    on_chain_root: str
+
+
 class ChainClient(Protocol):
-    """Protocol for submitting Merkle roots to the blockchain."""
+    """Protocol for submitting and verifying Merkle roots on the blockchain."""
 
     def submit_root(self, merkle_root_hex: str, entry_count: int) -> ChainReceipt:
         """Submit *merkle_root_hex* for *entry_count* entries.
 
         Returns a :class:`ChainReceipt` on success, or raises on failure.
+        """
+        ...
+
+    def verify_root(self, tx_hash: str, expected_root_hex: str) -> ChainVerification:
+        """Verify that *expected_root_hex* matches the root stored on-chain for *tx_hash*.
+
+        Returns a :class:`ChainVerification` with the comparison result.
         """
         ...
 
@@ -118,6 +133,22 @@ class Web3ChainClient:
             block_number=receipt.blockNumber,
         )
 
+    def verify_root(self, tx_hash: str, expected_root_hex: str) -> ChainVerification:
+        """Read the anchored root from the transaction and compare."""
+        from web3 import Web3  # type: ignore[import-untyped]
+
+        tx_receipt = self._w3.eth.get_transaction_receipt(tx_hash)
+        # Decode the anchorRoot event log to extract the stored root.
+        logs = self._contract.events.RootAnchored().process_receipt(tx_receipt)
+        if not logs:
+            return ChainVerification(verified=False, on_chain_root="")
+
+        on_chain_root = Web3.to_hex(logs[0]["args"]["merkleRoot"])[2:]  # strip 0x
+        return ChainVerification(
+            verified=on_chain_root == expected_root_hex,
+            on_chain_root=on_chain_root,
+        )
+
 
 class NoOpChainClient:
     """Chain client that does nothing -- useful for tests and dry runs."""
@@ -132,4 +163,16 @@ class NoOpChainClient:
         return ChainReceipt(
             tx_hash="0x" + "0" * 64,
             block_number=0,
+        )
+
+    def verify_root(self, tx_hash: str, expected_root_hex: str) -> ChainVerification:
+        logger.info(
+            "NoOpChainClient.verify_root called "
+            "(tx=%s, root=%s) -- returning verified=True",
+            tx_hash[:16],
+            expected_root_hex[:16],
+        )
+        return ChainVerification(
+            verified=True,
+            on_chain_root=expected_root_hex,
         )

@@ -14,6 +14,7 @@
 
 """Blockchain anchoring service for the RenderTrust credit ledger."""
 
+from core.ledger.anchor.chain import ChainVerification
 from core.ledger.anchor.merkle import MerkleProof, MerkleTree
 from core.ledger.anchor.models import AnchorRecord
 from core.ledger.anchor.service import AnchoringService
@@ -21,6 +22,7 @@ from core.ledger.anchor.service import AnchoringService
 __all__ = [
     "AnchorRecord",
     "AnchoringService",
+    "ChainVerification",
     "MerkleProof",
     "MerkleTree",
 ]

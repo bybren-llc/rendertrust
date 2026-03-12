@@ -63,6 +63,7 @@ from sqlalchemy.ext.asyncio import (
 
 from core.auth.jwt import create_access_token
 from core.database import Base, get_db_session
+from core.ledger.anchor.models import Base as AnchorBase
 from core.main import create_app
 from core.models.base import User
 
@@ -89,10 +90,13 @@ async def test_engine():
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Anchor models use a separate Base — create those tables too.
+        await conn.run_sync(AnchorBase.metadata.create_all)
 
     yield engine
 
     async with engine.begin() as conn:
+        await conn.run_sync(AnchorBase.metadata.drop_all)
         await conn.run_sync(Base.metadata.drop_all)
     await engine.dispose()
 
