@@ -14,7 +14,8 @@
 
 """API v1 router aggregating all sub-routers.
 
-Includes health checks, authentication, credits, billing, scheduler, and dispatch.
+Includes health checks, authentication, credits, billing, scheduler, dispatch,
+and edge relay WebSocket server.
 """
 
 from fastapi import APIRouter
@@ -23,6 +24,7 @@ from core.api.v1.auth import router as auth_router
 from core.api.v1.credits import router as credits_router
 from core.api.v1.health import router as health_router
 from core.billing.stripe.stripe_webhook import router as stripe_webhook_router
+from core.relay.server import router as relay_router
 from core.scheduler.dispatch import router as dispatch_router
 from core.scheduler.router import router as scheduler_router
 
@@ -45,3 +47,6 @@ api_v1_router.include_router(scheduler_router, tags=["scheduler"])
 
 # Job dispatch (scheduler algorithm)
 api_v1_router.include_router(dispatch_router, tags=["dispatch"])
+
+# Edge relay (WebSocket server for node communication)
+api_v1_router.include_router(relay_router, tags=["relay"])
