@@ -1,0 +1,68 @@
+# MIT License -- see LICENSE-MIT
+#
+# Cloudflared Tunnel Sidecar for RenderTrust
+#
+# Runs alongside the main Coolify stack (ci/coolify/docker-compose.coolify.yml).
+# The cloudflared daemon creates an outbound-only encrypted tunnel to
+# Cloudflare's edge, eliminating the need to open any inbound ports on
+# the Hetzner VPS.
+#
+# Usage:
+#   1. Place tunnel credentials JSON at ./credentials/<TUNNEL_ID>.json
+#   2. Set TUNNEL_TOKEN in your environment or .env file
+#   3. docker compose -f docker-compose.tunnel.yml up -d
+#
+# The tunnel config (tunnel-config.yml) is mounted read-only into the
+# container. Edit that file to add or change ingress rules.
+#
+# Related tickets:
+#   - REN-115: Coolify project setup
+#   - REN-116: Cloudflare Tunnel + DNS configuration
+
+services:
+  # ── Cloudflare Tunnel Daemon ─────────────────────────────────────
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: rendertrust-cloudflared
+    command: tunnel --config /etc/cloudflared/config.yml run
+    environment:
+      # TUNNEL_TOKEN is the alternative authentication method.
+      # You can authenticate via either:
+      #   (a) Credentials JSON file (mounted below), OR
+      #   (b) TUNNEL_TOKEN environment variable (set in Coolify UI or .env)
+      # If using TUNNEL_TOKEN, the credentials-file in tunnel-config.yml
+      # is ignored. Token-based auth is simpler for Coolify deployments.
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-<YOUR_TUNNEL_TOKEN>}
+    volumes:
+      # Tunnel configuration -- ingress rules, timeouts, etc.
+      - ./tunnel-config.yml:/etc/cloudflared/config.yml:ro
+      # Tunnel credentials -- only needed if NOT using TUNNEL_TOKEN.
+      # Create this directory and place <TUNNEL_ID>.json inside it.
+      - ./credentials:/etc/cloudflared/credentials:ro
+    restart: unless-stopped
+    networks:
+      - rendertrust-net
+    # cloudflared is lightweight (~30MB RSS). No GPU or large memory needed.
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+        reservations:
+          memory: 64M
+          cpus: "0.1"
+    # Healthcheck: cloudflared exposes a metrics endpoint on :2000 by default.
+    # The /ready path returns 200 when the tunnel is connected.
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:2000/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+networks:
+  # Use the same external network as the Coolify stack so cloudflared
+  # can reach localhost-bound services (app:8000, etc.) by container name
+  # or via the host network.
+  rendertrust-net:
+    external: true

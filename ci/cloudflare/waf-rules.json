@@ -1,0 +1,118 @@
+{
+  "_comment": [
+    "MIT License -- see LICENSE-MIT",
+    "",
+    "RenderTrust Cloudflare WAF Custom Rules Template",
+    "",
+    "These rules are written in Cloudflare's custom rules format and can be",
+    "imported via the Cloudflare dashboard (Security > WAF > Custom Rules) or",
+    "via the Cloudflare API (https://api.cloudflare.com/#firewall-rules).",
+    "",
+    "IMPORTANT: Review and adjust thresholds before deploying to production.",
+    "Rate limits, IP allowlists, and challenge conditions should be tuned",
+    "based on observed traffic patterns after initial deployment.",
+    "",
+    "Related tickets:",
+    "  - REN-116: Cloudflare Tunnel + DNS configuration",
+    "  - REN-62: Security Hardening Epic"
+  ],
+  "rules": [
+    {
+      "description": "Rate limit API endpoints -- 100 requests per minute per IP",
+      "expression": "(http.request.uri.path matches \"^/api/\")",
+      "action": "rate_limit",
+      "action_parameters": {
+        "response": {
+          "status_code": 429,
+          "content_type": "application/json",
+          "content": "{\"error\":\"Rate limit exceeded. Please retry after 60 seconds.\",\"retry_after\":60}"
+        },
+        "characteristics": ["ip.src"],
+        "period": 60,
+        "requests_per_period": 100,
+        "mitigation_timeout": 60
+      },
+      "enabled": true,
+      "priority": 10
+    },
+    {
+      "description": "Block SQL injection patterns in URL and query string",
+      "expression": "(http.request.uri contains \"UNION SELECT\" or http.request.uri contains \"1=1\" or http.request.uri contains \"' OR '\" or http.request.uri contains \"'; DROP\" or http.request.uri contains \"--\" and http.request.uri contains \"SELECT\")",
+      "action": "block",
+      "action_parameters": {
+        "response": {
+          "status_code": 403,
+          "content_type": "application/json",
+          "content": "{\"error\":\"Forbidden\"}"
+        }
+      },
+      "enabled": true,
+      "priority": 20
+    },
+    {
+      "description": "Block XSS patterns in URL parameters",
+      "expression": "(http.request.uri contains \"<script\" or http.request.uri contains \"javascript:\" or http.request.uri contains \"onerror=\" or http.request.uri contains \"onload=\" or http.request.uri contains \"%3Cscript\")",
+      "action": "block",
+      "action_parameters": {
+        "response": {
+          "status_code": 403,
+          "content_type": "application/json",
+          "content": "{\"error\":\"Forbidden\"}"
+        }
+      },
+      "enabled": true,
+      "priority": 21
+    },
+    {
+      "description": "Allow Stripe webhook IPs -- bypass rate limiting and challenges",
+      "_note": "Stripe publishes webhook IPs at https://stripe.com/docs/ips. These ranges may change; verify periodically.",
+      "expression": "(ip.src in {3.18.12.63 3.130.192.202 13.235.14.237 13.235.122.149 18.211.135.69 35.154.171.200 54.88.130.119 54.88.130.237 54.187.174.169 54.187.205.235 54.187.216.72} and http.request.uri.path eq \"/api/v1/webhooks/stripe\")",
+      "action": "skip",
+      "action_parameters": {
+        "products": ["rateLimit", "waf"],
+        "ruleset": "current"
+      },
+      "enabled": true,
+      "priority": 1
+    },
+    {
+      "description": "Challenge requests with suspicious or empty user agents",
+      "expression": "(http.user_agent eq \"\" or http.user_agent contains \"sqlmap\" or http.user_agent contains \"nikto\" or http.user_agent contains \"masscan\" or http.user_agent contains \"ZmEu\" or http.user_agent contains \"dirbuster\")",
+      "action": "managed_challenge",
+      "enabled": true,
+      "priority": 30
+    },
+    {
+      "description": "Block path traversal attempts",
+      "expression": "(http.request.uri contains \"../\" or http.request.uri contains \"..%2f\" or http.request.uri contains \"%2e%2e/\" or http.request.uri contains \"%2e%2e%2f\")",
+      "action": "block",
+      "action_parameters": {
+        "response": {
+          "status_code": 403,
+          "content_type": "application/json",
+          "content": "{\"error\":\"Forbidden\"}"
+        }
+      },
+      "enabled": true,
+      "priority": 22
+    },
+    {
+      "description": "Stricter rate limit on authentication endpoints -- 20 requests per minute per IP",
+      "expression": "(http.request.uri.path matches \"^/api/v1/auth/\")",
+      "action": "rate_limit",
+      "action_parameters": {
+        "response": {
+          "status_code": 429,
+          "content_type": "application/json",
+          "content": "{\"error\":\"Too many authentication attempts. Please retry after 60 seconds.\",\"retry_after\":60}"
+        },
+        "characteristics": ["ip.src"],
+        "period": 60,
+        "requests_per_period": 20,
+        "mitigation_timeout": 60
+      },
+      "enabled": true,
+      "priority": 11
+    }
+  ]
+}
