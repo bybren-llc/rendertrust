@@ -448,8 +448,8 @@ class TestStorageSettings:
         settings = StorageSettings()
         assert settings.endpoint_url == "http://localhost:9000"
         assert settings.bucket_name == "rendertrust-dev"
-        assert settings.access_key == "minioadmin"
-        assert settings.secret_key == "minioadmin"  # noqa: S105
+        assert settings.access_key.get_secret_value() == "minioadmin"
+        assert settings.secret_key.get_secret_value() == "minioadmin"
         assert settings.region == "us-east-1"
         assert settings.use_ssl is True
 
@@ -509,3 +509,57 @@ class TestStorageServiceInit:
     def test_bucket_name_property(self, storage_service: StorageService) -> None:
         """bucket_name property returns the configured bucket name."""
         assert storage_service.bucket_name == "rendertrust-test"
+
+
+# ---------------------------------------------------------------------------
+# Security Hardening Tests (from SecEng audit)
+# ---------------------------------------------------------------------------
+
+
+class TestPathTraversalPrevention:
+    """Tests for path traversal prevention in storage keys."""
+
+    def test_validate_key_rejects_dotdot(self) -> None:
+        """validate_key rejects keys containing '..' traversal."""
+        with pytest.raises(StorageKeyError, match="path traversal"):
+            StorageService.validate_key("user-1/../admin/job-1/result")
+
+    def test_validate_key_rejects_null_bytes(self) -> None:
+        """validate_key rejects keys containing null bytes."""
+        with pytest.raises(StorageKeyError, match="null bytes"):
+            StorageService.validate_key("user-1/job-1/result\x00.html")
+
+    def test_build_key_rejects_slash_in_user_id(self) -> None:
+        """build_key rejects user_id containing '/'."""
+        with pytest.raises(StorageKeyError, match="invalid characters"):
+            StorageService.build_key("user/../admin", "job-1", "result")
+
+    def test_build_key_rejects_dotdot_in_job_id(self) -> None:
+        """build_key rejects job_id containing '..'."""
+        with pytest.raises(StorageKeyError, match="invalid characters"):
+            StorageService.build_key("user-1", "job-1/../../other", "result")
+
+    def test_build_key_rejects_null_in_filename(self) -> None:
+        """build_key rejects filename containing null bytes."""
+        with pytest.raises(StorageKeyError, match="invalid characters"):
+            StorageService.build_key("user-1", "job-1", "result\x00.exe")
+
+    def test_upload_rejects_traversal_key(self, storage_service: StorageService) -> None:
+        """upload_file rejects keys with path traversal."""
+        with pytest.raises(StorageKeyError, match="path traversal"):
+            storage_service.upload_file("user-1/../other/job/result", b"data")
+
+
+class TestPresignedUrlExpiry:
+    """Tests for presigned URL expiry limits."""
+
+    def test_presigned_url_rejects_over_24h(self, storage_service: StorageService) -> None:
+        """generate_presigned_url rejects expiry over 24 hours."""
+        with pytest.raises(ValueError, match="must not exceed"):
+            storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86401)
+
+    def test_presigned_url_allows_24h(self, storage_service: StorageService, mock_s3_client: MagicMock) -> None:
+        """generate_presigned_url allows exactly 24 hours."""
+        mock_s3_client.generate_presigned_url.return_value = "https://s3/presigned"
+        url = storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86400)
+        assert url == "https://s3/presigned"

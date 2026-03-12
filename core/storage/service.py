@@ -85,8 +85,8 @@ class StorageService:
         return boto3.client(
             "s3",
             endpoint_url=self._settings.endpoint_url,
-            aws_access_key_id=self._settings.access_key,
-            aws_secret_access_key=self._settings.secret_key,
+            aws_access_key_id=self._settings.access_key.get_secret_value(),
+            aws_secret_access_key=self._settings.secret_key.get_secret_value(),
             region_name=self._settings.region,
             config=BotoConfig(
                 signature_version="s3v4",
@@ -116,6 +116,10 @@ class StorageService:
             raise StorageKeyError("Storage key must not be empty")
         if key.startswith("/"):
             raise StorageKeyError("Storage key must not start with '/'")
+        if ".." in key:
+            raise StorageKeyError("Storage key must not contain '..' path traversal sequences")
+        if "\x00" in key:
+            raise StorageKeyError("Storage key must not contain null bytes")
 
     @staticmethod
     def build_key(user_id: str, job_id: str, filename: str = "result") -> str:
@@ -130,10 +134,13 @@ class StorageService:
             A key in the format ``{user_id}/{job_id}/{filename}``.
 
         Raises:
-            StorageKeyError: If any component is empty.
+            StorageKeyError: If any component is empty or contains invalid characters.
         """
-        if not user_id or not job_id or not filename:
-            raise StorageKeyError("user_id, job_id, and filename must not be empty")
+        for name, value in [("user_id", user_id), ("job_id", job_id), ("filename", filename)]:
+            if not value:
+                raise StorageKeyError(f"{name} must not be empty")
+            if "/" in value or ".." in value or "\x00" in value:
+                raise StorageKeyError(f"{name} contains invalid characters")
         return f"{user_id}/{job_id}/{filename}"
 
     def upload_file(
@@ -223,8 +230,11 @@ class StorageService:
         """
         self.validate_key(key)
 
+        max_expiry = 86400  # 24 hours
         if expires_in <= 0:
             raise ValueError("expires_in must be a positive integer")
+        if expires_in > max_expiry:
+            raise ValueError(f"expires_in must not exceed {max_expiry} seconds (24 hours)")
 
         try:
             url: str = self._client.generate_presigned_url(

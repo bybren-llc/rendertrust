@@ -22,6 +22,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -51,8 +52,8 @@ class StorageSettings(BaseSettings):
 
     endpoint_url: str = "http://localhost:9000"
     bucket_name: str = "rendertrust-dev"
-    access_key: str = "minioadmin"
-    secret_key: str = "minioadmin"  # noqa: S105
+    access_key: SecretStr = SecretStr("minioadmin")
+    secret_key: SecretStr = SecretStr("minioadmin")
     region: str = "us-east-1"
     use_ssl: bool = True
 
