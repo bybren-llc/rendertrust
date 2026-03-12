@@ -46,6 +46,7 @@ class StorageSettings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
+        extra="ignore",
     )
 
     endpoint_url: str = "http://localhost:9000"
