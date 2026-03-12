@@ -47,6 +47,9 @@ dependencies = [
 
     # Object storage (S3-compatible: MinIO, Cloudflare R2, AWS S3)
     "boto3>=1.35.0,<2.0",
+
+    # Monitoring
+    "prometheus-client>=0.21.0,<1.0",
 ]
 
 [project.optional-dependencies]
