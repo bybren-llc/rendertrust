@@ -1,8 +1,62 @@
 // MIT License -- see LICENSE-MIT
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, safeStorage } from "electron";
 import path from "path";
+import fs from "fs";
 
 const isDev = !app.isPackaged;
+
+// ---------------------------------------------------------------------------
+// Secure token storage using Electron's safeStorage API.
+//
+// Tokens are encrypted via the OS keychain (macOS Keychain, Windows DPAPI,
+// Linux Secret Service / libsecret) and persisted to disk in the app's
+// userData directory.
+// ---------------------------------------------------------------------------
+
+function getTokenPath(key: string): string {
+  const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, "_");
+  return path.join(app.getPath("userData"), `token_${safeKey}.enc`);
+}
+
+function registerSecureTokenHandlers(): void {
+  // Store encrypted token
+  ipcMain.handle(
+    "secure-token:set",
+    async (_event, key: string, value: string) => {
+      if (!safeStorage.isEncryptionAvailable()) {
+        throw new Error("Encryption is not available on this system");
+      }
+      const encrypted = safeStorage.encryptString(value);
+      const filePath = getTokenPath(key);
+      fs.writeFileSync(filePath, encrypted);
+    },
+  );
+
+  // Retrieve and decrypt token
+  ipcMain.handle("secure-token:get", async (_event, key: string) => {
+    const filePath = getTokenPath(key);
+    if (!fs.existsSync(filePath)) {
+      return null;
+    }
+    if (!safeStorage.isEncryptionAvailable()) {
+      throw new Error("Encryption is not available on this system");
+    }
+    const encrypted = fs.readFileSync(filePath);
+    return safeStorage.decryptString(encrypted);
+  });
+
+  // Delete token
+  ipcMain.handle("secure-token:delete", async (_event, key: string) => {
+    const filePath = getTokenPath(key);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Window creation
+// ---------------------------------------------------------------------------
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -28,8 +82,12 @@ function createWindow(): void {
   }
 }
 
+// ---------------------------------------------------------------------------
 // App lifecycle handlers
+// ---------------------------------------------------------------------------
+
 app.whenReady().then(() => {
+  registerSecureTokenHandlers();
   createWindow();
 
   app.on("activate", () => {

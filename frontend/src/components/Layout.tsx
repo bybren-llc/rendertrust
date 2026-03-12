@@ -1,5 +1,6 @@
 // MIT License -- see LICENSE-MIT
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const navItems = [
   { to: "/", label: "Dashboard" },
@@ -9,6 +10,14 @@ const navItems = [
 ];
 
 function Layout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate("/login", { replace: true });
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -39,19 +48,28 @@ function Layout() {
           ))}
         </nav>
 
-        {/* User info placeholder */}
+        {/* User info + logout */}
         <div className="border-t border-gray-200 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-brand-100" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
+              {user?.email?.charAt(0).toUpperCase() ?? "?"}
+            </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-gray-900">
                 Creator
               </p>
               <p className="truncate text-xs text-gray-500">
-                creator@example.com
+                {user?.email ?? "---"}
               </p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="mt-3 w-full rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          >
+            Sign out
+          </button>
         </div>
       </aside>
 
