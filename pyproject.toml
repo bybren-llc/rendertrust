@@ -44,6 +44,9 @@ dependencies = [
 
     # Cache
     "redis>=5.2.0,<6.0",
+
+    # Object storage (S3-compatible: MinIO, Cloudflare R2, AWS S3)
+    "boto3>=1.35.0,<2.0",
 ]
 
 [project.optional-dependencies]
@@ -145,6 +148,8 @@ module = [
     "x402.*",
     "jinja2.*",
     "boto3.*",
+    "botocore.*",
+    "mypy_boto3_s3.*",
     "db.*",
 ]
 ignore_missing_imports = true
