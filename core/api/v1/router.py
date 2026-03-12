@@ -21,6 +21,7 @@ job status, and edge relay WebSocket server.
 from fastapi import APIRouter
 
 from core.api.v1.auth import router as auth_router
+from core.api.v1.certs import router as certs_router
 from core.api.v1.credits import router as credits_router
 from core.api.v1.health import router as health_router
 from core.api.v1.jobs import router as jobs_router
@@ -54,3 +55,6 @@ api_v1_router.include_router(jobs_router, tags=["jobs"])
 
 # Edge relay (WebSocket server for node communication)
 api_v1_router.include_router(relay_router, tags=["relay"])
+
+# Certificate management (mTLS)
+api_v1_router.include_router(certs_router, tags=["certs"])
