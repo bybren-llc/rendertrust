@@ -40,6 +40,7 @@ os.environ.setdefault("STRIPE_WEBHOOK_SECRET", "whsec_test_fake")
 
 import pytest
 from starlette.testclient import TestClient
+from starlette.websockets import WebSocketDisconnect
 
 from core.relay.manager import ConnectionManager
 from core.relay.protocol import (
@@ -270,25 +271,21 @@ class TestRelayWebSocket:
     def test_reject_without_token(self, sync_client, node_id):
         """WebSocket without token query param is closed with 4001."""
         url = f"/api/v1/relay/ws/{node_id}"
-        with pytest.raises(Exception):
-            # Starlette TestClient raises on server-initiated close
-            with sync_client.websocket_connect(url) as ws:
-                ws.receive_json()
+        with pytest.raises(WebSocketDisconnect), sync_client.websocket_connect(url) as ws:
+            ws.receive_json()
 
     def test_reject_with_invalid_token(self, sync_client, node_id):
         """WebSocket with garbage token is closed with 4001."""
         url = f"/api/v1/relay/ws/{node_id}?token=not-a-valid-jwt"
-        with pytest.raises(Exception):
-            with sync_client.websocket_connect(url) as ws:
-                ws.receive_json()
+        with pytest.raises(WebSocketDisconnect), sync_client.websocket_connect(url) as ws:
+            ws.receive_json()
 
     def test_reject_with_wrong_node_id(self, sync_client, valid_token):
         """WebSocket where path node_id differs from token sub is rejected."""
         wrong_node_id = uuid.uuid4()
         url = f"/api/v1/relay/ws/{wrong_node_id}?token={valid_token}"
-        with pytest.raises(Exception):
-            with sync_client.websocket_connect(url) as ws:
-                ws.receive_json()
+        with pytest.raises(WebSocketDisconnect), sync_client.websocket_connect(url) as ws:
+            ws.receive_json()
 
     def test_message_exchange(self, sync_client, node_id, valid_token):
         """Connected node can send and receive messages."""

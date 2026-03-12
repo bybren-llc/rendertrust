@@ -25,7 +25,7 @@ import uuid
 from pydantic import BaseModel, Field
 
 
-class RelayMessageType(str, enum.Enum):
+class RelayMessageType(enum.StrEnum):
     """Types of messages exchanged over the relay WebSocket."""
 
     JOB_ASSIGN = "job_assign"

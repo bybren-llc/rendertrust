@@ -24,9 +24,8 @@ The token is verified against :func:`core.scheduler.crypto.verify_node_token`
 and the ``sub`` claim must match the ``node_id`` path parameter.
 """
 
-from __future__ import annotations
-
 import asyncio
+import contextlib
 import uuid
 
 import structlog
@@ -110,7 +109,7 @@ async def _heartbeat_loop(
                     last_pong.wait(),
                     timeout=_HEARTBEAT_TIMEOUT_SECONDS,
                 )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 logger.warning("heartbeat_timeout", node_id=str(node_id))
                 await websocket.close(code=_WS_CLOSE_HEARTBEAT_TIMEOUT)
                 return
@@ -199,8 +198,6 @@ async def relay_websocket(websocket: WebSocket, node_id: uuid.UUID) -> None:
         logger.exception("ws_unexpected_error", node_id=str(node_id))
     finally:
         heartbeat_task.cancel()
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await heartbeat_task
-        except asyncio.CancelledError:
-            pass
         await relay_manager.disconnect(node_id)
