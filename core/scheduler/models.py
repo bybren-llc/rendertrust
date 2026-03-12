@@ -22,7 +22,19 @@ import datetime
 import enum
 import uuid
 
-from sqlalchemy import JSON, DateTime, Enum, Float, ForeignKey, Index, String, Text, func
+from sqlalchemy import (
+    JSON,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    func,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import BaseModel
@@ -99,6 +111,9 @@ class JobDispatch(BaseModel):
         queued_at: Timestamp when the job entered the queue.
         dispatched_at: Timestamp when the job was sent to a node.
         completed_at: Timestamp when the job finished (success or failure).
+        result_ref: Reference to the job result (S3 URI, IPFS CID, etc.).
+        error_message: Error message if the job failed.
+        retry_count: Number of times this job has been retried.
         node: Relationship to the assigned EdgeNode.
     """
 
@@ -126,6 +141,11 @@ class JobDispatch(BaseModel):
     )
     completed_at: Mapped[datetime.datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+    result_ref: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    retry_count: Mapped[int] = mapped_column(
+        Integer, default=0, server_default=text("0"), nullable=False
     )
 
     # Relationships
