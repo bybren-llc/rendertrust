@@ -14,8 +14,9 @@
 
 """Edge node scheduler data models.
 
-Provides EdgeNode (compute node registry) and JobDispatch (job tracking)
-models for the distributed scheduler system.
+Provides EdgeNode (compute node registry), JobDispatch (job tracking),
+and DeadLetterEntry (failed job archive) models for the distributed
+scheduler system.
 """
 
 import datetime
@@ -155,4 +156,35 @@ class JobDispatch(BaseModel):
         return (
             f"<JobDispatch(id={self.id}, node_id={self.node_id}, "
             f"status={self.status.value})>"
+        )
+
+
+class DeadLetterEntry(BaseModel):
+    """Archive record for jobs that exhausted all retry attempts.
+
+    Attributes:
+        job_id: FK to the original JobDispatch record.
+        original_payload: The payload reference from the original job.
+        error_history: JSON list of error messages from each failed attempt.
+        failed_at: Timestamp when the job was moved to the dead letter queue.
+        retry_count: Number of retries attempted before moving to DLQ.
+    """
+
+    __tablename__ = "dead_letter_queue"
+    __table_args__ = (Index("ix_dead_letter_queue_job_id", "job_id"),)
+
+    job_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("job_dispatches.id"), nullable=False
+    )
+    original_payload: Mapped[str] = mapped_column(String(500), nullable=False)
+    error_history: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    failed_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    retry_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"<DeadLetterEntry(id={self.id}, job_id={self.job_id}, "
+            f"retry_count={self.retry_count})>"
         )
