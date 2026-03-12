@@ -1,0 +1,81 @@
+# MIT License -- see LICENSE-MIT
+#
+# Promtail configuration for RenderTrust.
+# Scrapes Docker container logs with JSON parsing for structlog output.
+# Extracts: level, event, request_id, timestamp from JSON log lines.
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    static_configs: []
+
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: status
+            values:
+              - running
+
+    relabel_configs:
+      # Extract container name from __meta_docker_container_name (strip leading slash)
+      - source_labels:
+          - __meta_docker_container_name
+        regex: /(.*)
+        target_label: container_name
+
+      # Extract compose service name
+      - source_labels:
+          - __meta_docker_container_label_com_docker_compose_service
+        target_label: service
+
+      # Extract compose project name
+      - source_labels:
+          - __meta_docker_container_label_com_docker_compose_project
+        target_label: compose_project
+
+      # Only scrape containers that have a compose project label
+      # (avoids picking up unrelated containers)
+      - source_labels:
+          - __meta_docker_container_label_com_docker_compose_project
+        action: keep
+        regex: .+
+
+    pipeline_stages:
+      # Docker wraps container stdout in a JSON envelope; extract the log line
+      - docker: {}
+
+      # Attempt to parse the log line as JSON (structlog output)
+      - json:
+          expressions:
+            level: level
+            event: event
+            request_id: request_id
+            log_timestamp: timestamp
+
+      # Promote extracted fields to labels for indexing
+      - labels:
+          level:
+          event:
+          request_id:
+
+      # Use the structlog timestamp as the Loki entry timestamp
+      - timestamp:
+          source: log_timestamp
+          format: RFC3339Nano
+          fallback_formats:
+            - "2006-01-02T15:04:05.999999999Z07:00"
+            - "2006-01-02T15:04:05Z07:00"
+
+      # Drop the temporary log_timestamp label
+      - labeldrop:
+          - log_timestamp
