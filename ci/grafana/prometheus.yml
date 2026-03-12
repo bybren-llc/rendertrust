@@ -7,6 +7,9 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
+rule_files:
+  - "/etc/prometheus/alerts/*.yml"
+
 scrape_configs:
   # Scrape the RenderTrust application /metrics endpoint
   - job_name: "rendertrust-app"
