@@ -1,0 +1,17 @@
+/* Copyright (c) 2025 Words To Film By, Inc. */
+/* Licensed under the MIT License. See LICENSE-MIT for details. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
