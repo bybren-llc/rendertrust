@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Job status API endpoints for listing, querying, and cancelling jobs.
+"""Job status API endpoints for listing, querying, cancelling, and result download.
 
 Provides authenticated endpoints for users to list jobs, get job details,
-and cancel queued/dispatched jobs. Delegates to job_service for all
-business logic.
+cancel queued/dispatched jobs, and retrieve presigned download URLs for
+completed job results. Delegates to job_service for all business logic.
 """
 
 from __future__ import annotations
@@ -32,6 +32,8 @@ from core.auth.jwt import get_current_user
 from core.database import get_db_session
 from core.scheduler.job_service import cancel_job, get_job, list_jobs
 from core.scheduler.models import JobStatus
+from core.storage.config import get_storage_settings
+from core.storage.service import StorageService
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -70,6 +72,14 @@ class JobListResponse(BaseModel):
 
     jobs: list[JobResponse]
     count: int
+
+
+class JobResultResponse(BaseModel):
+    """Response containing a presigned download URL for a job result."""
+
+    job_id: str
+    download_url: str
+    expires_in: int
 
 
 # ---------------------------------------------------------------------------
@@ -252,4 +262,80 @@ async def cancel_job_endpoint(
         completed_at=job.completed_at.isoformat() if job.completed_at else None,
         created_at=job.created_at.isoformat(),
         updated_at=job.updated_at.isoformat(),
+    )
+
+
+# ---------------------------------------------------------------------------
+# GET /jobs/{job_id}/result
+# ---------------------------------------------------------------------------
+
+# Default presigned URL expiry: 1 hour (3600 seconds).
+_DEFAULT_RESULT_EXPIRY_SECONDS = 3600
+
+
+@router.get("/{job_id}/result", response_model=JobResultResponse)
+async def get_job_result(
+    job_id: str,
+    current_user: User = Depends(get_current_user),  # noqa: ARG001
+    session: AsyncSession = Depends(get_db_session),
+) -> JobResultResponse:
+    """Return a presigned download URL for a completed job's result.
+
+    The job must be in COMPLETED status and have a non-null ``result_ref``.
+    Returns 404 if the job does not exist, is not completed, or has no
+    result stored.
+
+    NOTE: Owner-only access enforcement is planned for when a ``user_id``
+    column is added to the JobDispatch model. Currently, any authenticated
+    user can retrieve any job result (consistent with the existing
+    list/get/cancel endpoints).
+
+    Returns 422 if the job ID format is invalid.
+    """
+    try:
+        parsed_id = _uuid.UUID(job_id)
+    except (ValueError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid job ID format",
+        ) from None
+
+    job = await get_job(session=session, job_id=parsed_id)
+
+    if job is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job not found",
+        )
+
+    if job.status != JobStatus.COMPLETED:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job result not available: job is not completed",
+        )
+
+    if not job.result_ref:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job result not available: no result stored",
+        )
+
+    # Generate presigned download URL from storage service.
+    storage = StorageService(settings=get_storage_settings())
+    download_url = storage.generate_presigned_url(
+        key=job.result_ref,
+        expires_in=_DEFAULT_RESULT_EXPIRY_SECONDS,
+    )
+
+    logger.info(
+        "job_result_url_generated",
+        job_id=str(job.id),
+        result_ref=job.result_ref,
+        expires_in=_DEFAULT_RESULT_EXPIRY_SECONDS,
+    )
+
+    return JobResultResponse(
+        job_id=str(job.id),
+        download_url=download_url,
+        expires_in=_DEFAULT_RESULT_EXPIRY_SECONDS,
     )
