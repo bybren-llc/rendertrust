@@ -1,0 +1,155 @@
+# MIT License -- see LICENSE-MIT
+#
+# RenderTrust Production Docker Compose
+#
+# Standalone production compose for direct Docker hosting (non-Coolify).
+# Enforces resource limits, security hardening, and structured logging.
+#
+# Usage:
+#   1. Copy .env from ci/coolify/env.template and fill in secrets
+#   2. docker compose -f docker-compose.prod.yml up -d
+#   3. Monitor: docker compose -f docker-compose.prod.yml logs -f
+#
+# Differences from ci/coolify/docker-compose.coolify.yml:
+#   - Resource limits ENFORCED (not commented out)
+#   - JSON-file logging with rotation
+#   - Security hardening (no-new-privileges, read_only where possible)
+#   - shm_size for PostgreSQL shared memory
+#
+# Related tickets:
+#   - REN-117: Production Docker Compose
+#   - REN-115: Coolify project setup (companion compose)
+#   - REN-120: Prometheus monitoring (separate story)
+
+services:
+  # ── FastAPI Application ──────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: ci/coolify/Dockerfile.prod
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_HOST: "0.0.0.0"
+      APP_PORT: "8000"
+      DATABASE_URL: "postgresql+asyncpg://rendertrust:${POSTGRES_PASSWORD}@db:5432/rendertrust"
+      REDIS_URL: "redis://redis:6379/0"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - rendertrust-net
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=100M
+      - /app/.cache:size=50M
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: "1.0"
+        reservations:
+          memory: 512M
+          cpus: "0.5"
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ── PostgreSQL 16 ────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rendertrust
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_DB: rendertrust
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    shm_size: 128mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rendertrust -d rendertrust"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - rendertrust-net
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ── Redis 7 (Cache & Job Queue) ─────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    command: >
+      redis-server
+        --appendonly yes
+        --appendfsync everysec
+        --maxmemory 256mb
+        --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - rendertrust-net
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.1"
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  rendertrust-net:
+    driver: bridge
