@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Create a new API route
 - Build a new UI component
 - Add database operations
@@ -30,12 +29,12 @@ Enforces pattern-first development by requiring a search of the Pattern library 
 
 ## Trigger Keywords
 
-| Primary       | Secondary    |
-| ------------- | ------------ |
-| implement     | build        |
-| create        | feature      |
-| new component | how do I     |
-| add route     | how should I |
+| Primary | Secondary |
+|---------|-----------|
+| implement | build |
+| create | feature |
+| new component | how do I |
+| add route | how should I |
 
 ## Related Skills
 
@@ -45,11 +44,11 @@ Enforces pattern-first development by requiring a search of the Pattern library 
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

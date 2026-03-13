@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Rebase feature branches onto dev
 - Use git bisect to find bugs
 - Cherry-pick commits between branches
@@ -31,12 +30,12 @@ Provides guidance for advanced git operations with safety considerations. This p
 
 ## Trigger Keywords
 
-| Primary     | Secondary      |
-| ----------- | -------------- |
-| rebase      | bisect         |
-| cherry-pick | conflict       |
-| git reset   | reflog         |
-| force push  | linear history |
+| Primary | Secondary |
+|---------|-----------|
+| rebase | bisect |
+| cherry-pick | conflict |
+| git reset | reflog |
+| force push | linear history |
 
 ## Related Skills
 
@@ -45,11 +44,11 @@ Provides guidance for advanced git operations with safety considerations. This p
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

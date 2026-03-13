@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Create or modify checkout flows
 - Implement Stripe webhooks
 - Work with subscriptions or invoices
@@ -31,12 +30,12 @@ Guides safe and consistent Stripe integration with proper webhook handling, idem
 
 ## Trigger Keywords
 
-| Primary  | Secondary    |
-| -------- | ------------ |
-| payment  | Stripe       |
-| webhook  | subscription |
-| checkout | invoice      |
-| refund   | dispute      |
+| Primary | Secondary |
+|---------|-----------|
+| payment | Stripe |
+| webhook | subscription |
+| checkout | invoice |
+| refund | dispute |
 
 ## Related Skills
 
@@ -45,11 +44,11 @@ Guides safe and consistent Stripe integration with proper webhook handling, idem
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

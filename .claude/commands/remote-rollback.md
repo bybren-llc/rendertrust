@@ -260,8 +260,8 @@ Document issue in Linear to prevent recurrence:
 
 ## Customization Guide
 
-| Placeholder                 | Description                      | Example                     |
-| --------------------------- | -------------------------------- | --------------------------- |
+| Placeholder               | Description                      | Example                     |
+| ------------------------- | -------------------------------- | --------------------------- |
 | `{{SSH_KEY_PATH}}`          | Path to SSH private key          | `~/.ssh/id_ed25519_staging` |
 | `{{REMOTE_USER}}`           | Username on remote host          | `deploy`                    |
 | `{{REMOTE_HOST}}`           | Remote server hostname/IP        | `staging.example.com`       |
@@ -275,8 +275,8 @@ Document issue in Linear to prevent recurrence:
 | `{{APP_CONTAINER_DEV}}`     | Dev app container name           | `myapp-dev`                 |
 | `{{APP_CONTAINER_STAGING}}` | Staging app container name       | `myapp-staging`             |
 | `{{DEV_PORT}}`              | Port your dev app runs on        | `3000`                      |
-| `dev`                       | Main git branch name             | `main`                      |
-| `REN`                       | Linear/Jira ticket prefix        | `WOR`, `PROJ`, `FEAT`       |
+| `dev`           | Main git branch name             | `main`                      |
+| `REN`         | Linear/Jira ticket prefix        | `WOR`, `PROJ`, `FEAT`       |
 
 ### Example Configuration
 

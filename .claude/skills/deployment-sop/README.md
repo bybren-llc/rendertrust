@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Deploy to staging or production
 - Run pre-deploy validation
 - Execute post-deploy smoke tests
@@ -30,12 +29,12 @@ Routes to existing deployment SOPs and provides checklists for safe, validated d
 
 ## Trigger Keywords
 
-| Primary    | Secondary  |
-| ---------- | ---------- |
-| deploy     | staging    |
+| Primary | Secondary |
+|---------|-----------|
+| deploy | staging |
 | production | smoke test |
-| release    | pre-deploy |
-| UAT        | validation |
+| release | pre-deploy |
+| UAT | validation |
 
 ## Related Skills
 
@@ -44,11 +43,11 @@ Routes to existing deployment SOPs and provides checklists for safe, validated d
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

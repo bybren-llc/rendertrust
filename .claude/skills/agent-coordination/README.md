@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Assign work to specialist agents
 - Manage blockers across agents
 - Coordinate multi-agent workflows
@@ -30,12 +29,12 @@ Guides correct agent assignment based on the 11-agent team structure, manages bl
 
 ## Trigger Keywords
 
-| Primary    | Secondary |
-| ---------- | --------- |
-| assign     | agent     |
-| coordinate | blocker   |
-| escalate   | TDM       |
-| workflow   | handoff   |
+| Primary | Secondary |
+|---------|-----------|
+| assign | agent |
+| coordinate | blocker |
+| escalate | TDM |
+| workflow | handoff |
 
 ## Related Skills
 
@@ -44,11 +43,11 @@ Guides correct agent assignment based on the 11-agent team structure, manages bl
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

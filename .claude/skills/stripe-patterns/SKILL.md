@@ -62,7 +62,7 @@ For webhook handlers:
 
 ```typescript
 // Idempotent webhook pattern
-await withSystemContext(prisma, "webhook", async client => {
+await withSystemContext(prisma, "webhook", async (client) => {
   // Check if already processed
   const existing = await client.webhook_events.findUnique({
     where: { stripe_event_id: event.id },
@@ -94,7 +94,7 @@ const signature = request.headers.get("stripe-signature");
 const event = stripe.webhooks.constructEvent(
   body,
   signature,
-  process.env.STRIPE_WEBHOOK_SECRET
+  process.env.STRIPE_WEBHOOK_SECRET,
 );
 ```
 

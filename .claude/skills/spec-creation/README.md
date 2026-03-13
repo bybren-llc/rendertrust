@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Create implementation specs
 - Break down user stories
 - Define acceptance criteria
@@ -30,12 +29,12 @@ Guides spec creation with clear acceptance criteria, pattern references for exec
 
 ## Trigger Keywords
 
-| Primary      | Secondary  |
-| ------------ | ---------- |
-| spec         | story      |
-| acceptance   | criteria   |
-| requirements | breakdown  |
-| demo script  | validation |
+| Primary | Secondary |
+|---------|-----------|
+| spec | story |
+| acceptance | criteria |
+| requirements | breakdown |
+| demo script | validation |
 
 ## Related Skills
 
@@ -44,11 +43,11 @@ Guides spec creation with clear acceptance criteria, pattern references for exec
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

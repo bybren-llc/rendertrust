@@ -186,17 +186,17 @@ Calculate overall health score (0-100):
 
 ## Customization Guide
 
-| Placeholder            | Description               | Example                     |
-| ---------------------- | ------------------------- | --------------------------- |
-| `{{SSH_KEY_PATH}}`     | Path to SSH private key   | `~/.ssh/id_ed25519_staging` |
-| `{{REMOTE_USER}}`      | Username on remote host   | `deploy`                    |
-| `{{REMOTE_HOST}}`      | Remote server hostname/IP | `staging.example.com`       |
-| `{{PROJECT}}`          | Your project name         | `myapp`                     |
-| `{{CONTAINER_NAME}}`   | Docker container name     | `myapp-staging`             |
-| `{{APP_PORT}}`         | Port your app runs on     | `3000`                      |
-| `rendertrust-postgres` | Database container name   | `myapp-postgres`            |
-| `rendertrust`          | Database username         | `app_user`                  |
-| `{{REDIS_CONTAINER}}`  | Redis container name      | `myapp-redis`               |
+| Placeholder         | Description               | Example                     |
+| ------------------- | ------------------------- | --------------------------- |
+| `{{SSH_KEY_PATH}}`    | Path to SSH private key   | `~/.ssh/id_ed25519_staging` |
+| `{{REMOTE_USER}}`     | Username on remote host   | `deploy`                    |
+| `{{REMOTE_HOST}}`     | Remote server hostname/IP | `staging.example.com`       |
+| `{{PROJECT}}`         | Your project name         | `myapp`                     |
+| `{{CONTAINER_NAME}}`  | Docker container name     | `myapp-staging`             |
+| `{{APP_PORT}}`        | Port your app runs on     | `3000`                      |
+| `rendertrust-postgres`    | Database container name   | `myapp-postgres`            |
+| `rendertrust`         | Database username         | `app_user`                  |
+| `{{REDIS_CONTAINER}}` | Redis container name      | `myapp-redis`               |
 
 ## Related Commands
 

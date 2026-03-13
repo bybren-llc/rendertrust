@@ -13,8 +13,8 @@ Compare the Docker image running on your remote host with the latest image in th
 
 Most Docker setups support two deployment modes:
 
-| Mode            | Container Name        | Port   | Use Case                                    |
-| --------------- | --------------------- | ------ | ------------------------------------------- |
+| Mode            | Container Name      | Port   | Use Case                                    |
+| --------------- | ------------------- | ------ | ------------------------------------------- |
 | **Development** | `{{PROJECT}}-dev`     | `3000` | Hot-reload, source-mounted, local dev tools |
 | **Staging**     | `{{PROJECT}}-staging` | `3001` | Production-like, self-contained, stable     |
 
@@ -167,15 +167,15 @@ If container not found:
 
 To adapt this command for your infrastructure, replace these placeholders:
 
-| Placeholder          | Description                    | Example                     |
-| -------------------- | ------------------------------ | --------------------------- |
+| Placeholder        | Description                    | Example                     |
+| ------------------ | ------------------------------ | --------------------------- |
 | `{{SSH_KEY_PATH}}`   | Path to SSH private key        | `~/.ssh/id_ed25519_staging` |
 | `{{REMOTE_USER}}`    | Username on remote host        | `deploy`                    |
 | `{{REMOTE_HOST}}`    | Remote server hostname/IP      | `staging.example.com`       |
 | `{{PROJECT}}`        | Your project name              | `myapp`                     |
 | `{{CONTAINER_NAME}}` | Docker container name          | `myapp-staging`             |
 | `{{REGISTRY}}`       | Container registry URL         | `ghcr.io/myorg/myapp`       |
-| `dev`                | Your main branch name          | `main` or `dev`             |
+| `dev`    | Your main branch name          | `main` or `dev`             |
 | `{{BUILD_WORKFLOW}}` | CI workflow that builds images | `build-image.yml`           |
 
 ## Success Criteria

@@ -93,8 +93,8 @@ ssh -i {{SSH_KEY_PATH}} {{REMOTE_USER}}@{{REMOTE_HOST}} "docker ps --filter name
 
 To adapt this command for your infrastructure, replace these placeholders:
 
-| Placeholder          | Description                   | Example                     |
-| -------------------- | ----------------------------- | --------------------------- |
+| Placeholder        | Description                   | Example                     |
+| ------------------ | ----------------------------- | --------------------------- |
 | `{{SSH_KEY_PATH}}`   | Path to SSH private key       | `~/.ssh/id_ed25519_staging` |
 | `{{REMOTE_USER}}`    | Username on remote host       | `deploy`                    |
 | `{{REMOTE_HOST}}`    | Staging server hostname/IP    | `staging.example.com`       |

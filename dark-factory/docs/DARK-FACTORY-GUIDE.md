@@ -33,7 +33,6 @@ defined in `CLAUDE.md` and `AGENTS.md` -- they create PRs, enqueue them via
 merge queue, and never merge directly.
 
 **Key properties:**
-
 - Self-contained in `dark-factory/` -- does not modify the main harness
 - Merge queue + squash enforced from day 1 (readiness gate blocks setup otherwise)
 - Observable from Cursor IDE via SSH
@@ -44,12 +43,12 @@ merge queue, and never merge directly.
 
 ## Prerequisites
 
-| Tool              | Minimum Version | Install                                    |
-| ----------------- | --------------- | ------------------------------------------ |
-| tmux              | 3.0+            | `apt install tmux` / `brew install tmux`   |
-| Claude Code       | 2.1+            | `npm install -g @anthropic-ai/claude-code` |
-| GitHub CLI (`gh`) | 2.0+            | `apt install gh` / `brew install gh`       |
-| git               | 2.30+           | System package manager                     |
+| Tool | Minimum Version | Install |
+|------|----------------|---------|
+| tmux | 3.0+ | `apt install tmux` / `brew install tmux` |
+| Claude Code | 2.1+ | `npm install -g @anthropic-ai/claude-code` |
+| GitHub CLI (`gh`) | 2.0+ | `apt install gh` / `brew install gh` |
+| git | 2.30+ | System package manager |
 
 The `factory-setup.sh` script validates all prerequisites automatically.
 
@@ -67,7 +66,6 @@ cd rendertrust
 ```
 
 Setup performs:
-
 1. Checks all prerequisites are installed
 2. Creates `~/.dark-factory/` config directory with `logs/` and `worktrees/`
 3. Copies `env.template` to `~/.dark-factory/env`
@@ -103,7 +101,6 @@ The session name follows the pattern `factory-REN-XXX` (or
 ### Team Layouts
 
 **Story Team (3 panes):**
-
 ```
 +------------------------------+
 |         TDM (lead)           |
@@ -113,7 +110,6 @@ The session name follows the pattern `factory-REN-XXX` (or
 ```
 
 **Feature Team (5 panes):**
-
 ```
 +------------------------------+
 |         TDM (lead)           |
@@ -125,7 +121,6 @@ The session name follows the pattern `factory-REN-XXX` (or
 ```
 
 **Epic Team (9 panes):**
-
 ```
 +------------------------------+
 |         TDM (lead)           |
@@ -174,11 +169,11 @@ Aggregate Stats
 
 **How to read it:**
 
-| Color  | Status      | Meaning                                    | Action                                              |
-| ------ | ----------- | ------------------------------------------ | --------------------------------------------------- |
-| Green  | `active`    | Claude process running, recent output      | None — agent is working                             |
+| Color | Status | Meaning | Action |
+|-------|--------|---------|--------|
+| Green | `active` | Claude process running, recent output | None — agent is working |
 | Yellow | `idle (Ns)` | Claude running, no activity for 5+ minutes | Check if agent is stuck or waiting for a dependency |
-| Red    | `dead`      | No Claude process in this pane             | Attach to pane and restart (see below)              |
+| Red | `dead` | No Claude process in this pane | Attach to pane and restart (see below) |
 
 **Auto-refreshing dashboard** — run this in a dedicated terminal:
 
@@ -191,7 +186,6 @@ This updates every 5 seconds so you can leave it visible while doing other work.
 ### Responding to Status
 
 **Agent is "dead":**
-
 ```bash
 # 1. Attach to the dead pane to see what happened
 ./dark-factory/scripts/factory-attach.sh factory-REN-123 4
@@ -203,7 +197,6 @@ claude --dangerously-skip-permissions
 ```
 
 **Agent is "idle" for a long time:**
-
 ```bash
 # Check the agent's log for what it last did
 tail -20 ~/.dark-factory/logs/factory-REN-123/qas.log
@@ -213,7 +206,6 @@ tail -20 ~/.dark-factory/logs/factory-REN-123/qas.log
 ```
 
 **All agents dead (session crashed):**
-
 ```bash
 # Stop the session cleanly
 ./dark-factory/scripts/factory-stop.sh factory-REN-123
@@ -263,13 +255,13 @@ tmux attach -t factory-REN-123 -r
 
 Once attached, navigate between agent panes:
 
-| Key       | Action                                                        |
-| --------- | ------------------------------------------------------------- |
-| Alt+Arrow | Switch panes (no prefix key needed)                           |
-| Prefix+q  | Show pane numbers (click number to jump)                      |
-| Prefix+z  | Zoom current pane full-screen (toggle)                        |
-| Prefix+[  | Enter scroll mode (navigate history with arrows, `q` to exit) |
-| Prefix+o  | Cycle to the next pane                                        |
+| Key | Action |
+|-----|--------|
+| Alt+Arrow | Switch panes (no prefix key needed) |
+| Prefix+q | Show pane numbers (click number to jump) |
+| Prefix+z | Zoom current pane full-screen (toggle) |
+| Prefix+[ | Enter scroll mode (navigate history with arrows, `q` to exit) |
+| Prefix+o | Cycle to the next pane |
 
 **Tip**: `Prefix` is `Ctrl+b` by default. The Dark Factory tmux.conf does not
 change this, so your standard tmux muscle memory works.
@@ -287,7 +279,6 @@ change this, so your standard tmux muscle memory works.
 ```
 
 Stop performs:
-
 1. Sends Ctrl-C to all panes
 2. Waits up to 30 seconds for graceful shutdown
 3. Kills the tmux session
@@ -303,7 +294,6 @@ git worktree. This prevents agents from conflicting when they edit files
 simultaneously.
 
 Worktrees are created at:
-
 ```
 ~/.dark-factory/worktrees/<session-name>/agent-1/
 ~/.dark-factory/worktrees/<session-name>/agent-2/
@@ -331,7 +321,6 @@ All agent output is captured via `tmux pipe-pane`:
 On session stop, logs move to `~/.dark-factory/logs/archive/`.
 
 **Tail live logs:**
-
 ```bash
 tail -f ~/.dark-factory/logs/factory-REN-123/*.log
 ```
@@ -384,7 +373,6 @@ When `FACTORY_AUTO_PERMISSIONS=true`, agents run with
 command, write any file, and make network requests without confirmation.
 
 **Mitigations:**
-
 - Run on an isolated machine (not your laptop)
 - Use dedicated SSH keys with limited scope
 - Network-level isolation (firewall rules)
@@ -396,7 +384,6 @@ command, write any file, and make network requests without confirmation.
 
 The `~/.dark-factory/env` file may contain sensitive values (SSH keys, API
 tokens). Ensure:
-
 - File permissions: `chmod 600 ~/.dark-factory/env`
 - Not committed to git (it lives in `$HOME`, not the repo)
 
@@ -415,7 +402,6 @@ Dark Factory agents follow the same workflow as interactive sessions:
 ### Commit Format
 
 Agents use the standard commit format:
-
 ```
 type(scope): description [REN-XXX]
 ```
@@ -435,13 +421,13 @@ No agent ever runs `git push` to `dev` or `gh pr merge` without
 
 These community tools complement the Dark Factory:
 
-| Tool               | Purpose                                        | Link                                   |
-| ------------------ | ---------------------------------------------- | -------------------------------------- |
-| **agent-deck**     | TUI dashboard with MCP connection pooling      | github.com/anthropics/agent-deck       |
-| **claude-tmux**    | tmux popup integration + session management    | github.com/anthropics/claude-tmux      |
-| **ntm**            | Named Tmux Manager for complex session layouts | github.com/anthropics/ntm              |
-| **mosh**           | Mobile shell for persistent SSH connections    | mosh.org                               |
-| **tmux-resurrect** | Save/restore tmux sessions across restarts     | github.com/tmux-plugins/tmux-resurrect |
+| Tool | Purpose | Link |
+|------|---------|------|
+| **agent-deck** | TUI dashboard with MCP connection pooling | github.com/anthropics/agent-deck |
+| **claude-tmux** | tmux popup integration + session management | github.com/anthropics/claude-tmux |
+| **ntm** | Named Tmux Manager for complex session layouts | github.com/anthropics/ntm |
+| **mosh** | Mobile shell for persistent SSH connections | mosh.org |
+| **tmux-resurrect** | Save/restore tmux sessions across restarts | github.com/tmux-plugins/tmux-resurrect |
 
 ---
 
@@ -460,7 +446,6 @@ directory with a `CLAUDE.md` file.
 ### Panes show "dead" in status
 
 The Claude process exited. Attach to the pane and check for error output:
-
 ```bash
 ./dark-factory/scripts/factory-attach.sh <session> <pane-index>
 ```

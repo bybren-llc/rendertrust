@@ -1,0 +1,62 @@
+# MIT License -- see LICENSE-MIT
+#
+# RenderTrust Cloudflare Tunnel Configuration
+#
+# This is a TEMPLATE. Replace placeholders before deploying:
+#   - <TUNNEL_ID>: Your tunnel UUID from `cloudflared tunnel create rendertrust`
+#   - Credentials file path: Adjust if your cloudflared home differs
+#
+# Tunnel runs on the Hetzner VPS alongside Coolify. All traffic is routed
+# through Cloudflare's network -- no inbound ports need to be opened on
+# the VPS firewall. This is the primary security benefit of using Tunnels.
+#
+# Related tickets:
+#   - REN-115: Coolify project setup (prerequisite)
+#   - REN-116: Cloudflare Tunnel + DNS configuration (this file)
+#   - REN-119: Structured logging to Loki
+#   - REN-120: Prometheus metrics endpoint
+
+# ── Tunnel Identity ──────────────────────────────────────────────────
+tunnel: rendertrust
+credentials-file: /etc/cloudflared/<TUNNEL_ID>.json
+
+# ── Ingress Rules ────────────────────────────────────────────────────
+# Rules are evaluated top-to-bottom; the first match wins.
+# All services run on localhost inside the same Docker network,
+# so TLS verification is unnecessary (traffic never leaves the host).
+ingress:
+  # FastAPI gateway -- primary API surface
+  # Serves: /api/v1/*, /health, /docs, /openapi.json
+  - hostname: api.rendertrust.com
+    service: http://localhost:8000
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+      # Keep-alive prevents repeated TCP handshakes for high-throughput
+      # API traffic (job dispatch, credit operations, webhooks).
+      keepAliveTimeout: 90s
+      keepAliveConnections: 10
+
+  # Web application -- future React/Electron web client
+  # Currently a placeholder; will serve the creator dashboard.
+  - hostname: app.rendertrust.com
+    service: http://localhost:3000
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+      keepAliveTimeout: 90s
+      keepAliveConnections: 10
+
+  # Grafana monitoring dashboard -- internal use only
+  # Access should be restricted via Cloudflare Access policies
+  # (Zero Trust) so that only authorized team members can reach it.
+  # See setup-guide.md for Cloudflare Access configuration.
+  - hostname: grafana.rendertrust.com
+    service: http://localhost:3001
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 10s
+
+  # Catch-all rule (REQUIRED by cloudflared).
+  # Any request that does not match a hostname above gets a 404.
+  - service: http_status:404

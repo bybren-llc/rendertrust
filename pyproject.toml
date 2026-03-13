@@ -1,0 +1,187 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rendertrust"
+version = "0.1.0"
+description = "General-purpose trust fabric for computational services"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "ByBren, LLC", email = "contributors@rendertrust.com"},
+]
+dependencies = [
+    # Web framework
+    "fastapi>=0.115.0,<1.0",
+    "uvicorn[standard]>=0.34.0,<1.0",
+
+    # Database
+    "sqlalchemy[asyncio]>=2.0.36,<3.0",
+    "asyncpg>=0.30.0,<1.0",
+    "alembic>=1.14.0,<2.0",
+
+    # Configuration & validation
+    "pydantic[email]>=2.10.0,<3.0",
+    "pydantic-settings>=2.7.0,<3.0",
+
+    # Authentication
+    "python-jose[cryptography]>=3.3.0,<4.0",
+    "passlib[bcrypt]>=1.7.4,<2.0",
+    "bcrypt>=4.0,<4.1",
+
+    # Payments
+    "stripe>=11.0.0,<12.0",
+
+    # HTTP client
+    "httpx>=0.28.0,<1.0",
+
+    # Logging
+    "structlog>=24.4.0,<25.0",
+
+    # Multipart form support (file uploads)
+    "python-multipart>=0.0.18,<1.0",
+
+    # Cache
+    "redis>=5.2.0,<6.0",
+
+    # Object storage (S3-compatible: MinIO, Cloudflare R2, AWS S3)
+    "boto3>=1.35.0,<2.0",
+
+    # Monitoring
+    "prometheus-client>=0.21.0,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest>=8.3.0,<9.0",
+    "pytest-asyncio>=0.24.0,<1.0",
+    "pytest-cov>=6.0.0,<7.0",
+    "httpx>=0.28.0",
+    "aiosqlite>=0.20.0,<1.0",
+
+    # Linting & type checking
+    "ruff>=0.8.0,<1.0",
+    "mypy>=1.13.0,<2.0",
+    "sqlalchemy[mypy]>=2.0.36,<3.0",
+
+    # Security audit
+    "pip-audit>=2.7.0,<3.0",
+]
+
+blockchain = [
+    "web3>=7.0.0,<8.0",
+    "psycopg2-binary>=2.9.0,<3.0",
+]
+
+edge = [
+    "influxdb-client>=1.40.0,<2.0",
+    "hvac>=2.3.0,<3.0",
+    "websockets>=14.0,<15.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["core*", "edgekit*", "sdk*"]
+
+# ── Ruff Configuration ──────────────────────────────────────────────
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "S",    # flake8-bandit (security)
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "T20",  # flake8-print (no print in production code)
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "S101",  # allow assert in tests
+    "S104",  # allow binding to 0.0.0.0 (Docker)
+    "B008",  # allow Depends() in function defaults (FastAPI pattern)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "ARG", "T20"]
+"rollup_anchor/**/*.py" = ["T20", "DTZ", "PTH", "B", "RET"]
+# Pre-existing code — will be cleaned up in dedicated tickets
+"core/billing/**/*.py" = ["E501", "SIM", "RET", "DTZ", "PTH", "T20", "S", "A", "F", "B"]
+"core/ledger/**/*.py" = ["DTZ", "B"]
+"core/gateway/**/*.py" = ["T20", "A", "F"]
+"edgekit/**/*.py" = ["E", "DTZ", "ARG", "T20", "RET", "SIM", "B", "S", "A", "F"]
+"loadtest/**/*.py" = ["T20", "S", "A"]
+"sdk/**/*.py" = ["E", "T20", "I", "C4"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "edgekit", "sdk"]
+
+# ── Mypy Configuration ──────────────────────────────────────────────
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+
+[[tool.mypy.overrides]]
+module = [
+    "stripe.*",
+    "hvac.*",
+    "weasyprint.*",
+    "influxdb_client.*",
+    "web3.*",
+    "postmarker.*",
+    "jose.*",
+    "x402.*",
+    "jinja2.*",
+    "boto3.*",
+    "botocore.*",
+    "mypy_boto3_s3.*",
+    "db.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "core.billing.*",
+    "core.gateway.web.*",
+    "core.gateway.x402.*",
+    "core.ledger.*",
+    "core.scheduler.*",
+    "edgekit.*",
+    "rollup_anchor.*",
+    "loadtest.*",
+    "sdk.*",
+]
+disallow_untyped_defs = false
+ignore_errors = true
+
+# ── Pytest Configuration ─────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "unit: unit tests (no external dependencies)",
+    "integration: integration tests (require database)",
+    "e2e: end-to-end tests (require full stack)",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:sqlalchemy.*",
+]
+addopts = "--strict-markers --tb=short -q"

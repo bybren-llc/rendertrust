@@ -1,0 +1,219 @@
+# MIT License -- see LICENSE-MIT
+#
+# RenderTrust Deploy Workflow
+#
+# Manual-trigger deployment pipeline with build, test, migrate, and deploy stages.
+# Runs migrations in an ephemeral container before restarting the application.
+#
+# Required secrets (configure in GitHub Settings > Secrets):
+#   SSH_HOST  - Deployment server hostname or IP
+#   SSH_USER  - SSH username for deployment server
+#   SSH_KEY   - Private SSH key for authentication
+#
+# Related tickets:
+#   - REN-118: Auto-migration on deploy
+#   - REN-115: Coolify project setup (Dockerfile.prod, entrypoint.sh)
+#   - REN-117: Production Docker Compose
+
+name: RenderTrust Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
+      skip_migrations:
+        description: 'Skip database migrations'
+        required: false
+        type: boolean
+        default: false
+
+# Only one deploy at a time per environment
+concurrency:
+  group: deploy-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/app
+
+jobs:
+  # ── Build ──────────────────────────────────────────────────────
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=deploy-
+            type=raw,value=${{ github.event.inputs.environment }}-latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/coolify/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── Test ───────────────────────────────────────────────────────
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -e '.[dev]'
+
+      - name: Run unit tests
+        run: python -m pytest tests/ -v --tb=short
+
+      - name: Run linting
+        run: ruff check .
+
+      - name: Run type checking
+        run: mypy . --ignore-missing-imports || true
+
+  # ── Migrate ────────────────────────────────────────────────────
+  migrate:
+    name: Run Database Migrations
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: ${{ github.event.inputs.skip_migrations != 'true' }}
+    # NOTE: Environment protection rules should be configured in
+    # GitHub Settings > Environments for both 'staging' and 'production'.
+    # This provides:
+    #   - Required reviewers for production deploys
+    #   - Deployment branch restrictions
+    #   - Environment-specific secrets
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run migrations in ephemeral container
+        # This runs alembic upgrade head in a temporary container.
+        # The container connects to the target database and applies
+        # any pending migrations. If the migration fails, the deploy
+        # job will not execute.
+        #
+        # IMPORTANT: DATABASE_URL must be set as an environment secret
+        # for each target environment (staging, production).
+        run: |
+          docker run --rm \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            "${{ env.IMAGE_NAME }}:${{ github.event.inputs.environment }}-latest" \
+            alembic upgrade head
+
+      - name: Verify migration revision
+        run: |
+          docker run --rm \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            "${{ env.IMAGE_NAME }}:${{ github.event.inputs.environment }}-latest" \
+            alembic current
+
+  # ── Deploy ─────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    needs: [build, test, migrate]
+    # Run even if migrate was skipped (due to skip_migrations flag)
+    if: ${{ always() && needs.build.result == 'success' && needs.test.result == 'success' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Option A: SSH-based deploy (direct server access)
+      # Uncomment and configure when SSH secrets are available.
+      #
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@v1
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       cd /opt/rendertrust
+      #       export IMAGE_TAG="${{ github.event.inputs.environment }}-latest"
+      #       ./ci/deploy.sh --no-migrate
+
+      # Option B: Coolify webhook trigger (preferred for Coolify-managed deploys)
+      # Uncomment when Coolify webhook URL is configured.
+      #
+      # - name: Trigger Coolify deployment
+      #   run: |
+      #     curl -sf -X POST \
+      #       -H "Authorization: Bearer ${{ secrets.COOLIFY_WEBHOOK_TOKEN }}" \
+      #       "${{ secrets.COOLIFY_WEBHOOK_URL }}"
+
+      - name: Deploy placeholder
+        # TODO: Replace with Option A or Option B above once secrets are configured.
+        # This step logs the deployment intent for audit purposes.
+        run: |
+          echo "=========================================="
+          echo "DEPLOY READY"
+          echo "  Environment : ${{ github.event.inputs.environment }}"
+          echo "  Image       : ${{ env.IMAGE_NAME }}:${{ github.event.inputs.environment }}-latest"
+          echo "  Commit      : ${{ github.sha }}"
+          echo "  Actor       : ${{ github.actor }}"
+          echo "  Migrations  : ${{ github.event.inputs.skip_migrations == 'true' && 'SKIPPED' || 'APPLIED' }}"
+          echo "=========================================="
+          echo ""
+          echo "To complete deployment, configure one of:"
+          echo "  1. SSH secrets (SSH_HOST, SSH_USER, SSH_KEY) for direct deploy"
+          echo "  2. Coolify webhook (COOLIFY_WEBHOOK_URL, COOLIFY_WEBHOOK_TOKEN)"
+          echo ""
+          echo "See docs/operations/migration-runbook.md for details."
+
+      - name: Post-deploy health check placeholder
+        # TODO: Replace with actual health check once deploy target is configured.
+        run: |
+          echo "Health check would verify: ${{ github.event.inputs.environment == 'production' && 'https://app.rendertrust.com/health' || 'https://staging.rendertrust.com/health' }}"

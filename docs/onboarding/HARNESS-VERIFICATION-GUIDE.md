@@ -49,13 +49,13 @@ grep -c '{{[A-Z_]*}}' CLAUDE.md AGENTS.md CONTRIBUTING.md .claude/settings.json
 
 ### Expected Values
 
-| Field                 | Expected Value        |
-| --------------------- | --------------------- |
-| Ticket prefix         | `REN`                 |
-| Main branch           | `dev`                 |
-| Project name          | `rendertrust`         |
-| GitHub org            | `ByBren-LLC`          |
-| Linear MCP server     | `claude_ai_Linear`    |
+| Field | Expected Value |
+|-------|---------------|
+| Ticket prefix | `REN` |
+| Main branch | `dev` |
+| Project name | `rendertrust` |
+| GitHub org | `ByBren-LLC` |
+| Linear MCP server | `claude_ai_Linear` |
 | Confluence MCP server | `claude_ai_Atlassian` |
 
 ## 3. CLAUDE.md Content Verification
@@ -99,7 +99,6 @@ Test that the Linear MCP server can read REN issues:
 ```
 
 Verify `.claude/settings.local.json` has:
-
 ```json
 {
   "enableAllProjectMcpServers": true
@@ -166,13 +165,11 @@ After the harness is merged, any Claude Code session in this repo will automatic
 4. **Agents** — spawnable via `@agent-name` or Task tool
 
 To start working on an issue:
-
 ```
 /start-work REN-123
 ```
 
 Before creating a PR:
-
 ```
 /pre-pr
 ```

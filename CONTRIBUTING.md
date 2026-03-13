@@ -15,7 +15,7 @@ Welcome to RenderTrust! This guide covers everything you need to know to contrib
 - [Branch Naming Conventions](#branch-naming-conventions)
 - [Commit Message Guidelines](#commit-message-guidelines)
 - [Workflow Process](#workflow-process)
-- [Create Pull Request](#5-create-pull-request)
+- [Pull Request Process](#pull-request-process)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Local Development](#local-development)
 - [Troubleshooting](#troubleshooting)
@@ -440,7 +440,7 @@ git push --force-with-lease origin your-branch
 
 ## Questions?
 
-If you have any questions about contributing or licensing, please contact us at <contributors@rendertrust.com>.
+If you have any questions about contributing or licensing, please contact us at contributors@rendertrust.com.
 
 ---
 

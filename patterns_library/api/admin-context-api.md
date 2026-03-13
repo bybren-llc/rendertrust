@@ -324,7 +324,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = CreateContentSchema.parse(body);
 
-    const content = await withAdminContext(prisma, adminId, async client => {
+    const content = await withAdminContext(prisma, adminId, async (client) => {
       return client.course_content.create({
         data: {
           ...validated,
@@ -341,13 +341,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && error.message === "Admin access required") {
       return NextResponse.json(
         { error: "Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to create content" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

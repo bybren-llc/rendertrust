@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Orchestrate multi-step implementation tasks
 - Manage work across multiple subagents
 - Run long-running sessions that need checkpoints
@@ -30,12 +29,12 @@ Codifies evidence-based delivery and iterative agent loops for orchestrating com
 
 ## Trigger Keywords
 
-| Primary      | Secondary   |
-| ------------ | ----------- |
-| workflow     | orchestrate |
-| evidence     | multi-step  |
-| checkpoint   | subagent    |
-| long-running | iterate     |
+| Primary | Secondary |
+|---------|-----------|
+| workflow | orchestrate |
+| evidence | multi-step |
+| checkpoint | subagent |
+| long-running | iterate |
 
 ## Related Skills
 
@@ -44,11 +43,11 @@ Codifies evidence-based delivery and iterative agent loops for orchestrating com
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

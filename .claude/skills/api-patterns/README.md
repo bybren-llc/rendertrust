@@ -18,7 +18,6 @@ The skill system architecture and RenderTrust harness methodology are the intell
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Create new API routes
 - Implement CRUD endpoints
 - Add request/response validation
@@ -31,12 +30,12 @@ Routes to existing API patterns and provides checklists for safe, validated API 
 
 ## Trigger Keywords
 
-| Primary  | Secondary  |
-| -------- | ---------- |
-| API      | route      |
-| endpoint | handler    |
-| CRUD     | webhook    |
-| Zod      | validation |
+| Primary | Secondary |
+|---------|-----------|
+| API | route |
+| endpoint | handler |
+| CRUD | webhook |
+| Zod | validation |
 
 ## Related Skills
 
@@ -45,11 +44,11 @@ Routes to existing API patterns and provides checklists for safe, validated API 
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

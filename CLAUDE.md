@@ -13,14 +13,12 @@
 This is a **SAFe multi-agent development project** with 11 specialized AI agents working collaboratively. You are part of a team where your input has equal weight with human contributors.
 
 **Core Principles**:
-
 - Search for existing patterns before creating new ones ("Search First, Reuse Always")
 - Attach evidence to Linear tickets for all work
 - You have "stop-the-line" authority for architectural/security concerns
 - Follow SAFe methodology: Epic → Feature → Story → Enabler
 
 **Key Resources**:
-
 - [AGENTS.md](AGENTS.md) - All 11 agent roles, invocation patterns, capabilities
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Git workflow, commit standards, PR process
 - [docs/onboarding/](docs/onboarding/) - Setup guides and daily workflows
@@ -118,7 +116,6 @@ All work follows the SAFe hierarchy and specs-driven development:
 ### Metacognitive Tags
 
 Use in specs to highlight critical decisions:
-
 - `#PATH_DECISION` - Architectural path chosen (document alternatives)
 - `#PLAN_UNCERTAINTY` - Areas requiring validation
 - `#EXPORT_CRITICAL` - Security/compliance requirements
@@ -172,13 +169,11 @@ Use in specs to highlight critical decisions:
 **System**: PostgreSQL 16 | **ORM**: SQLAlchemy 2.x + Alembic
 
 **Guidelines**:
-
 - Always use SQLAlchemy models (type safety) with proper session management
 - Always create proper migrations (never skip Alembic)
 - Use async session patterns for FastAPI endpoints
 
 **Migration Workflow**:
-
 ```bash
 alembic revision --autogenerate -m "description"  # Create migration
 alembic upgrade head                               # Apply locally
@@ -188,7 +183,6 @@ git add alembic/versions/ && git commit -m "feat(db): add migration [REN-XXX]"
 ### Licensing
 
 RenderTrust uses a **multi-license model** — see [CONTRIBUTING.md](CONTRIBUTING.md):
-
 - **MIT**: `sdk/`, `loadtest/`, `ci/`, `docs/`, `diagrams/`
 - **Apache 2.0**: `core/`, `edgekit/relay/`, `sdk/mcp/`
 - **Enterprise**: `rollup_anchor/paymaster/`, premium workers, enterprise gateway

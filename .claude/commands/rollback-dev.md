@@ -259,14 +259,14 @@ Document issue in Linear to prevent recurrence:
 
 To adapt this command for your infrastructure, replace these placeholders:
 
-| Placeholder        | Description                 | Example                           |
-| ------------------ | --------------------------- | --------------------------------- |
-| `REN`              | Your Linear ticket prefix   | `WOR`, `PROJ`, `TASK`             |
-| `{{SSH_KEY_PATH}}` | Path to SSH private key     | `~/.ssh/id_ed25519_staging`       |
-| `{{REMOTE_USER}}`  | Username on remote host     | `deploy`, `cheddarfox`            |
-| `{{REMOTE_HOST}}`  | Remote host name/IP         | `pop-os`, `staging.example.com`   |
-| `{{PROJECT_PATH}}` | Project directory on remote | `~/Projects/rendertrust`, `~/app` |
-| `{{REGISTRY}}`     | Container registry URL      | `ghcr.io/bybren-llc`              |
-| `rendertrust`      | Project name in registry    | `myapp`, `webapp`                 |
-| `{{PROJECT}}`      | Short project identifier    | `myapp`, `webapp`                 |
-| `{{DEV_MACHINE}}`  | Remote dev machine name     | `Pop OS`, `staging`, `dev-server` |
+| Placeholder       | Description                 | Example                              |
+| ----------------- | --------------------------- | ------------------------------------ |
+| `REN` | Your Linear ticket prefix   | `WOR`, `PROJ`, `TASK`                |
+| `{{SSH_KEY_PATH}}`  | Path to SSH private key     | `~/.ssh/id_ed25519_staging`          |
+| `{{REMOTE_USER}}`   | Username on remote host     | `deploy`, `cheddarfox`               |
+| `{{REMOTE_HOST}}`   | Remote host name/IP         | `pop-os`, `staging.example.com`      |
+| `{{PROJECT_PATH}}`  | Project directory on remote | `~/Projects/rendertrust`, `~/app` |
+| `{{REGISTRY}}`      | Container registry URL      | `ghcr.io/bybren-llc`                 |
+| `rendertrust`  | Project name in registry    | `myapp`, `webapp`                    |
+| `{{PROJECT}}`       | Short project identifier    | `myapp`, `webapp`                    |
+| `{{DEV_MACHINE}}`   | Remote dev machine name     | `Pop OS`, `staging`, `dev-server`    |

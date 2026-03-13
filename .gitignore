@@ -72,6 +72,34 @@ Thumbs.db
 *.backup
 *~
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+*.whl
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+pip-log.txt
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Docker
+docker-compose.override.yml
+
+# Agent worktrees and outputs
+.claude/worktrees/
+docs/agent-outputs/
+
 # Planning workflow - keep only templates and completed docs
 specs/wip/
 specs/todo/

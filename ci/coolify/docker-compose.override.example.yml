@@ -1,0 +1,68 @@
+# MIT License -- see LICENSE-MIT
+#
+# Docker Compose Override Example
+#
+# Copy this file and rename to docker-compose.override.yml to apply
+# local overrides when developing or debugging.
+#
+# Usage:
+#   cp ci/coolify/docker-compose.override.example.yml docker-compose.override.yml
+#   # Edit docker-compose.override.yml to suit your needs
+#   docker compose -f docker-compose.prod.yml -f docker-compose.override.yml up
+#
+# NOTE: Do NOT commit docker-compose.override.yml to version control.
+
+services:
+  # ── App Overrides ────────────────────────────────────────────────
+  app:
+    # Disable read-only filesystem for development
+    read_only: false
+    # Mount source code for hot-reload during development
+    # volumes:
+    #   - ./core:/app/core:ro
+    #   - ./edgekit:/app/edgekit:ro
+    #   - ./sdk:/app/sdk:ro
+    environment:
+      APP_DEBUG: "true"
+      APP_ENV: development
+
+  # ── Database Overrides ───────────────────────────────────────────
+  db:
+    # Expose PostgreSQL port for local access (psql, pgAdmin, etc.)
+    ports:
+      - "5432:5432"
+
+  # ── Redis Overrides ──────────────────────────────────────────────
+  redis:
+    # Expose Redis port for local access (redis-cli, RedisInsight, etc.)
+    ports:
+      - "6379:6379"
+
+  # ── Optional: pgAdmin for Database Management ───────────────────
+  # Uncomment this entire block to add a pgAdmin web interface.
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@rendertrust.local
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   networks:
+  #     - rendertrust-net
+  #   restart: unless-stopped
+
+  # ── Optional: RedisInsight for Cache Monitoring ─────────────────
+  # Uncomment this entire block to add a Redis GUI.
+  # redisinsight:
+  #   image: redis/redisinsight:latest
+  #   ports:
+  #     - "5540:5540"
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - rendertrust-net
+  #   restart: unless-stopped

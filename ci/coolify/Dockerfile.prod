@@ -1,0 +1,76 @@
+# MIT License -- see LICENSE-MIT
+#
+# RenderTrust Production Dockerfile
+#
+# Multi-stage build optimized for production deployment via Coolify.
+# Produces a minimal image with only production dependencies.
+#
+# Build context should be the repository root:
+#   docker build -f ci/coolify/Dockerfile.prod -t rendertrust:latest .
+
+# ── Stage 1: Builder ──────────────────────────────────────────────
+# Install Python dependencies into a clean prefix so we can copy
+# only the installed packages into the final image.
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+# Install build-time system dependencies (C compiler for asyncpg, libpq headers)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy only pyproject.toml first for better Docker layer caching.
+# Dependencies change less often than application code.
+COPY pyproject.toml .
+
+# Install production dependencies only (no [dev] extras).
+# --prefix=/install puts everything under a clean tree we can COPY later.
+RUN pip install --no-cache-dir --prefix=/install .
+
+# ── Stage 2: Production Runtime ───────────────────────────────────
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install minimal runtime system dependencies:
+#   - libpq5: PostgreSQL client library (required by asyncpg at runtime)
+#   - curl: used by Docker HEALTHCHECK
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libpq5 curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user for running the application.
+# The app should never run as root in production.
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -d /app -s /sbin/nologin appuser
+
+# Copy installed Python packages from the builder stage
+COPY --from=builder /install /usr/local
+
+# Copy application code
+COPY core/ core/
+COPY edgekit/ edgekit/
+COPY sdk/ sdk/
+
+# Copy Alembic migration files (used by entrypoint.sh to run migrations)
+COPY alembic/ alembic/
+COPY alembic.ini .
+
+# Copy the production entrypoint script
+COPY ci/coolify/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Set ownership to non-root user
+RUN chown -R appuser:appuser /app
+
+USER appuser
+
+EXPOSE 8000
+
+# Health check ensures the container is actually serving requests.
+# Coolify also monitors health via its own probes.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+ENTRYPOINT ["/app/entrypoint.sh"]

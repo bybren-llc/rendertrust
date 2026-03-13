@@ -20,7 +20,6 @@ SAFe® is a registered trademark of Scaled Agile, Inc.
 ## Quick Start
 
 This skill activates automatically when you:
-
 - Start work on a Linear ticket (e.g., "I'm starting REN-447")
 - Create a commit or branch
 - Ask about PR workflow or contribution guidelines
@@ -32,12 +31,12 @@ Enforces SAFe-compliant development workflow with proper branch naming (`REN-{nu
 
 ## Trigger Keywords
 
-| Primary       | Secondary    |
-| ------------- | ------------ |
-| branch        | git workflow |
-| commit        | contributing |
-| PR            | pull request |
-| Linear ticket | rebase       |
+| Primary | Secondary |
+|---------|-----------|
+| branch | git workflow |
+| commit | contributing |
+| PR | pull request |
+| Linear ticket | rebase |
 
 ## Related Skills
 
@@ -46,11 +45,11 @@ Enforces SAFe-compliant development workflow with proper branch naming (`REN-{nu
 
 ## Maintenance
 
-| Field           | Value      |
-| --------------- | ---------- |
-| Last Updated    | 2026-01-04 |
-| Harness Version | v2.6.0     |
+| Field | Value |
+|-------|-------|
+| Last Updated | 2026-01-04 |
+| Harness Version | v2.6.0 |
 
 ---
 
-_Full implementation details in [SKILL.md](SKILL.md)_
+*Full implementation details in [SKILL.md](SKILL.md)*

@@ -173,12 +173,12 @@ Tickets referenced in commit messages (e.g., `[REN-123]`) automatically move to 
 
 ### Status Update Guidelines
 
-| From             | To               | When                                    |
-| ---------------- | ---------------- | --------------------------------------- |
-| Backlog          | Ready            | Sprint planning                         |
-| Ready            | In Progress      | Work starts                             |
-| In Progress      | Testing          | PR created                              |
-| Testing          | Ready for Review | Tests pass, UAT complete                |
+| From             | To               | When                     |
+| ---------------- | ---------------- | ------------------------ |
+| Backlog          | Ready            | Sprint planning          |
+| Ready            | In Progress      | Work starts              |
+| In Progress      | Testing          | PR created               |
+| Testing          | Ready for Review | Tests pass, UAT complete |
 | Ready for Review | Done             | POPM approval or auto-sync via PR merge |
 
 ## UUID Handling

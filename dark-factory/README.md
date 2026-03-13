@@ -35,12 +35,12 @@ entire factory is observable and controllable from Cursor IDE via SSH.
 
 ## Prerequisites
 
-| Tool              | Minimum Version | Purpose                     |
-| ----------------- | --------------- | --------------------------- |
-| tmux              | 3.0+            | Session and pane management |
-| Claude Code       | 2.1+            | AI agent runtime            |
-| GitHub CLI (`gh`) | 2.0+            | PR creation and merge queue |
-| git               | 2.30+           | Worktree support            |
+| Tool | Minimum Version | Purpose |
+|------|----------------|---------|
+| tmux | 3.0+ | Session and pane management |
+| Claude Code | 2.1+ | AI agent runtime |
+| GitHub CLI (`gh`) | 2.0+ | PR creation and merge queue |
+| git | 2.30+ | Worktree support |
 
 ## Quick Start
 
@@ -106,7 +106,6 @@ Aggregate Stats
 **Color codes**: green = active, yellow = idle, red = dead.
 
 **If a pane shows "dead"**: Attach and check for errors:
-
 ```bash
 ./dark-factory/scripts/factory-attach.sh factory-REN-42 4
 # In the pane, restart: claude --dangerously-skip-permissions
@@ -125,16 +124,16 @@ See [Cursor SSH Guide](docs/CURSOR-SSH-GUIDE.md) for full setup.
 
 ### All Commands at a Glance
 
-| Command                                          | What It Does                                      |
-| ------------------------------------------------ | ------------------------------------------------- |
-| `factory-setup.sh`                               | One-time setup (prerequisites + merge queue gate) |
-| `factory-start.sh story\|feature\|epic [TICKET]` | Launch a team session                             |
-| `factory-status.sh`                              | Color-coded health dashboard                      |
-| `factory-attach.sh [SESSION] [PANE]`             | List sessions or jump into a pane                 |
-| `factory-stop.sh [SESSION]`                      | Graceful shutdown + log archive                   |
-| `watch -n 5 factory-status.sh`                   | Auto-refreshing monitoring                        |
-| `tail -f ~/.dark-factory/logs/SESSION/*.log`     | Live agent output                                 |
-| `tmux attach -t SESSION -r`                      | Read-only tmux observation                        |
+| Command | What It Does |
+|---------|-------------|
+| `factory-setup.sh` | One-time setup (prerequisites + merge queue gate) |
+| `factory-start.sh story\|feature\|epic [TICKET]` | Launch a team session |
+| `factory-status.sh` | Color-coded health dashboard |
+| `factory-attach.sh [SESSION] [PANE]` | List sessions or jump into a pane |
+| `factory-stop.sh [SESSION]` | Graceful shutdown + log archive |
+| `watch -n 5 factory-status.sh` | Auto-refreshing monitoring |
+| `tail -f ~/.dark-factory/logs/SESSION/*.log` | Live agent output |
+| `tmux attach -t SESSION -r` | Read-only tmux observation |
 
 ---
 

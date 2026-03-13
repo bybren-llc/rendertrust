@@ -308,7 +308,7 @@ const ConditionalSchema = z
     taxId: z.string().optional(),
   })
   .refine(
-    data => {
+    (data) => {
       if (data.userType === "business") {
         return data.businessName && data.taxId;
       }
@@ -317,7 +317,7 @@ const ConditionalSchema = z
     {
       message: "Business name and tax ID required for business accounts",
       path: ["businessName"],
-    }
+    },
   );
 ```
 
@@ -327,12 +327,12 @@ const ConditionalSchema = z
 const TransformSchema = z.object({
   price: z
     .string()
-    .transform(val => parseFloat(val))
+    .transform((val) => parseFloat(val))
     .pipe(z.number().positive()),
 
   tags: z
     .string()
-    .transform(val => val.split(",").map(t => t.trim()))
+    .transform((val) => val.split(",").map((t) => t.trim()))
     .pipe(z.array(z.string().min(1))),
 });
 ```
@@ -411,7 +411,7 @@ const RegisterSchema = z
     confirmPassword: z.string(),
     tier: z.enum(["FREE", "PRO"]).default("FREE"),
   })
-  .refine(data => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
@@ -429,7 +429,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

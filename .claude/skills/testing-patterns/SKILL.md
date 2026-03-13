@@ -30,9 +30,7 @@ const user = await prisma.user.findUnique({ where: { user_id } });
 
 // FORBIDDEN: Shared test state (causes flaky tests)
 let sharedUser: User;
-beforeAll(() => {
-  sharedUser = createUser();
-});
+beforeAll(() => { sharedUser = createUser(); });
 
 // FORBIDDEN: Hard-coded IDs (test pollution)
 const userId = "user-123";
@@ -48,7 +46,7 @@ it("creates user", async () => {
 
 ```typescript
 // CORRECT: Use RLS context helpers
-const user = await withSystemContext(prisma, "test", async client => {
+const user = await withSystemContext(prisma, "test", async (client) => {
   return client.user.findUnique({ where: { user_id } });
 });
 
@@ -63,7 +61,7 @@ const email = `test-${Date.now()}@example.com`;
 
 // CORRECT: Proper cleanup
 afterEach(async () => {
-  await withSystemContext(prisma, "test", async client => {
+  await withSystemContext(prisma, "test", async (client) => {
     await client.user.deleteMany({ where: { email: { contains: "test-" } } });
   });
 });
@@ -106,7 +104,7 @@ describe("User payments", () => {
 
   beforeEach(async () => {
     // Create test user with RLS context
-    await withSystemContext(prisma, "test", async client => {
+    await withSystemContext(prisma, "test", async (client) => {
       await client.user.create({
         data: {
           user_id: testUserId,
@@ -119,11 +117,15 @@ describe("User payments", () => {
   });
 
   it("should only see own payments", async () => {
-    const payments = await withUserContext(prisma, testUserId, async client => {
-      return client.payments.findMany();
-    });
+    const payments = await withUserContext(
+      prisma,
+      testUserId,
+      async (client) => {
+        return client.payments.findMany();
+      },
+    );
     // RLS ensures only this user's payments returned
-    expect(payments.every(p => p.user_id === testUserId)).toBe(true);
+    expect(payments.every((p) => p.user_id === testUserId)).toBe(true);
   });
 });
 ```

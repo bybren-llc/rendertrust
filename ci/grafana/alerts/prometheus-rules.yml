@@ -1,0 +1,94 @@
+# MIT License -- see LICENSE-MIT
+#
+# Prometheus alerting rules for RenderTrust.
+# Loaded by Prometheus via rule_files config in prometheus.yml.
+#
+# Metrics reference (core/metrics.py):
+#   - http_requests_total{method, endpoint, status_code}  (Counter)
+#   - http_request_duration_seconds{method, endpoint}      (Histogram)
+#   - jobs_dispatched_total{job_type}                      (Counter)
+#   - jobs_completed_total{job_type, status}               (Counter)
+#   - fleet_nodes_total{status}                            (Gauge)
+#   - credits_consumed_total                               (Counter)
+#   - active_websocket_connections                         (Gauge)
+
+groups:
+  - name: rendertrust-alerts
+    rules:
+      # ---------------------------------------------------------------
+      # Fleet health
+      # ---------------------------------------------------------------
+      - alert: FleetTooFewNodes
+        expr: fleet_nodes_total{status="healthy"} < 2
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Fleet has fewer than 2 healthy nodes"
+          description: >-
+            The number of healthy fleet nodes has been below 2 for more
+            than 5 minutes.  Current value: {{ $value }}.
+
+      # ---------------------------------------------------------------
+      # HTTP error rate
+      # ---------------------------------------------------------------
+      - alert: HighErrorRate
+        expr: >-
+          rate(http_requests_total{status_code=~"5.."}[5m])
+          / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "HTTP 5xx error rate exceeds 5%"
+          description: >-
+            The ratio of 5xx responses to total HTTP requests over the
+            last 5 minutes has exceeded 5%.  Current ratio: {{ $value }}.
+
+      # ---------------------------------------------------------------
+      # Job failure rate
+      # ---------------------------------------------------------------
+      - alert: HighJobFailureRate
+        expr: >-
+          rate(jobs_completed_total{status="failed"}[10m])
+          / rate(jobs_completed_total[10m]) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Job failure rate exceeds 10%"
+          description: >-
+            More than 10% of completed jobs have failed over the last
+            10 minutes.  Current failure ratio: {{ $value }}.
+
+      # ---------------------------------------------------------------
+      # API latency (p95)
+      # ---------------------------------------------------------------
+      - alert: APILatencyHigh
+        expr: >-
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket[5m])
+          ) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "95th-percentile API latency exceeds 5 seconds"
+          description: >-
+            The p95 HTTP request duration has exceeded 5 seconds for
+            more than 5 minutes.  Current p95: {{ $value }}s.
+
+      # ---------------------------------------------------------------
+      # WebSocket connectivity
+      # ---------------------------------------------------------------
+      - alert: NoWebSocketConnections
+        expr: active_websocket_connections == 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No active WebSocket connections"
+          description: >-
+            There have been zero active WebSocket connections for more
+            than 10 minutes.  This may indicate a client connectivity
+            issue or that no clients are connected.

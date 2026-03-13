@@ -2,8 +2,7 @@
 
 ## What It Does
 
-Provides a typed, validated environment configuration system using a schema validation library. Validates all environment variables at application startup with type coercion, default values, and descriptive error messages.
-Ensures the application fails fast with actionable diagnostics rather than encountering cryptic runtime errors from missing or malformed configuration values.
+Provides a typed, validated environment configuration system using a schema validation library. Validates all environment variables at application startup with type coercion, default values, and descriptive error messages. Ensures the application fails fast with actionable diagnostics rather than encountering cryptic runtime errors from missing or malformed configuration values.
 
 ## When to Use
 
