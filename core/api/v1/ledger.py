@@ -98,7 +98,7 @@ router = APIRouter(prefix="/ledger")
 # ---------------------------------------------------------------------------
 
 
-def _get_anchoring_deps():
+def _get_anchoring_deps():  # type: ignore[no-untyped-def]
     """Build the anchoring service and chain client for dependency injection.
 
     Returns a tuple of (AnchoringService, ChainClient).
@@ -211,7 +211,7 @@ async def verify_entry_proof(
     entry_id: int,
     current_user: User = Depends(get_current_user),  # noqa: ARG001
     session: AsyncSession = Depends(get_db_session),
-    deps: tuple = Depends(_get_anchoring_deps),
+    deps: tuple = Depends(_get_anchoring_deps),  # type: ignore[type-arg]
 ) -> VerificationResponse:
     """Verify that a ledger entry's Merkle proof matches on-chain data.
 
