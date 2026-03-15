@@ -60,7 +60,6 @@ from botocore.exceptions import ClientError
 from core.scheduler.models import EdgeNode, JobDispatch, JobStatus, NodeStatus
 from core.storage.config import StorageSettings
 from core.storage.service import (
-    StorageDeleteError,
     StorageDownloadError,
     StorageError,
     StorageKeyError,

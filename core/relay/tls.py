@@ -416,7 +416,7 @@ class CertificateAuthority:
                 cert.signature,
                 cert.tbs_certificate_bytes,
                 padding.PKCS1v15(),
-                hash_algo,  # type: ignore[arg-type]
+                hash_algo,
             )
             return True
         except Exception:

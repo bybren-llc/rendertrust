@@ -558,7 +558,9 @@ class TestPresignedUrlExpiry:
         with pytest.raises(ValueError, match="must not exceed"):
             storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86401)
 
-    def test_presigned_url_allows_24h(self, storage_service: StorageService, mock_s3_client: MagicMock) -> None:
+    def test_presigned_url_allows_24h(
+        self, storage_service: StorageService, mock_s3_client: MagicMock
+    ) -> None:
         """generate_presigned_url allows exactly 24 hours."""
         mock_s3_client.generate_presigned_url.return_value = "https://s3/presigned"
         url = storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86400)

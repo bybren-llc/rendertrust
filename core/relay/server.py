@@ -119,7 +119,7 @@ async def _heartbeat_loop(
 
 
 async def _handle_message(
-    node_id: uuid.UUID, data: dict
+    node_id: uuid.UUID, data: dict[str, object]
 ) -> None:
     """Process an incoming WebSocket message from a node.
 
