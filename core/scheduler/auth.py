@@ -62,9 +62,7 @@ async def get_current_node(
 
     from sqlalchemy import select
 
-    result = await session.execute(
-        select(EdgeNode).where(EdgeNode.id == node_id)
-    )
+    result = await session.execute(select(EdgeNode).where(EdgeNode.id == node_id))
     node = result.scalar_one_or_none()
 
     if node is None:

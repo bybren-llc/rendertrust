@@ -75,9 +75,7 @@ def mock_blacklist():
 
 @pytest.fixture(autouse=True)
 def mock_redis_queue():
-    with patch(
-        "core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock
-    ) as mock_push:
+    with patch("core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock) as mock_push:
         mock_push.return_value = True
         yield mock_push
 
@@ -162,9 +160,7 @@ class TestDispatchSuccess:
         assert "job_id" in data
 
         # Verify via GET endpoint
-        get_resp = await client.get(
-            f"/api/v1/jobs/{data['job_id']}", headers=auth_headers
-        )
+        get_resp = await client.get(f"/api/v1/jobs/{data['job_id']}", headers=auth_headers)
         assert get_resp.status_code == 200
         assert get_resp.json()["status"] == "DISPATCHED"
 
@@ -215,9 +211,7 @@ class TestHappyPathLifecycle:
         assert completed.result_ref == "s3://bucket/result-happy.zip"
 
         # Verify via API
-        resp = await client.get(
-            f"/api/v1/jobs/{job_id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job_id}", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "COMPLETED"
@@ -318,9 +312,7 @@ class TestCancelQueuedJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "FAILED"
@@ -352,9 +344,7 @@ class TestCancelDispatchedJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "FAILED"
@@ -385,9 +375,7 @@ class TestCancelRunningJobRejected:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 400
         assert "Cannot cancel job" in resp.json()["detail"]
 
@@ -421,9 +409,7 @@ class TestGetJobDetail:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
 
@@ -463,16 +449,12 @@ class TestListJobsPaginationAndFilter:
         # Create jobs in different states
         queued = _make_job(node=node, status=JobStatus.QUEUED, payload_ref="s3://q")
         running = _make_job(node=node, status=JobStatus.RUNNING, payload_ref="s3://r")
-        completed = _make_job(
-            node=node, status=JobStatus.COMPLETED, payload_ref="s3://c"
-        )
+        completed = _make_job(node=node, status=JobStatus.COMPLETED, payload_ref="s3://c")
         db_session.add_all([queued, running, completed])
         await db_session.flush()
 
         # Filter for RUNNING only
-        resp = await client.get(
-            "/api/v1/jobs?status=RUNNING", headers=auth_headers
-        )
+        resp = await client.get("/api/v1/jobs?status=RUNNING", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["count"] >= 1
@@ -496,16 +478,12 @@ class TestListJobsPaginationAndFilter:
         await db_session.flush()
 
         # Page 1: limit=2
-        resp1 = await client.get(
-            "/api/v1/jobs?limit=2&offset=0", headers=auth_headers
-        )
+        resp1 = await client.get("/api/v1/jobs?limit=2&offset=0", headers=auth_headers)
         assert resp1.status_code == 200
         assert len(resp1.json()["jobs"]) == 2
 
         # Page 2: offset=2, limit=2
-        resp2 = await client.get(
-            "/api/v1/jobs?limit=2&offset=2", headers=auth_headers
-        )
+        resp2 = await client.get("/api/v1/jobs?limit=2&offset=2", headers=auth_headers)
         assert resp2.status_code == 200
         assert len(resp2.json()["jobs"]) == 2
 
@@ -538,9 +516,7 @@ class TestCrossUserIsolation:
         client: AsyncClient,
     ) -> None:
         """Unauthenticated requests to get a job are rejected."""
-        resp = await client.get(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000"
-        )
+        resp = await client.get("/api/v1/jobs/00000000-0000-0000-0000-000000000000")
         assert resp.status_code in (401, 403)
 
     async def test_unauthenticated_cannot_cancel_job(
@@ -548,9 +524,7 @@ class TestCrossUserIsolation:
         client: AsyncClient,
     ) -> None:
         """Unauthenticated requests to cancel a job are rejected."""
-        resp = await client.post(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000/cancel"
-        )
+        resp = await client.post("/api/v1/jobs/00000000-0000-0000-0000-000000000000/cancel")
         assert resp.status_code in (401, 403)
 
     async def test_different_user_auth_required_for_dispatch(
@@ -586,9 +560,7 @@ class TestCrossUserIsolation:
         # This is the CURRENT behavior -- no per-user isolation yet
         token_b = create_access_token({"sub": str(admin_user.id)})
         headers_b = {"Authorization": f"Bearer {token_b}"}
-        resp_b = await client.get(
-            f"/api/v1/jobs/{job_a_id}", headers=headers_b
-        )
+        resp_b = await client.get(f"/api/v1/jobs/{job_a_id}", headers=headers_b)
         assert resp_b.status_code == 200
         assert resp_b.json()["id"] == job_a_id
 
@@ -629,9 +601,7 @@ class TestErrorMessageStorage:
         assert failed.completed_at is not None
 
         # Verify via API
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "FAILED"
@@ -674,9 +644,7 @@ class TestRetryCountTracking:
         assert retried.status == JobStatus.QUEUED
 
         # Verify via API
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}", headers=auth_headers)
         assert resp.status_code == 200
         assert resp.json()["retry_count"] == 1
 
@@ -694,9 +662,7 @@ class TestRetryCountTracking:
         await db_session.flush()
 
         # Cycle 1: DISPATCHED -> RUNNING -> FAILED -> QUEUED
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -709,12 +675,8 @@ class TestRetryCountTracking:
         assert result.retry_count == 1
 
         # Cycle 2: QUEUED -> DISPATCHED -> RUNNING -> FAILED -> QUEUED
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -762,9 +724,7 @@ class TestResultRefStorage:
         assert completed.result_ref == "ipfs://QmXoY123abc/render-output.exr"
 
         # Verify via API
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "COMPLETED"
@@ -805,20 +765,14 @@ class TestFullLifecycleDispatchToComplete:
         job_id = uuid.UUID(job_id_str)
 
         # Verify DISPATCHED via API
-        resp1 = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        resp1 = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert resp1.json()["status"] == "DISPATCHED"
 
         # Step 2: Transition to RUNNING via service
-        await update_job_status(
-            session=db_session, job_id=job_id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job_id, new_status=JobStatus.RUNNING)
 
         # Verify RUNNING via API
-        resp2 = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        resp2 = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert resp2.json()["status"] == "RUNNING"
 
         # Step 3: Complete via service with result
@@ -830,9 +784,7 @@ class TestFullLifecycleDispatchToComplete:
         )
 
         # Verify COMPLETED via API
-        resp3 = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        resp3 = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         data = resp3.json()
         assert data["status"] == "COMPLETED"
         assert data["result_ref"] == "s3://bucket/output-full-lc.zip"
@@ -874,9 +826,7 @@ class TestFullLifecycleDispatchToFailed:
         job_id = uuid.UUID(job_id_str)
 
         # DISPATCHED -> RUNNING
-        await update_job_status(
-            session=db_session, job_id=job_id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job_id, new_status=JobStatus.RUNNING)
 
         # RUNNING -> FAILED with error
         await update_job_status(
@@ -887,9 +837,7 @@ class TestFullLifecycleDispatchToFailed:
         )
 
         # Verify via API
-        resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         data = resp.json()
         assert data["status"] == "FAILED"
         assert data["error_message"] == "Node crashed: segmentation fault in renderer"

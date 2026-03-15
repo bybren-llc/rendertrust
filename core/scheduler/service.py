@@ -66,9 +66,7 @@ async def register_node(
     caps = capabilities or []
 
     # Check for duplicate public key (idempotent re-registration)
-    result = await session.execute(
-        select(EdgeNode).where(EdgeNode.public_key == public_key)
-    )
+    result = await session.execute(select(EdgeNode).where(EdgeNode.public_key == public_key))
     existing_node = result.scalar_one_or_none()
 
     if existing_node is not None:

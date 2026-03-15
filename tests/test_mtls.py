@@ -82,9 +82,7 @@ def node_id() -> str:
 def node_cert(ca_keypair: tuple[bytes, bytes], node_id: str) -> tuple[bytes, bytes]:
     """Issue an ephemeral node certificate for testing."""
     ca_cert_pem, ca_key_pem = ca_keypair
-    return CertificateAuthority.issue_node_cert(
-        ca_cert_pem, ca_key_pem, node_id
-    )
+    return CertificateAuthority.issue_node_cert(ca_cert_pem, ca_key_pem, node_id)
 
 
 @pytest.fixture
@@ -175,9 +173,7 @@ class TestNodeCertIssuance:
         assert b"-----BEGIN CERTIFICATE-----" in cert_pem
         assert b"-----BEGIN PRIVATE KEY-----" in key_pem
 
-    def test_issue_node_cert_has_correct_cn(
-        self, node_cert: tuple[bytes, bytes], node_id: str
-    ):
+    def test_issue_node_cert_has_correct_cn(self, node_cert: tuple[bytes, bytes], node_id: str):
         """Node certificate CN should match the expected format."""
         cert_pem, _ = node_cert
         cert = x509.load_pem_x509_certificate(cert_pem)
@@ -201,30 +197,22 @@ class TestNodeCertIssuance:
         bc = cert.extensions.get_extension_for_class(x509.BasicConstraints)
         assert bc.value.ca is False
 
-    def test_issue_node_cert_has_san(
-        self, node_cert: tuple[bytes, bytes], node_id: str
-    ):
+    def test_issue_node_cert_has_san(self, node_cert: tuple[bytes, bytes], node_id: str):
         """Node certificate should have a SubjectAlternativeName."""
         cert_pem, _ = node_cert
         cert = x509.load_pem_x509_certificate(cert_pem)
-        san = cert.extensions.get_extension_for_class(
-            x509.SubjectAlternativeName
-        )
+        san = cert.extensions.get_extension_for_class(x509.SubjectAlternativeName)
         dns_names = san.value.get_values_for_type(x509.DNSName)
         assert f"node-{node_id}.rendertrust.local" in dns_names
 
-    def test_issue_node_cert_has_client_auth_eku(
-        self, node_cert: tuple[bytes, bytes]
-    ):
+    def test_issue_node_cert_has_client_auth_eku(self, node_cert: tuple[bytes, bytes]):
         """Node certificate should have CLIENT_AUTH extended key usage."""
         cert_pem, _ = node_cert
         cert = x509.load_pem_x509_certificate(cert_pem)
         eku = cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage)
         assert x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH in eku.value
 
-    def test_issue_node_cert_key_is_rsa_2048(
-        self, node_cert: tuple[bytes, bytes]
-    ):
+    def test_issue_node_cert_key_is_rsa_2048(self, node_cert: tuple[bytes, bytes]):
         """Node private key should be RSA with 2048-bit key size."""
         _, key_pem = node_cert
         key = serialization.load_pem_private_key(key_pem, password=None)
@@ -365,18 +353,14 @@ class TestCertExpiry:
         assert result["is_expired"] is False
         assert result["days_remaining"] > 0
 
-    def test_get_cert_expiry_returns_datetime(
-        self, node_cert: tuple[bytes, bytes]
-    ):
+    def test_get_cert_expiry_returns_datetime(self, node_cert: tuple[bytes, bytes]):
         """get_cert_expiry should return a UTC datetime."""
         cert_pem, _ = node_cert
         expiry = CertificateAuthority.get_cert_expiry(cert_pem)
         assert isinstance(expiry, datetime.datetime)
         assert expiry.tzinfo is not None
 
-    def test_get_cert_cn(
-        self, node_cert: tuple[bytes, bytes], node_id: str
-    ):
+    def test_get_cert_cn(self, node_cert: tuple[bytes, bytes], node_id: str):
         """get_cert_cn should extract the CN from the certificate."""
         cert_pem, _ = node_cert
         cn = CertificateAuthority.get_cert_cn(cert_pem)
@@ -539,12 +523,8 @@ class TestCertRenewal:
     ):
         """A renewed certificate should still be signed by the same CA."""
         ca_cert_pem, ca_key_pem = ca_keypair
-        renewed_cert_pem, _ = CertificateAuthority.issue_node_cert(
-            ca_cert_pem, ca_key_pem, node_id
-        )
-        assert CertificateAuthority.verify_cert_chain(
-            renewed_cert_pem, ca_cert_pem
-        ) is True
+        renewed_cert_pem, _ = CertificateAuthority.issue_node_cert(ca_cert_pem, ca_key_pem, node_id)
+        assert CertificateAuthority.verify_cert_chain(renewed_cert_pem, ca_cert_pem) is True
 
 
 # ---------------------------------------------------------------------------
@@ -555,15 +535,17 @@ class TestCertRenewal:
 class TestCAEnvLoading:
     """Tests for CA material loading from environment."""
 
-    def test_load_ca_from_env_inline(
-        self, ca_keypair: tuple[bytes, bytes]
-    ):
+    def test_load_ca_from_env_inline(self, ca_keypair: tuple[bytes, bytes]):
         """Should load CA from inline PEM env vars."""
         ca_cert_pem, ca_key_pem = ca_keypair
-        with patch.dict(os.environ, {
-            "RENDERTRUST_CA_CERT": ca_cert_pem.decode(),
-            "RENDERTRUST_CA_KEY": ca_key_pem.decode(),
-        }, clear=False):
+        with patch.dict(
+            os.environ,
+            {
+                "RENDERTRUST_CA_CERT": ca_cert_pem.decode(),
+                "RENDERTRUST_CA_KEY": ca_key_pem.decode(),
+            },
+            clear=False,
+        ):
             result = CertificateAuthority.load_ca_from_env()
             assert result is not None
             assert result[0] == ca_cert_pem
@@ -619,15 +601,17 @@ class TestCertsAPI:
     def ca_env(self, ca_keypair: tuple[bytes, bytes]):
         """Set up CA env vars for API tests."""
         ca_cert_pem, ca_key_pem = ca_keypair
-        with patch.dict(os.environ, {
-            "RENDERTRUST_CA_CERT": ca_cert_pem.decode(),
-            "RENDERTRUST_CA_KEY": ca_key_pem.decode(),
-        }, clear=False):
+        with patch.dict(
+            os.environ,
+            {
+                "RENDERTRUST_CA_CERT": ca_cert_pem.decode(),
+                "RENDERTRUST_CA_KEY": ca_key_pem.decode(),
+            },
+            clear=False,
+        ):
             yield ca_cert_pem, ca_key_pem
 
-    async def test_issue_certificate_endpoint(
-        self, client, ca_env, node_id: str
-    ):
+    async def test_issue_certificate_endpoint(self, client, ca_env, node_id: str):
         """POST /certs/issue should return a signed certificate."""
         response = await client.post(
             "/api/v1/certs/issue",
@@ -646,15 +630,11 @@ class TestCertsAPI:
         data = response.json()
         assert "-----BEGIN CERTIFICATE-----" in data["ca_certificate"]
 
-    async def test_renew_certificate_endpoint(
-        self, client, ca_env, node_id: str
-    ):
+    async def test_renew_certificate_endpoint(self, client, ca_env, node_id: str):
         """POST /certs/renew should return a renewed certificate."""
         ca_cert_pem, ca_key_pem = ca_env
         # First issue a cert
-        cert_pem, _ = CertificateAuthority.issue_node_cert(
-            ca_cert_pem, ca_key_pem, node_id
-        )
+        cert_pem, _ = CertificateAuthority.issue_node_cert(ca_cert_pem, ca_key_pem, node_id)
 
         response = await client.post(
             "/api/v1/certs/renew",

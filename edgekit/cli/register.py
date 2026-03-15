@@ -162,9 +162,7 @@ def register_with_gateway(
         response.raise_for_status()
         return response.json()
     except httpx.ConnectError as exc:
-        raise click.ClickException(
-            f"Cannot connect to gateway at {gateway_url}: {exc}"
-        ) from exc
+        raise click.ClickException(f"Cannot connect to gateway at {gateway_url}: {exc}") from exc
     except httpx.HTTPStatusError as exc:
         detail = ""
         try:
@@ -175,9 +173,7 @@ def register_with_gateway(
             f"Registration failed (HTTP {exc.response.status_code}): {detail}"
         ) from exc
     except httpx.TimeoutException as exc:
-        raise click.ClickException(
-            f"Request to gateway timed out: {exc}"
-        ) from exc
+        raise click.ClickException(f"Request to gateway timed out: {exc}") from exc
 
 
 @click.command()

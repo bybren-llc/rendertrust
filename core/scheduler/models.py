@@ -124,9 +124,7 @@ class JobDispatch(BaseModel):
         Index("ix_job_dispatches_status", "status"),
     )
 
-    node_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("edge_nodes.id"), nullable=False
-    )
+    node_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("edge_nodes.id"), nullable=False)
     job_type: Mapped[str] = mapped_column(String(100), nullable=False)
     payload_ref: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[JobStatus] = mapped_column(
@@ -153,10 +151,7 @@ class JobDispatch(BaseModel):
     node: Mapped["EdgeNode"] = relationship(back_populates="jobs")
 
     def __repr__(self) -> str:
-        return (
-            f"<JobDispatch(id={self.id}, node_id={self.node_id}, "
-            f"status={self.status.value})>"
-        )
+        return f"<JobDispatch(id={self.id}, node_id={self.node_id}, status={self.status.value})>"
 
 
 class DeadLetterEntry(BaseModel):
@@ -173,9 +168,7 @@ class DeadLetterEntry(BaseModel):
     __tablename__ = "dead_letter_queue"
     __table_args__ = (Index("ix_dead_letter_queue_job_id", "job_id"),)
 
-    job_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("job_dispatches.id"), nullable=False
-    )
+    job_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("job_dispatches.id"), nullable=False)
     original_payload: Mapped[str] = mapped_column(String(500), nullable=False)
     error_history: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     failed_at: Mapped[datetime.datetime] = mapped_column(
@@ -185,6 +178,5 @@ class DeadLetterEntry(BaseModel):
 
     def __repr__(self) -> str:
         return (
-            f"<DeadLetterEntry(id={self.id}, job_id={self.job_id}, "
-            f"retry_count={self.retry_count})>"
+            f"<DeadLetterEntry(id={self.id}, job_id={self.job_id}, retry_count={self.retry_count})>"
         )

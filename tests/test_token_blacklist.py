@@ -147,17 +147,20 @@ async def test_logout_revokes_token(client, test_user):
     token = create_access_token({"sub": str(test_user.id)})
     headers = {"Authorization": f"Bearer {token}"}
 
-    with patch.object(
-        token_blacklist,
-        "is_revoked",
-        new_callable=AsyncMock,
-        return_value=False,
-    ), patch.object(
-        token_blacklist,
-        "revoke",
-        new_callable=AsyncMock,
-        return_value=True,
-    ) as mock_revoke:
+    with (
+        patch.object(
+            token_blacklist,
+            "is_revoked",
+            new_callable=AsyncMock,
+            return_value=False,
+        ),
+        patch.object(
+            token_blacklist,
+            "revoke",
+            new_callable=AsyncMock,
+            return_value=True,
+        ) as mock_revoke,
+    ):
         response = await client.post("/api/v1/auth/logout", headers=headers)
 
     assert response.status_code == 200

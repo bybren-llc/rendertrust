@@ -98,9 +98,7 @@ async def update_job_status(
         ValueError: If the job is not found or the transition is invalid.
     """
     result = await session.execute(
-        select(JobDispatch)
-        .options(selectinload(JobDispatch.node))
-        .where(JobDispatch.id == job_id)
+        select(JobDispatch).options(selectinload(JobDispatch.node)).where(JobDispatch.id == job_id)
     )
     job = result.scalar_one_or_none()
 
@@ -162,9 +160,7 @@ async def get_job(session: AsyncSession, job_id: uuid.UUID) -> JobDispatch | Non
         The JobDispatch record, or None if not found.
     """
     result = await session.execute(
-        select(JobDispatch)
-        .options(selectinload(JobDispatch.node))
-        .where(JobDispatch.id == job_id)
+        select(JobDispatch).options(selectinload(JobDispatch.node)).where(JobDispatch.id == job_id)
     )
     return result.scalar_one_or_none()
 
@@ -221,9 +217,7 @@ async def cancel_job(session: AsyncSession, job_id: uuid.UUID) -> JobDispatch:
         ValueError: If the job is not found or is not in a cancellable state.
     """
     result = await session.execute(
-        select(JobDispatch)
-        .options(selectinload(JobDispatch.node))
-        .where(JobDispatch.id == job_id)
+        select(JobDispatch).options(selectinload(JobDispatch.node)).where(JobDispatch.id == job_id)
     )
     job = result.scalar_one_or_none()
 

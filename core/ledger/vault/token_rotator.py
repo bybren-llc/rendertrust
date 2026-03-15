@@ -55,8 +55,6 @@ async def rotate(node_id: str):
         JWT_SECRET,
         algorithm="HS256",
     )
-    VAULT.secrets.kv.v2.create_or_update_secret(
-        path=f"edge/{node_id}", secret={"token": token}
-    )
+    VAULT.secrets.kv.v2.create_or_update_secret(path=f"edge/{node_id}", secret={"token": token})
     logger.info("edge_token_rotated", node_id=node_id)
     return {"token": token}

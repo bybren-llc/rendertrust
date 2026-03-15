@@ -35,6 +35,7 @@ else:
     class StrEnum(str, Enum):  # type: ignore[no-redef]  # noqa: UP042
         """Polyfill for Python < 3.11."""
 
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
@@ -87,9 +88,7 @@ class MerkleTree:
         if not leaves:
             raise ValueError("Cannot build a Merkle tree from an empty list")
         self._leaves: list[str] = list(leaves)
-        self._hashed_leaves: list[bytes] = [
-            self._hash_leaf(leaf) for leaf in self._leaves
-        ]
+        self._hashed_leaves: list[bytes] = [self._hash_leaf(leaf) for leaf in self._leaves]
         self._levels: list[list[bytes]] = self._build()
 
     # ------------------------------------------------------------------
@@ -118,9 +117,7 @@ class MerkleTree:
             IndexError: If *index* is out of range.
         """
         if index < 0 or index >= len(self._hashed_leaves):
-            raise IndexError(
-                f"Leaf index {index} out of range [0, {len(self._hashed_leaves)})"
-            )
+            raise IndexError(f"Leaf index {index} out of range [0, {len(self._hashed_leaves)})")
 
         proof_hashes: list[bytes] = []
         directions: list[Direction] = []

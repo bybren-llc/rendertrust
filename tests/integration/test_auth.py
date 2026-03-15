@@ -168,9 +168,7 @@ class TestTokenVerification:
             "token_type": TokenType.ACCESS.value,
             "jti": "test-jti",
         }
-        token = jose_jwt.encode(
-            payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
-        )
+        token = jose_jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
         with pytest.raises(HTTPException) as exc_info:
             await verify_token(token)
         assert exc_info.value.status_code == 401
@@ -217,9 +215,7 @@ class TestAuthenticatedEndpoints:
         token = jose_jwt.encode(
             expired_payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
         )
-        response = await auth_client.get(
-            "/test-auth", headers={"Authorization": f"Bearer {token}"}
-        )
+        response = await auth_client.get("/test-auth", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 401
 
     async def test_refresh_token_rejected_as_access(
@@ -227,17 +223,13 @@ class TestAuthenticatedEndpoints:
     ):
         """OWASP A01 fix: refresh tokens cannot be used as access tokens."""
         token = create_refresh_token({"sub": str(test_user.id)})
-        response = await auth_client.get(
-            "/test-auth", headers={"Authorization": f"Bearer {token}"}
-        )
+        response = await auth_client.get("/test-auth", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 401
 
     async def test_nonexistent_user_returns_401(self, auth_client: AsyncClient):
         """Token for non-existent user returns 401."""
         token = create_access_token({"sub": "00000000-0000-0000-0000-000000000000"})
-        response = await auth_client.get(
-            "/test-auth", headers={"Authorization": f"Bearer {token}"}
-        )
+        response = await auth_client.get("/test-auth", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 401
 
     async def test_inactive_user_returns_401(
@@ -248,9 +240,7 @@ class TestAuthenticatedEndpoints:
         db_session.add(test_user)
         await db_session.flush()
         token = create_access_token({"sub": str(test_user.id)})
-        response = await auth_client.get(
-            "/test-auth", headers={"Authorization": f"Bearer {token}"}
-        )
+        response = await auth_client.get("/test-auth", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 401
 
     async def test_valid_token_active_user_returns_200(

@@ -138,10 +138,7 @@ class CpuBenchmarkPlugin(BaseWorkerPlugin):
         if limit > self.MAX_LIMIT:
             return WorkerResult(
                 success=False,
-                error=(
-                    f"Limit {limit} exceeds maximum allowed value "
-                    f"of {self.MAX_LIMIT}"
-                ),
+                error=(f"Limit {limit} exceeds maximum allowed value of {self.MAX_LIMIT}"),
             )
 
         # -- Run the sieve --
@@ -149,12 +146,14 @@ class CpuBenchmarkPlugin(BaseWorkerPlugin):
         primes_found = self._sieve_of_eratosthenes(limit)
         duration = time.monotonic() - start_time
 
-        result = json.dumps({
-            "job_id": str(job_id),
-            "primes_found": primes_found,
-            "limit": limit,
-            "duration_seconds": round(duration, 6),
-        })
+        result = json.dumps(
+            {
+                "job_id": str(job_id),
+                "primes_found": primes_found,
+                "limit": limit,
+                "duration_seconds": round(duration, 6),
+            }
+        )
 
         return WorkerResult(success=True, result_ref=result)
 

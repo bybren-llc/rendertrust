@@ -178,7 +178,7 @@ def build_capabilities(gpu: GpuInfo | None, cpu: CpuInfo) -> list[str]:
         # Strip common prefixes for brevity
         for prefix in ("nvidia geforce ", "nvidia ", "geforce "):
             if short_name.startswith(prefix):
-                short_name = short_name[len(prefix):]
+                short_name = short_name[len(prefix) :]
                 break
         short_name = short_name.replace(" ", "")
         vram_gb = gpu.vram_total_mb // 1024

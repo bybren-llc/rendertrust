@@ -104,9 +104,7 @@ class TestSyncLogin:
     @respx.mock
     def test_login_invalid_credentials(self) -> None:
         respx.post(f"{BASE_URL}/api/v1/auth/login").mock(
-            return_value=httpx.Response(
-                401, json={"detail": "Invalid email or password"}
-            )
+            return_value=httpx.Response(401, json={"detail": "Invalid email or password"})
         )
         client = RenderTrustClient(base_url=BASE_URL)
         with pytest.raises(AuthenticationError) as exc_info:
@@ -281,9 +279,7 @@ class TestSyncHealth:
 
     @respx.mock
     def test_health(self) -> None:
-        respx.get(f"{BASE_URL}/health").mock(
-            return_value=httpx.Response(200, json=HEALTH_RESPONSE)
-        )
+        respx.get(f"{BASE_URL}/health").mock(return_value=httpx.Response(200, json=HEALTH_RESPONSE))
         client = RenderTrustClient(base_url=BASE_URL)
         result = client.health()
         assert result["status"] == "healthy"
@@ -360,9 +356,7 @@ class TestSyncErrorHandling:
 
     @respx.mock
     def test_non_json_error_response(self) -> None:
-        respx.get(f"{BASE_URL}/health").mock(
-            return_value=httpx.Response(502, text="Bad Gateway")
-        )
+        respx.get(f"{BASE_URL}/health").mock(return_value=httpx.Response(502, text="Bad Gateway"))
         client = RenderTrustClient(base_url=BASE_URL)
         with pytest.raises(RenderTrustError) as exc_info:
             client.health()
@@ -408,9 +402,7 @@ class TestAsyncLogin:
     @respx.mock
     async def test_login_failure(self) -> None:
         respx.post(f"{BASE_URL}/api/v1/auth/login").mock(
-            return_value=httpx.Response(
-                401, json={"detail": "Invalid email or password"}
-            )
+            return_value=httpx.Response(401, json={"detail": "Invalid email or password"})
         )
         client = AsyncRenderTrustClient(base_url=BASE_URL)
         with pytest.raises(AuthenticationError):
@@ -494,17 +486,13 @@ class TestAsyncCreditsAndHealth:
 
     @respx.mock
     async def test_health(self) -> None:
-        respx.get(f"{BASE_URL}/health").mock(
-            return_value=httpx.Response(200, json=HEALTH_RESPONSE)
-        )
+        respx.get(f"{BASE_URL}/health").mock(return_value=httpx.Response(200, json=HEALTH_RESPONSE))
         async with AsyncRenderTrustClient(base_url=BASE_URL) as client:
             result = await client.health()
             assert result["status"] == "healthy"
 
     @respx.mock
     async def test_async_context_manager(self) -> None:
-        respx.get(f"{BASE_URL}/health").mock(
-            return_value=httpx.Response(200, json=HEALTH_RESPONSE)
-        )
+        respx.get(f"{BASE_URL}/health").mock(return_value=httpx.Response(200, json=HEALTH_RESPONSE))
         async with AsyncRenderTrustClient(base_url=BASE_URL) as client:
             assert client.base_url == BASE_URL

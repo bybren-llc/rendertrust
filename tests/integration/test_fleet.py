@@ -332,7 +332,5 @@ class TestUnauthenticated:
         fleet_client: AsyncClient,
     ) -> None:
         """No Authorization header on health endpoint returns 401 or 403."""
-        resp = await fleet_client.get(
-            "/api/v1/fleet/00000000-0000-0000-0000-000000000000/health"
-        )
+        resp = await fleet_client.get("/api/v1/fleet/00000000-0000-0000-0000-000000000000/health")
         assert resp.status_code in (401, 403)

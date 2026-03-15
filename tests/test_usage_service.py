@@ -52,6 +52,7 @@ from core.models.base import CreditLedgerEntry, TransactionDirection, Transactio
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_job(*, job_id: uuid.UUID | None = None, job_type: str = "render") -> MagicMock:
     """Create a mock JobDispatch with the given attributes."""
     job = MagicMock()

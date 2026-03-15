@@ -88,9 +88,7 @@ if TYPE_CHECKING:
 
 @pytest.fixture(autouse=True)
 def _mock_redis_queue():
-    with patch(
-        "core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock
-    ) as mock_push:
+    with patch("core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock) as mock_push:
         mock_push.return_value = True
         yield mock_push
 
@@ -190,12 +188,8 @@ class TestRetryToDlqFlow:
         assert result1.status == JobStatus.QUEUED
 
         # --- Failure 2 (retry 1): QUEUED -> DISPATCHED -> RUNNING -> FAILED ---
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -208,12 +202,8 @@ class TestRetryToDlqFlow:
         assert result2.retry_count == 2
 
         # --- Failure 3 (retry 2): QUEUED -> DISPATCHED -> RUNNING -> FAILED ---
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -226,12 +216,8 @@ class TestRetryToDlqFlow:
         assert result3.retry_count == 3
 
         # --- Failure 4 (retry 3): QUEUED -> DISPATCHED -> RUNNING -> FAILED ---
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -285,12 +271,8 @@ class TestRetrySuccessFlow:
         assert retried.status == JobStatus.QUEUED
 
         # Second attempt succeeds
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         completed = await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -320,9 +302,7 @@ class TestCircuitBreakerRetryInteraction:
         cb = CircuitBreaker()
 
         node_a = _make_node(name="node-a-bad", public_key="key-cb-a")
-        node_b = _make_node(
-            name="node-b-good", public_key="key-cb-b", current_load=0.1
-        )
+        node_b = _make_node(name="node-b-good", public_key="key-cb-b", current_load=0.1)
         db_session.add_all([node_a, node_b])
         await db_session.flush()
 
@@ -376,16 +356,10 @@ class TestCircuitBreakerRedistribute:
         await db_session.flush()
 
         # Create jobs in QUEUED and DISPATCHED states on the node
-        job_queued = _make_job(
-            node=node, status=JobStatus.QUEUED, payload_ref="s3://q1"
-        )
-        job_dispatched = _make_job(
-            node=node, status=JobStatus.DISPATCHED, payload_ref="s3://d1"
-        )
+        job_queued = _make_job(node=node, status=JobStatus.QUEUED, payload_ref="s3://q1")
+        job_dispatched = _make_job(node=node, status=JobStatus.DISPATCHED, payload_ref="s3://d1")
         # A running job should NOT be redistributed
-        job_running = _make_job(
-            node=node, status=JobStatus.RUNNING, payload_ref="s3://r1"
-        )
+        job_running = _make_job(node=node, status=JobStatus.RUNNING, payload_ref="s3://r1")
         db_session.add_all([job_queued, job_dispatched, job_running])
         await db_session.flush()
 
@@ -535,12 +509,8 @@ class TestUsageDeductionOnRetrySuccess:
         await schedule_retry(db_session, job, "Temporary error")
 
         # Second attempt succeeds
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED
-        )
-        await update_job_status(
-            session=db_session, job_id=job.id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.DISPATCHED)
+        await update_job_status(session=db_session, job_id=job.id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job.id,
@@ -574,9 +544,7 @@ class TestInsufficientCreditsPreFlight:
     ) -> None:
         """User with 0 credits cannot dispatch a render job (costs 10)."""
         # No credits allocated -- balance is 0
-        has_enough = await check_sufficient_credits(
-            db_session, test_user.id, "render"
-        )
+        has_enough = await check_sufficient_credits(db_session, test_user.id, "render")
         assert has_enough is False
 
     async def test_sufficient_credits_allows_dispatch(
@@ -593,9 +561,7 @@ class TestInsufficientCreditsPreFlight:
             reference_id="seed-preflight-ok",
         )
 
-        has_enough = await check_sufficient_credits(
-            db_session, test_user.id, "render"
-        )
+        has_enough = await check_sufficient_credits(db_session, test_user.id, "render")
         assert has_enough is True
 
     async def test_free_job_type_always_passes(
@@ -604,9 +570,7 @@ class TestInsufficientCreditsPreFlight:
         test_user: User,
     ) -> None:
         """Echo jobs are free (0 credits) so pre-flight always passes."""
-        has_enough = await check_sufficient_credits(
-            db_session, test_user.id, "echo"
-        )
+        has_enough = await check_sufficient_credits(db_session, test_user.id, "echo")
         assert has_enough is True
 
 
