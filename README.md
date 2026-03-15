@@ -1,13 +1,35 @@
 # RenderTrust
 
-<img src="diagrams/RenderTrust_prime_logo.png" alt="RenderTrust Logo" width="300"/>
+<p align="center">
+  <img src="diagrams/RenderTrust_prime_logo.png" alt="RenderTrust Logo" width="300"/>
+</p>
 
-**The distributed compute trust platform.** Submit jobs, dispatch to edge nodes, pay with credits, verify on-chain.
+<p align="center">
+  <strong>The distributed compute trust platform.</strong><br>
+  Submit jobs, dispatch to edge nodes, pay with credits, verify on-chain.
+</p>
 
-[![Release](https://img.shields.io/github/v/release/bybren-llc/rendertrust?include_prereleases&label=release)](https://github.com/bybren-llc/rendertrust/releases/tag/v1.0.0-alpha)
-[![Tests](https://img.shields.io/badge/tests-716%20passing-brightgreen)]()
-[![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
-[![License](https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-blue)]()
+<p align="center">
+  <a href="https://github.com/bybren-llc/rendertrust/releases/tag/v1.0.0-alpha">
+    <img src="https://img.shields.io/github/v/release/bybren-llc/rendertrust?include_prereleases&label=release&style=flat-square" alt="Release">
+  </a>
+  <img src="https://img.shields.io/badge/tests-716%20passing-brightgreen?style=flat-square" alt="Tests">
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square" alt="Python">
+  <img src="https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-blue?style=flat-square" alt="License">
+  <a href="https://deepwiki.com/ByBren-LLC/rendertrust">
+    <img src="https://img.shields.io/badge/DeepWiki-ByBren--LLC%2Frendertrust-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJMNCAyQzIuOSAyIDIgMi45IDIgNHY4YzAgMS4xLjkgMiAyIDJoOCI+PC9wYXRoPjxwYXRoIGQ9Ik0yMCAyaC04djEyaDhjMS4xIDAgMi0uOSAyLTJWNGMwLTEuMS0uOS0yLTItMnoiPjwvcGF0aD48cGF0aCBkPSJNMTIgMTR2OCI+PC9wYXRoPjxwYXRoIGQ9Ik04IDIyaDgiPjwvcGF0aD48L3N2Zz4=" alt="DeepWiki">
+  </a>
+</p>
+
+<p align="center">
+  <strong>Built with</strong><br>
+  <a href="https://github.com/bybren-llc/safe-agentic-workflow">
+    <img src="https://img.shields.io/badge/SAFe_Agent_Harness-ByBren-purple?style=flat-square" alt="SAFe Agent Harness">
+  </a>
+  <img src="https://img.shields.io/badge/agents-11%20specialized-purple?style=flat-square" alt="Agents">
+  <img src="https://img.shields.io/badge/skills-18%20model--invoked-orange?style=flat-square" alt="Skills">
+  <img src="https://img.shields.io/badge/patterns-18%20reusable-green?style=flat-square" alt="Patterns">
+</p>
 
 ---
 
