@@ -49,8 +49,13 @@ transaction_source = sa.Enum(
 def upgrade() -> None:
     """Create credit_ledger_entries table with enum types and constraints."""
     # -- enum types -----------------------------------------------------------
-    transaction_direction.create(op.get_bind(), checkfirst=True)
-    transaction_source.create(op.get_bind(), checkfirst=True)
+    # Use raw SQL with IF NOT EXISTS for asyncpg compatibility.
+    # SQLAlchemy Enum.create(checkfirst=True) doesn't work reliably with asyncpg.
+    op.execute("CREATE TYPE IF NOT EXISTS transaction_direction AS ENUM ('CREDIT', 'DEBIT')")
+    op.execute(
+        "CREATE TYPE IF NOT EXISTS transaction_source"
+        " AS ENUM ('STRIPE', 'USAGE', 'ADJUSTMENT', 'REFUND')"
+    )
 
     # -- credit_ledger_entries ------------------------------------------------
     op.create_table(
