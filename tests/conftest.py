@@ -88,16 +88,24 @@ async def test_engine():
     """Create a session-scoped async engine and bootstrap the schema."""
     engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        # Anchor models use a separate Base — create those tables too.
-        await conn.run_sync(AnchorBase.metadata.create_all)
+    # When running against PostgreSQL (CI), Alembic migrations have already
+    # created the schema (including PostgreSQL-specific ENUM types).  Calling
+    # metadata.create_all on top of that causes "type already exists" errors.
+    # Only bootstrap via create_all for SQLite (unit tests).
+    _is_sqlite = TEST_DATABASE_URL.startswith("sqlite")
+
+    if _is_sqlite:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+            # Anchor models use a separate Base — create those tables too.
+            await conn.run_sync(AnchorBase.metadata.create_all)
 
     yield engine
 
-    async with engine.begin() as conn:
-        await conn.run_sync(AnchorBase.metadata.drop_all)
-        await conn.run_sync(Base.metadata.drop_all)
+    if _is_sqlite:
+        async with engine.begin() as conn:
+            await conn.run_sync(AnchorBase.metadata.drop_all)
+            await conn.run_sync(Base.metadata.drop_all)
     await engine.dispose()
 
 
