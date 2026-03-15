@@ -292,11 +292,13 @@ class TestRelayWebSocket:
         url = f"/api/v1/relay/ws/{node_id}?token={valid_token}"
         with sync_client.websocket_connect(url) as ws:
             # Send a status update message
-            ws.send_json({
-                "type": "status_update",
-                "job_id": str(uuid.uuid4()),
-                "status": "running",
-            })
+            ws.send_json(
+                {
+                    "type": "status_update",
+                    "job_id": str(uuid.uuid4()),
+                    "status": "running",
+                }
+            )
             # Send a heartbeat pong (to keep connection alive)
             ws.send_json({"type": "heartbeat_pong", "payload": {}})
             # If no exception, message exchange succeeded

@@ -122,9 +122,7 @@ async def test_deduct_credits_insufficient(db_session: AsyncSession, test_user: 
     assert exc_info.value.user_id == test_user.id
 
 
-async def test_deduct_credits_zero_or_negative(
-    db_session: AsyncSession, test_user: User
-) -> None:
+async def test_deduct_credits_zero_or_negative(db_session: AsyncSession, test_user: User) -> None:
     """Raises ValueError for zero or negative amounts."""
     with pytest.raises(ValueError, match="Debit amount must be positive"):
         await deduct_credits(

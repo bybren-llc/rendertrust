@@ -281,9 +281,12 @@ class TestRegisterCommand:
                 cli,
                 [
                     "register",
-                    "--gateway-url", "http://localhost:8000",
-                    "--name", "gpu-node",
-                    "--capabilities", "gpu-render,cpu-inference",
+                    "--gateway-url",
+                    "http://localhost:8000",
+                    "--name",
+                    "gpu-node",
+                    "--capabilities",
+                    "gpu-render,cpu-inference",
                 ],
             )
 
@@ -307,12 +310,15 @@ class TestRegisterCommand:
         # Create existing registration
         _, priv_pem, pub_pem = generate_keypair()
         save_keys(edgekit_home, priv_pem, pub_pem)
-        save_config(edgekit_home, {
-            "node_id": "existing-id",
-            "name": "existing-node",
-            "gateway_url": "http://old:8000",
-            "jwt_token": "old-token",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "existing-id",
+                "name": "existing-node",
+                "gateway_url": "http://old:8000",
+                "jwt_token": "old-token",
+            },
+        )
 
         result = runner.invoke(
             cli,
@@ -332,12 +338,15 @@ class TestRegisterCommand:
         # Create existing registration
         _, priv_pem, pub_pem = generate_keypair()
         save_keys(edgekit_home, priv_pem, pub_pem)
-        save_config(edgekit_home, {
-            "node_id": "old-id",
-            "name": "old-node",
-            "gateway_url": "http://old:8000",
-            "jwt_token": "old-token",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "old-id",
+                "name": "old-node",
+                "gateway_url": "http://old:8000",
+                "jwt_token": "old-token",
+            },
+        )
         old_private = (edgekit_home / PRIVATE_KEY_FILE).read_bytes()
 
         mock_response = MagicMock()
@@ -350,8 +359,10 @@ class TestRegisterCommand:
                 cli,
                 [
                     "register",
-                    "--gateway-url", "http://localhost:8000",
-                    "--name", "new-node",
+                    "--gateway-url",
+                    "http://localhost:8000",
+                    "--name",
+                    "new-node",
                     "--force",
                 ],
             )
@@ -477,14 +488,17 @@ class TestStatusCommand:
         """Status displays node ID, name, gateway, and status from config."""
         _, priv_pem, pub_pem = generate_keypair()
         save_keys(edgekit_home, priv_pem, pub_pem)
-        save_config(edgekit_home, {
-            "node_id": "test-node-id-123",
-            "name": "my-test-node",
-            "gateway_url": "http://gateway:8000",
-            "jwt_token": "some-jwt-token",
-            "status": "HEALTHY",
-            "capabilities": ["gpu-render"],
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "test-node-id-123",
+                "name": "my-test-node",
+                "gateway_url": "http://gateway:8000",
+                "jwt_token": "some-jwt-token",
+                "status": "HEALTHY",
+                "capabilities": ["gpu-render"],
+            },
+        )
 
         result = runner.invoke(cli, ["status", "--no-check-connectivity"])
 
@@ -503,12 +517,15 @@ class TestStatusCommand:
         """Status reports presence/absence of key files."""
         _, priv_pem, pub_pem = generate_keypair()
         save_keys(edgekit_home, priv_pem, pub_pem)
-        save_config(edgekit_home, {
-            "node_id": "id",
-            "name": "n",
-            "gateway_url": "http://gw:8000",
-            "jwt_token": "tok",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "id",
+                "name": "n",
+                "gateway_url": "http://gw:8000",
+                "jwt_token": "tok",
+            },
+        )
 
         result = runner.invoke(cli, ["status", "--no-check-connectivity"])
 
@@ -524,12 +541,15 @@ class TestStatusCommand:
         edgekit_home: Path,
     ) -> None:
         """Status shows MISSING when key files are absent."""
-        save_config(edgekit_home, {
-            "node_id": "id",
-            "name": "n",
-            "gateway_url": "http://gw:8000",
-            "jwt_token": "tok",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "id",
+                "name": "n",
+                "gateway_url": "http://gw:8000",
+                "jwt_token": "tok",
+            },
+        )
 
         result = runner.invoke(cli, ["status", "--no-check-connectivity"])
 
@@ -542,12 +562,15 @@ class TestStatusCommand:
         edgekit_home: Path,
     ) -> None:
         """Status reports OK when gateway health endpoint responds 200."""
-        save_config(edgekit_home, {
-            "node_id": "id",
-            "name": "n",
-            "gateway_url": "http://localhost:8000",
-            "jwt_token": "tok",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "id",
+                "name": "n",
+                "gateway_url": "http://localhost:8000",
+                "jwt_token": "tok",
+            },
+        )
         _, priv_pem, pub_pem = generate_keypair()
         save_keys(edgekit_home, priv_pem, pub_pem)
 
@@ -568,12 +591,15 @@ class TestStatusCommand:
         """Status reports UNREACHABLE when gateway cannot be reached."""
         import httpx as _httpx
 
-        save_config(edgekit_home, {
-            "node_id": "id",
-            "name": "n",
-            "gateway_url": "http://dead-host:8000",
-            "jwt_token": "tok",
-        })
+        save_config(
+            edgekit_home,
+            {
+                "node_id": "id",
+                "name": "n",
+                "gateway_url": "http://dead-host:8000",
+                "jwt_token": "tok",
+            },
+        )
 
         with patch(
             "edgekit.cli.status.httpx.get",

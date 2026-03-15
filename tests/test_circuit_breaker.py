@@ -93,9 +93,7 @@ async def unhealthy_node(db_session: AsyncSession) -> EdgeNode:
 
 
 @pytest.fixture
-async def queued_job_on_node(
-    db_session: AsyncSession, healthy_node: EdgeNode
-) -> JobDispatch:
+async def queued_job_on_node(db_session: AsyncSession, healthy_node: EdgeNode) -> JobDispatch:
     """Create a QUEUED job assigned to the healthy node."""
     job = JobDispatch(
         node_id=healthy_node.id,
@@ -109,9 +107,7 @@ async def queued_job_on_node(
 
 
 @pytest.fixture
-async def dispatched_job_on_node(
-    db_session: AsyncSession, healthy_node: EdgeNode
-) -> JobDispatch:
+async def dispatched_job_on_node(db_session: AsyncSession, healthy_node: EdgeNode) -> JobDispatch:
     """Create a DISPATCHED job assigned to the healthy node."""
     job = JobDispatch(
         node_id=healthy_node.id,
@@ -125,9 +121,7 @@ async def dispatched_job_on_node(
 
 
 @pytest.fixture
-async def running_job_on_node(
-    db_session: AsyncSession, healthy_node: EdgeNode
-) -> JobDispatch:
+async def running_job_on_node(db_session: AsyncSession, healthy_node: EdgeNode) -> JobDispatch:
     """Create a RUNNING job assigned to the healthy node."""
     job = JobDispatch(
         node_id=healthy_node.id,
@@ -141,9 +135,7 @@ async def running_job_on_node(
 
 
 @pytest.fixture
-async def completed_job_on_node(
-    db_session: AsyncSession, healthy_node: EdgeNode
-) -> JobDispatch:
+async def completed_job_on_node(db_session: AsyncSession, healthy_node: EdgeNode) -> JobDispatch:
     """Create a COMPLETED job assigned to the healthy node."""
     job = JobDispatch(
         node_id=healthy_node.id,
@@ -157,9 +149,7 @@ async def completed_job_on_node(
 
 
 @pytest.fixture
-async def failed_job_on_node(
-    db_session: AsyncSession, healthy_node: EdgeNode
-) -> JobDispatch:
+async def failed_job_on_node(db_session: AsyncSession, healthy_node: EdgeNode) -> JobDispatch:
     """Create a FAILED job assigned to the healthy node."""
     job = JobDispatch(
         node_id=healthy_node.id,
@@ -495,9 +485,7 @@ async def test_full_lifecycle_failure_trip_redistribute_recovery(
     assert health == NodeStatus.UNHEALTHY
 
     # Phase 4: Simulate recovery timeout elapsed
-    past = datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(
-        seconds=RECOVERY_TIMEOUT + 1
-    )
+    past = datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(seconds=RECOVERY_TIMEOUT + 1)
     cb._last_failure_time[healthy_node.id] = past
 
     health = await cb.check_node_health(db_session, healthy_node.id)

@@ -176,9 +176,7 @@ async def renew_certificate(
     # Verify the current certificate was issued by our CA
     try:
         current_cert_bytes = payload.current_cert_pem.encode()
-        if not CertificateAuthority.verify_cert_chain(
-            current_cert_bytes, ca_cert_pem
-        ):
+        if not CertificateAuthority.verify_cert_chain(current_cert_bytes, ca_cert_pem):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Current certificate was not issued by this CA",

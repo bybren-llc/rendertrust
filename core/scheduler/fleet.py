@@ -148,9 +148,7 @@ async def list_nodes(
                 status=n.status.value,
                 capabilities=list(n.capabilities or []),
                 current_load=n.current_load,
-                last_heartbeat=(
-                    n.last_heartbeat.isoformat() if n.last_heartbeat else None
-                ),
+                last_heartbeat=(n.last_heartbeat.isoformat() if n.last_heartbeat else None),
             )
             for n in nodes
         ],
@@ -179,9 +177,7 @@ async def node_health(
             detail="Invalid node ID format",
         ) from None
 
-    result = await session.execute(
-        select(EdgeNode).where(EdgeNode.id == parsed_id)
-    )
+    result = await session.execute(select(EdgeNode).where(EdgeNode.id == parsed_id))
     node = result.scalar_one_or_none()
 
     if node is None:
@@ -210,9 +206,7 @@ async def node_health(
         status=node.status.value,
         capabilities=list(node.capabilities or []),
         current_load=node.current_load,
-        last_heartbeat=(
-            node.last_heartbeat.isoformat() if node.last_heartbeat else None
-        ),
+        last_heartbeat=(node.last_heartbeat.isoformat() if node.last_heartbeat else None),
         uptime_seconds=uptime,
         metadata=node.metadata_,
         created_at=node.created_at.isoformat(),

@@ -20,7 +20,9 @@ PERIOD = (datetime.date.today().replace(day=1) - datetime.timedelta(days=1)).str
 async def build(account_id: str):
     async with async_session() as s:
         rows = await s.execute(
-            text("SELECT created_at, delta_usd FROM ledger_entries WHERE account_id=:a AND date_trunc('month', created_at)=date_trunc('month', now()-interval '1 month')"),
+            text(
+                "SELECT created_at, delta_usd FROM ledger_entries WHERE account_id=:a AND date_trunc('month', created_at)=date_trunc('month', now()-interval '1 month')"
+            ),
             {"a": account_id},
         )
         items = [

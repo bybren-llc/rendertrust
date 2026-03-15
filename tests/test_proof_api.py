@@ -59,9 +59,7 @@ def _make_entry(
     entry.id = entry_id
     entry.account_id = account_id
     entry.delta_usd = delta_usd
-    entry.created_at = created_at or datetime.datetime(
-        2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC
-    )
+    entry.created_at = created_at or datetime.datetime(2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC)
     entry.ref_event_id = None
     entry.anchor_id = anchor_id
     return entry
@@ -110,9 +108,7 @@ async def _seed_anchor_data(
         entry.id = i
         entry.account_id = f"user:{i}"
         entry.delta_usd = f"{i * 5}.00"
-        entry.created_at = datetime.datetime(
-            2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC
-        )
+        entry.created_at = datetime.datetime(2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC)
         entry.ref_event_id = None
         entry.anchor_id = anchor_id
         session.add(entry)
@@ -131,9 +127,7 @@ async def _seed_unanchored_entry(
     entry.id = entry_id
     entry.account_id = "user:unanchored"
     entry.delta_usd = "50.00"
-    entry.created_at = datetime.datetime(
-        2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC
-    )
+    entry.created_at = datetime.datetime(2024, 6, 1, 12, 0, 0, tzinfo=datetime.UTC)
     entry.ref_event_id = None
     entry.anchor_id = None
     session.add(entry)
@@ -220,9 +214,7 @@ class TestGetEntryProof:
             int(proof_hash, 16)  # Should not raise -- valid hex
 
     @pytest.mark.asyncio
-    async def test_proof_404_for_nonexistent_entry(
-        self, client: AsyncClient, auth_headers: dict
-    ):
+    async def test_proof_404_for_nonexistent_entry(self, client: AsyncClient, auth_headers: dict):
         """Proof endpoint returns 404 for a non-existent entry."""
         response = await client.get(
             "/api/v1/ledger/99999/proof",
@@ -342,9 +334,7 @@ class TestVerifyEntryProof:
             app.dependency_overrides.pop(_get_anchoring_deps, None)
 
     @pytest.mark.asyncio
-    async def test_verify_404_for_nonexistent_entry(
-        self, client: AsyncClient, auth_headers: dict
-    ):
+    async def test_verify_404_for_nonexistent_entry(self, client: AsyncClient, auth_headers: dict):
         """Verify endpoint returns 404 for a non-existent entry."""
         response = await client.get(
             "/api/v1/ledger/99999/verify",
@@ -403,9 +393,7 @@ class TestListAnchors:
         assert record["entry_count"] == 3
 
     @pytest.mark.asyncio
-    async def test_list_anchors_empty(
-        self, client: AsyncClient, auth_headers: dict
-    ):
+    async def test_list_anchors_empty(self, client: AsyncClient, auth_headers: dict):
         """Anchors endpoint returns empty list when no anchors exist."""
         response = await client.get(
             "/api/v1/ledger/anchors",
@@ -431,9 +419,7 @@ class TestListAnchors:
                 tx_hash=f"0x{'0' * 62}{i:02d}",
                 block_number=100 + i,
                 entry_count=2,
-                anchored_at=datetime.datetime(
-                    2024, 6, 1, 13, i, 0, tzinfo=datetime.UTC
-                ),
+                anchored_at=datetime.datetime(2024, 6, 1, 13, i, 0, tzinfo=datetime.UTC),
             )
             db_session.add(anchor)
         await db_session.flush()
@@ -464,9 +450,7 @@ class TestListAnchors:
                 tx_hash=f"0x{'1' * 62}{i:02d}",
                 block_number=200 + i,
                 entry_count=1,
-                anchored_at=datetime.datetime(
-                    2024, 6, day, 12, 0, 0, tzinfo=datetime.UTC
-                ),
+                anchored_at=datetime.datetime(2024, 6, day, 12, 0, 0, tzinfo=datetime.UTC),
             )
             db_session.add(anchor)
         await db_session.flush()
@@ -496,7 +480,8 @@ class TestListAnchors:
 
     @pytest.mark.asyncio
     async def test_list_anchors_requires_authentication(
-        self, client: AsyncClient,
+        self,
+        client: AsyncClient,
     ):
         """Anchors endpoint returns 401 without auth headers."""
         response = await client.get("/api/v1/ledger/anchors")

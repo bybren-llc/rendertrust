@@ -97,9 +97,7 @@ def status(check_connectivity: bool) -> None:
             if response.status_code == 200:
                 click.echo(f"  Health check:  OK ({health_url})")
             else:
-                click.echo(
-                    f"  Health check:  DEGRADED (HTTP {response.status_code})"
-                )
+                click.echo(f"  Health check:  DEGRADED (HTTP {response.status_code})")
         except httpx.ConnectError:
             click.echo(f"  Health check:  UNREACHABLE ({health_url})")
             sys.exit(1)

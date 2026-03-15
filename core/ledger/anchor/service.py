@@ -101,9 +101,7 @@ class AnchoringService:
         leaves = [entry.hash_input for entry in entries]
         tree = MerkleTree(leaves)
 
-        receipt: ChainReceipt = self._chain.submit_root(
-            tree.root_hex, len(entries)
-        )
+        receipt: ChainReceipt = self._chain.submit_root(tree.root_hex, len(entries))
 
         record = AnchorRecord(
             id=uuid.uuid4(),
@@ -144,13 +142,9 @@ class AnchoringService:
         leaves = [e.hash_input for e in all_entries]
 
         try:
-            index = next(
-                i for i, e in enumerate(all_entries) if e.id == entry.id
-            )
+            index = next(i for i, e in enumerate(all_entries) if e.id == entry.id)
         except StopIteration:
-            raise ValueError(
-                f"Entry id={entry.id} not found in the provided batch"
-            ) from None
+            raise ValueError(f"Entry id={entry.id} not found in the provided batch") from None
 
         tree = MerkleTree(leaves)
         return tree.get_proof(index)

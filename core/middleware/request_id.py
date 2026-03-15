@@ -47,9 +47,7 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
     4. Sets the X-Request-ID response header for client correlation.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Use client-provided ID if present, otherwise generate
         request_id = request.headers.get(_REQUEST_ID_HEADER) or str(uuid.uuid4())
 

@@ -60,10 +60,14 @@ def mock_blacklist():
 def ed25519_keypair():
     """Generate an Ed25519 keypair for testing."""
     private_key = Ed25519PrivateKey.generate()
-    public_key_pem = private_key.public_key().public_bytes(
-        serialization.Encoding.PEM,
-        serialization.PublicFormat.SubjectPublicKeyInfo,
-    ).decode()
+    public_key_pem = (
+        private_key.public_key()
+        .public_bytes(
+            serialization.Encoding.PEM,
+            serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+        .decode()
+    )
     return private_key, public_key_pem
 
 
@@ -71,10 +75,14 @@ def ed25519_keypair():
 def second_ed25519_keypair():
     """Generate a second Ed25519 keypair (different from the first)."""
     private_key = Ed25519PrivateKey.generate()
-    public_key_pem = private_key.public_key().public_bytes(
-        serialization.Encoding.PEM,
-        serialization.PublicFormat.SubjectPublicKeyInfo,
-    ).decode()
+    public_key_pem = (
+        private_key.public_key()
+        .public_bytes(
+            serialization.Encoding.PEM,
+            serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+        .decode()
+    )
     return private_key, public_key_pem
 
 
@@ -143,10 +151,14 @@ def test_verify_signature_non_ed25519_key():
         public_exponent=65537,
         key_size=2048,
     )
-    rsa_public_pem = rsa_private.public_key().public_bytes(
-        serialization.Encoding.PEM,
-        serialization.PublicFormat.SubjectPublicKeyInfo,
-    ).decode()
+    rsa_public_pem = (
+        rsa_private.public_key()
+        .public_bytes(
+            serialization.Encoding.PEM,
+            serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+        .decode()
+    )
     challenge = generate_challenge()
     fake_sig = b"\x00" * 64
 
@@ -179,9 +191,7 @@ def test_create_node_token_contains_claims():
     from core.config import get_settings
 
     settings = get_settings()
-    payload = jwt.decode(
-        token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
-    )
+    payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
 
     assert payload["sub"] == str(node_id)
     assert payload["token_type"] == _NODE_TOKEN_TYPE
@@ -199,9 +209,7 @@ def test_create_node_token_default_capabilities():
     from core.config import get_settings
 
     settings = get_settings()
-    payload = jwt.decode(
-        token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
-    )
+    payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
 
     assert payload["capabilities"] == []
 
@@ -251,9 +259,7 @@ def test_verify_node_token_expired():
         "capabilities": [],
         "jti": str(uuid.uuid4()),
     }
-    expired_token = jwt.encode(
-        payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
-    )
+    expired_token = jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 
     with pytest.raises(HTTPException) as exc_info:
         verify_node_token(expired_token)

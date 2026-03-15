@@ -115,9 +115,7 @@ async def failed_job(db_session: AsyncSession, edge_node: EdgeNode) -> JobDispat
 
 
 @pytest.fixture
-async def failed_job_max_retries(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> JobDispatch:
+async def failed_job_max_retries(db_session: AsyncSession, edge_node: EdgeNode) -> JobDispatch:
     """Create a job in FAILED status that has exhausted retries."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -152,9 +150,7 @@ async def running_job(db_session: AsyncSession, edge_node: EdgeNode) -> JobDispa
 # ---------------------------------------------------------------------------
 
 
-async def test_should_retry_count_zero(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> None:
+async def test_should_retry_count_zero(db_session: AsyncSession, edge_node: EdgeNode) -> None:
     """should_retry returns True when retry_count is 0."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -166,9 +162,7 @@ async def test_should_retry_count_zero(
     assert should_retry(job) is True
 
 
-async def test_should_retry_count_one(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> None:
+async def test_should_retry_count_one(db_session: AsyncSession, edge_node: EdgeNode) -> None:
     """should_retry returns True when retry_count is 1."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -180,9 +174,7 @@ async def test_should_retry_count_one(
     assert should_retry(job) is True
 
 
-async def test_should_retry_count_two(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> None:
+async def test_should_retry_count_two(db_session: AsyncSession, edge_node: EdgeNode) -> None:
     """should_retry returns True when retry_count is 2."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -194,9 +186,7 @@ async def test_should_retry_count_two(
     assert should_retry(job) is True
 
 
-async def test_should_retry_count_at_max(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> None:
+async def test_should_retry_count_at_max(db_session: AsyncSession, edge_node: EdgeNode) -> None:
     """should_retry returns False when retry_count equals MAX_RETRIES."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -208,9 +198,7 @@ async def test_should_retry_count_at_max(
     assert should_retry(job) is False
 
 
-async def test_should_retry_count_above_max(
-    db_session: AsyncSession, edge_node: EdgeNode
-) -> None:
+async def test_should_retry_count_above_max(db_session: AsyncSession, edge_node: EdgeNode) -> None:
     """should_retry returns False when retry_count exceeds MAX_RETRIES."""
     job = JobDispatch(
         node_id=edge_node.id,
@@ -279,9 +267,7 @@ async def test_schedule_retry_calls_move_to_dlq_at_max(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """schedule_retry moves job to DLQ when max retries exceeded."""
-    result = await schedule_retry(
-        db_session, failed_job_max_retries, "Final failure"
-    )
+    result = await schedule_retry(db_session, failed_job_max_retries, "Final failure")
 
     assert isinstance(result, DeadLetterEntry)
     assert result.job_id == failed_job_max_retries.id
@@ -323,9 +309,7 @@ async def test_move_to_dlq_creates_entry(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq creates a DeadLetterEntry record."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Permanent failure"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Permanent failure")
 
     assert isinstance(entry, DeadLetterEntry)
     assert entry.id is not None
@@ -336,9 +320,7 @@ async def test_move_to_dlq_records_original_payload(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq preserves the original payload reference."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Permanent failure"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Permanent failure")
 
     assert entry.original_payload == failed_job_max_retries.payload_ref
 
@@ -347,9 +329,7 @@ async def test_move_to_dlq_error_history_contains_messages(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq creates error_history with failure messages."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Final OOM error"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Final OOM error")
 
     assert isinstance(entry.error_history, list)
     assert len(entry.error_history) > 0
@@ -361,9 +341,7 @@ async def test_move_to_dlq_includes_previous_error(
 ) -> None:
     """move_to_dlq includes previous error_message in error_history."""
     # failed_job_max_retries has error_message="Previous error"
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Final error"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Final error")
 
     assert "Previous error" in entry.error_history
     assert "Final error" in entry.error_history
@@ -373,9 +351,7 @@ async def test_move_to_dlq_sets_job_permanently_failed(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq ensures the job remains in FAILED status."""
-    await move_to_dlq(
-        db_session, failed_job_max_retries, "Permanent failure"
-    )
+    await move_to_dlq(db_session, failed_job_max_retries, "Permanent failure")
 
     assert failed_job_max_retries.status == JobStatus.FAILED
 
@@ -384,9 +360,7 @@ async def test_move_to_dlq_records_retry_count(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq records the final retry_count."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Permanent failure"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Permanent failure")
 
     assert entry.retry_count == MAX_RETRIES
 
@@ -395,9 +369,7 @@ async def test_move_to_dlq_sets_failed_at(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """move_to_dlq sets a valid failed_at timestamp."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Permanent failure"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Permanent failure")
 
     assert entry.failed_at is not None
 
@@ -411,9 +383,7 @@ async def test_dlq_entry_model_repr(
     db_session: AsyncSession, failed_job_max_retries: JobDispatch
 ) -> None:
     """DeadLetterEntry __repr__ returns a useful string."""
-    entry = await move_to_dlq(
-        db_session, failed_job_max_retries, "Test repr"
-    )
+    entry = await move_to_dlq(db_session, failed_job_max_retries, "Test repr")
 
     repr_str = repr(entry)
     assert "DeadLetterEntry" in repr_str

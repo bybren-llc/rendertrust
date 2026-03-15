@@ -284,9 +284,7 @@ async def test_update_job_not_found(db_session: AsyncSession) -> None:
 # ---------------------------------------------------------------------------
 
 
-async def test_dispatched_sets_timestamp(
-    db_session: AsyncSession, queued_job: JobDispatch
-) -> None:
+async def test_dispatched_sets_timestamp(db_session: AsyncSession, queued_job: JobDispatch) -> None:
     """Transitioning to DISPATCHED auto-sets dispatched_at."""
     assert queued_job.dispatched_at is None
 
@@ -304,9 +302,7 @@ async def test_dispatched_sets_timestamp(
 # ---------------------------------------------------------------------------
 
 
-async def test_get_job_returns_job(
-    db_session: AsyncSession, queued_job: JobDispatch
-) -> None:
+async def test_get_job_returns_job(db_session: AsyncSession, queued_job: JobDispatch) -> None:
     """get_job returns the job with eager-loaded node."""
     result = await get_job(session=db_session, job_id=queued_job.id)
 
@@ -358,9 +354,7 @@ async def test_list_jobs_returns_all_when_no_filter(
 # ---------------------------------------------------------------------------
 
 
-async def test_cancel_queued_job(
-    db_session: AsyncSession, queued_job: JobDispatch
-) -> None:
+async def test_cancel_queued_job(db_session: AsyncSession, queued_job: JobDispatch) -> None:
     """Cancelling a QUEUED job sets status=FAILED with cancellation message."""
     result = await cancel_job(session=db_session, job_id=queued_job.id)
 
@@ -369,9 +363,7 @@ async def test_cancel_queued_job(
     assert result.error_message == "Cancelled by user"
 
 
-async def test_cancel_dispatched_job(
-    db_session: AsyncSession, dispatched_job: JobDispatch
-) -> None:
+async def test_cancel_dispatched_job(db_session: AsyncSession, dispatched_job: JobDispatch) -> None:
     """Cancelling a DISPATCHED job sets status=FAILED with cancellation message."""
     result = await cancel_job(session=db_session, job_id=dispatched_job.id)
 

@@ -141,11 +141,13 @@ async def push_to_queue(node_id: str, job_id: str, job_type: str, payload_ref: s
     """
     settings = get_settings()
     key = f"queue:node:{node_id}"
-    payload = json.dumps({
-        "job_id": job_id,
-        "job_type": job_type,
-        "payload_ref": payload_ref,
-    })
+    payload = json.dumps(
+        {
+            "job_id": job_id,
+            "job_type": job_type,
+            "payload_ref": payload_ref,
+        }
+    )
 
     try:
         r = aioredis.from_url(settings.redis_url)

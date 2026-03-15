@@ -89,15 +89,11 @@ class Web3ChainClient:
 
         abi_path = _ABI_PATH
         if not abi_path.is_file():
-            raise FileNotFoundError(
-                f"LedgerAnchor ABI not found at {abi_path}"
-            )
+            raise FileNotFoundError(f"LedgerAnchor ABI not found at {abi_path}")
         with abi_path.open() as fh:
             abi = json.load(fh)
 
-        self._contract = self._w3.eth.contract(
-            address=config.contract_address, abi=abi
-        )
+        self._contract = self._w3.eth.contract(address=config.contract_address, abi=abi)
 
     def submit_root(self, merkle_root_hex: str, entry_count: int) -> ChainReceipt:
         """Build, sign, and send an ``anchorRoot`` transaction."""
@@ -107,25 +103,17 @@ class Web3ChainClient:
         # Pad to 32 bytes if necessary.
         root_bytes = root_bytes.rjust(32, b"\x00")
 
-        tx = self._contract.functions.anchorRoot(
-            root_bytes, entry_count
-        ).build_transaction(
+        tx = self._contract.functions.anchorRoot(root_bytes, entry_count).build_transaction(
             {
                 "from": self._account.address,
-                "nonce": self._w3.eth.get_transaction_count(
-                    self._account.address
-                ),
+                "nonce": self._w3.eth.get_transaction_count(self._account.address),
                 "gas": 200_000,
                 "gasPrice": self._w3.eth.gas_price,
             }
         )
 
-        signed = self._w3.eth.account.sign_transaction(
-            tx, self._account.key
-        )
-        tx_hash = self._w3.eth.send_raw_transaction(
-            signed.rawTransaction
-        )
+        signed = self._w3.eth.account.sign_transaction(tx, self._account.key)
+        tx_hash = self._w3.eth.send_raw_transaction(signed.rawTransaction)
         receipt = self._w3.eth.wait_for_transaction_receipt(tx_hash)
 
         return ChainReceipt(
@@ -155,8 +143,7 @@ class NoOpChainClient:
 
     def submit_root(self, merkle_root_hex: str, entry_count: int) -> ChainReceipt:
         logger.info(
-            "NoOpChainClient.submit_root called "
-            "(root=%s, count=%d) -- skipping",
+            "NoOpChainClient.submit_root called (root=%s, count=%d) -- skipping",
             merkle_root_hex[:16],
             entry_count,
         )
@@ -167,8 +154,7 @@ class NoOpChainClient:
 
     def verify_root(self, tx_hash: str, expected_root_hex: str) -> ChainVerification:
         logger.info(
-            "NoOpChainClient.verify_root called "
-            "(tx=%s, root=%s) -- returning verified=True",
+            "NoOpChainClient.verify_root called (tx=%s, root=%s) -- returning verified=True",
             tx_hash[:16],
             expected_root_hex[:16],
         )

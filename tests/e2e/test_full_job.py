@@ -76,9 +76,7 @@ def mock_blacklist():
 @pytest.fixture(autouse=True)
 def mock_redis_queue():
     """Mock the Redis job queue push (no Redis server in tests)."""
-    with patch(
-        "core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock
-    ) as mock_push:
+    with patch("core.scheduler.dispatch.push_to_queue", new_callable=AsyncMock) as mock_push:
         mock_push.return_value = True
         yield mock_push
 
@@ -89,8 +87,7 @@ def mock_redis_queue():
 
 
 MOCK_PRESIGNED_URL = (
-    "https://storage.example.com/rendertrust-dev/"
-    "presigned?X-Amz-Signature=e2e-test-signature"
+    "https://storage.example.com/rendertrust-dev/presigned?X-Amz-Signature=e2e-test-signature"
 )
 
 
@@ -191,9 +188,7 @@ class TestFullJobLifecycleHappyPath:
         )
 
         # Verify balance via API
-        balance_resp = await client.get(
-            "/api/v1/credits/balance", headers=auth_headers
-        )
+        balance_resp = await client.get("/api/v1/credits/balance", headers=auth_headers)
         assert balance_resp.status_code == 200
         assert Decimal(balance_resp.json()["balance"]) == initial_credits
 
@@ -225,9 +220,7 @@ class TestFullJobLifecycleHappyPath:
         job_id = uuid.UUID(job_id_str)
 
         # Verify DISPATCHED status via GET
-        get_resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        get_resp = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert get_resp.status_code == 200
         assert get_resp.json()["status"] == "DISPATCHED"
         assert get_resp.json()["dispatched_at"] is not None
@@ -241,9 +234,7 @@ class TestFullJobLifecycleHappyPath:
         assert running_job.status == JobStatus.RUNNING
 
         # Verify RUNNING via API
-        running_resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        running_resp = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert running_resp.status_code == 200
         assert running_resp.json()["status"] == "RUNNING"
 
@@ -271,9 +262,7 @@ class TestFullJobLifecycleHappyPath:
         )
 
         # -- Step 7: Verify COMPLETED status via API --
-        completed_resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        completed_resp = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert completed_resp.status_code == 200
         completed_data = completed_resp.json()
         assert completed_data["status"] == "COMPLETED"
@@ -283,9 +272,7 @@ class TestFullJobLifecycleHappyPath:
         assert completed_data["retry_count"] == 0
 
         # -- Step 8: Download result via presigned URL endpoint --
-        result_resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}/result", headers=auth_headers
-        )
+        result_resp = await client.get(f"/api/v1/jobs/{job_id_str}/result", headers=auth_headers)
         assert result_resp.status_code == 200
         result_data = result_resp.json()
         assert result_data["job_id"] == job_id_str
@@ -294,22 +281,16 @@ class TestFullJobLifecycleHappyPath:
 
         # -- Step 9: Verify credits were deducted --
         expected_balance = initial_credits - job_cost
-        final_balance = await get_balance(
-            session=db_session, user_id=test_user.id
-        )
+        final_balance = await get_balance(session=db_session, user_id=test_user.id)
         assert final_balance == expected_balance
 
         # Also verify via API
-        balance_resp_final = await client.get(
-            "/api/v1/credits/balance", headers=auth_headers
-        )
+        balance_resp_final = await client.get("/api/v1/credits/balance", headers=auth_headers)
         assert balance_resp_final.status_code == 200
         assert Decimal(balance_resp_final.json()["balance"]) == expected_balance
 
         # -- Step 10: Verify full job detail fields --
-        detail_resp = await client.get(
-            f"/api/v1/jobs/{job_id_str}", headers=auth_headers
-        )
+        detail_resp = await client.get(f"/api/v1/jobs/{job_id_str}", headers=auth_headers)
         assert detail_resp.status_code == 200
         detail = detail_resp.json()
         assert detail["id"] == job_id_str
@@ -347,9 +328,7 @@ class TestFullJobLifecycleHappyPath:
         assert dispatch_resp.status_code == 201
         job_id = uuid.UUID(dispatch_resp.json()["job_id"])
 
-        await update_job_status(
-            session=db_session, job_id=job_id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job_id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job_id,
@@ -358,9 +337,7 @@ class TestFullJobLifecycleHappyPath:
         )
 
         # Query the list endpoint with COMPLETED filter
-        list_resp = await client.get(
-            "/api/v1/jobs?status=COMPLETED", headers=auth_headers
-        )
+        list_resp = await client.get("/api/v1/jobs?status=COMPLETED", headers=auth_headers)
         assert list_resp.status_code == 200
         jobs = list_resp.json()["jobs"]
         completed_ids = [j["id"] for j in jobs]
@@ -438,9 +415,7 @@ class TestJobFailureAndRetry:
         )
 
         # Verify failure via API
-        fail_resp = await client.get(
-            f"/api/v1/jobs/{job_id}", headers=auth_headers
-        )
+        fail_resp = await client.get(f"/api/v1/jobs/{job_id}", headers=auth_headers)
         assert fail_resp.status_code == 200
         fail_data = fail_resp.json()
         assert fail_data["status"] == "FAILED"
@@ -449,9 +424,7 @@ class TestJobFailureAndRetry:
         assert fail_data["retry_count"] == 0
 
         # Result endpoint should return 404 for failed job
-        result_fail_resp = await client.get(
-            f"/api/v1/jobs/{job_id}/result", headers=auth_headers
-        )
+        result_fail_resp = await client.get(f"/api/v1/jobs/{job_id}/result", headers=auth_headers)
         assert result_fail_resp.status_code == 404
 
         # -- Retry: FAILED -> QUEUED --
@@ -462,9 +435,7 @@ class TestJobFailureAndRetry:
         )
         assert retried.retry_count == 1
 
-        retry_resp = await client.get(
-            f"/api/v1/jobs/{job_id}", headers=auth_headers
-        )
+        retry_resp = await client.get(f"/api/v1/jobs/{job_id}", headers=auth_headers)
         assert retry_resp.json()["status"] == "QUEUED"
         assert retry_resp.json()["retry_count"] == 1
 
@@ -489,9 +460,7 @@ class TestJobFailureAndRetry:
         )
 
         # Verify second completion via API
-        completed_resp = await client.get(
-            f"/api/v1/jobs/{job_id}", headers=auth_headers
-        )
+        completed_resp = await client.get(f"/api/v1/jobs/{job_id}", headers=auth_headers)
         assert completed_resp.status_code == 200
         completed_data = completed_resp.json()
         assert completed_data["status"] == "COMPLETED"
@@ -515,9 +484,7 @@ class TestJobFailureAndRetry:
         assert balance == expected_balance
 
         # Download result should now work
-        result_resp = await client.get(
-            f"/api/v1/jobs/{job_id}/result", headers=auth_headers
-        )
+        result_resp = await client.get(f"/api/v1/jobs/{job_id}/result", headers=auth_headers)
         assert result_resp.status_code == 200
         assert result_resp.json()["download_url"] == MOCK_PRESIGNED_URL
 
@@ -687,9 +654,7 @@ class TestAuthenticationRequiredE2E:
         client: AsyncClient,
     ) -> None:
         """Job result endpoint without auth token returns 401/403."""
-        resp = await client.get(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000/result"
-        )
+        resp = await client.get("/api/v1/jobs/00000000-0000-0000-0000-000000000000/result")
         assert resp.status_code in (401, 403)
 
     async def test_credits_balance_without_auth_rejected(
@@ -768,9 +733,7 @@ class TestMultiJobDispatch:
         job_b_id = uuid.UUID(resp_b.json()["job_id"])
 
         # Complete job A
-        await update_job_status(
-            session=db_session, job_id=job_a_id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job_a_id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job_a_id,
@@ -779,15 +742,11 @@ class TestMultiJobDispatch:
         )
 
         # Job B still DISPATCHED
-        b_resp = await client.get(
-            f"/api/v1/jobs/{job_b_id}", headers=auth_headers
-        )
+        b_resp = await client.get(f"/api/v1/jobs/{job_b_id}", headers=auth_headers)
         assert b_resp.json()["status"] == "DISPATCHED"
 
         # Complete job B
-        await update_job_status(
-            session=db_session, job_id=job_b_id, new_status=JobStatus.RUNNING
-        )
+        await update_job_status(session=db_session, job_id=job_b_id, new_status=JobStatus.RUNNING)
         await update_job_status(
             session=db_session,
             job_id=job_b_id,
@@ -796,12 +755,8 @@ class TestMultiJobDispatch:
         )
 
         # Both jobs completed
-        a_resp = await client.get(
-            f"/api/v1/jobs/{job_a_id}", headers=auth_headers
-        )
-        b_resp = await client.get(
-            f"/api/v1/jobs/{job_b_id}", headers=auth_headers
-        )
+        a_resp = await client.get(f"/api/v1/jobs/{job_a_id}", headers=auth_headers)
+        b_resp = await client.get(f"/api/v1/jobs/{job_b_id}", headers=auth_headers)
         assert a_resp.json()["status"] == "COMPLETED"
         assert b_resp.json()["status"] == "COMPLETED"
 

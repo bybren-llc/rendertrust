@@ -224,9 +224,7 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
     counter and ``http_request_duration_seconds`` histogram.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Skip /metrics itself to avoid self-referential noise
         if request.url.path == "/metrics":
             return await call_next(request)
@@ -240,12 +238,8 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
 
         status_code = str(response.status_code)
 
-        http_requests_total.labels(
-            method=method, endpoint=path, status_code=status_code
-        ).inc()
-        http_request_duration_seconds.labels(
-            method=method, endpoint=path
-        ).observe(duration)
+        http_requests_total.labels(method=method, endpoint=path, status_code=status_code).inc()
+        http_request_duration_seconds.labels(method=method, endpoint=path).observe(duration)
 
         return response
 

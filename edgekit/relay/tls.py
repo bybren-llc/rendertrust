@@ -78,11 +78,15 @@ def generate_csr(
 
     csr = (
         x509.CertificateSigningRequestBuilder()
-        .subject_name(x509.Name([
-            x509.NameAttribute(NameOID.COMMON_NAME, cn),
-            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
-            x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Edge Nodes"),
-        ]))
+        .subject_name(
+            x509.Name(
+                [
+                    x509.NameAttribute(NameOID.COMMON_NAME, cn),
+                    x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
+                    x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Edge Nodes"),
+                ]
+            )
+        )
         .add_extension(
             x509.SubjectAlternativeName([x509.DNSName(cn)]),
             critical=False,

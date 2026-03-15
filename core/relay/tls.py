@@ -91,11 +91,13 @@ class CertificateAuthority:
             key_size=_CA_KEY_SIZE,
         )
 
-        subject = issuer = x509.Name([
-            x509.NameAttribute(NameOID.COMMON_NAME, common_name),
-            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
-            x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Infrastructure"),
-        ])
+        subject = issuer = x509.Name(
+            [
+                x509.NameAttribute(NameOID.COMMON_NAME, common_name),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
+                x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Infrastructure"),
+            ]
+        )
 
         now = datetime.datetime.now(tz=datetime.UTC)
         ca_cert = (
@@ -180,11 +182,13 @@ class CertificateAuthority:
         )
 
         cn = _NODE_CN_FORMAT.format(node_id=node_id)
-        subject = x509.Name([
-            x509.NameAttribute(NameOID.COMMON_NAME, cn),
-            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
-            x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Edge Nodes"),
-        ])
+        subject = x509.Name(
+            [
+                x509.NameAttribute(NameOID.COMMON_NAME, cn),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "RenderTrust"),
+                x509.NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, "Edge Nodes"),
+            ]
+        )
 
         now = datetime.datetime.now(tz=datetime.UTC)
         node_cert = (
@@ -214,15 +218,19 @@ class CertificateAuthority:
                 critical=True,
             )
             .add_extension(
-                x509.ExtendedKeyUsage([
-                    x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH,
-                ]),
+                x509.ExtendedKeyUsage(
+                    [
+                        x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH,
+                    ]
+                ),
                 critical=False,
             )
             .add_extension(
-                x509.SubjectAlternativeName([
-                    x509.DNSName(cn),
-                ]),
+                x509.SubjectAlternativeName(
+                    [
+                        x509.DNSName(cn),
+                    ]
+                ),
                 critical=False,
             )
             .sign(ca_key, hashes.SHA256())
