@@ -61,6 +61,7 @@ services:
       bash -c "
         apt-get update -qq && apt-get install -y -qq libpq-dev gcc > /dev/null 2>&1 &&
         pip install -q -e '.[dev]' &&
+        alembic upgrade head &&
         python -m pytest tests/ -v --tb=short
       "
     networks:
