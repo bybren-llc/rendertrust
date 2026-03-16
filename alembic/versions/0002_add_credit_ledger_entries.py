@@ -46,16 +46,27 @@ transaction_source = sa.Enum(
 )
 
 
+def _create_enum_if_not_exists(name: str, values: Sequence[str]) -> None:
+    """Create a PostgreSQL ENUM type only if it does not already exist.
+
+    Works around SQLAlchemy Enum.create(checkfirst=True) failing with asyncpg,
+    and PostgreSQL < 16.4 not supporting CREATE TYPE IF NOT EXISTS.
+    """
+    bind = op.get_bind()
+    result = bind.execute(
+        sa.text("SELECT 1 FROM pg_type WHERE typname = :name"),
+        {"name": name},
+    )
+    if not result.scalar():
+        vals = ", ".join(f"'{v}'" for v in values)
+        bind.execute(sa.text(f"CREATE TYPE {name} AS ENUM ({vals})"))
+
+
 def upgrade() -> None:
     """Create credit_ledger_entries table with enum types and constraints."""
     # -- enum types -----------------------------------------------------------
-    # Use raw SQL with IF NOT EXISTS for asyncpg compatibility.
-    # SQLAlchemy Enum.create(checkfirst=True) doesn't work reliably with asyncpg.
-    op.execute("CREATE TYPE IF NOT EXISTS transaction_direction AS ENUM ('CREDIT', 'DEBIT')")
-    op.execute(
-        "CREATE TYPE IF NOT EXISTS transaction_source"
-        " AS ENUM ('STRIPE', 'USAGE', 'ADJUSTMENT', 'REFUND')"
-    )
+    _create_enum_if_not_exists("transaction_direction", ["CREDIT", "DEBIT"])
+    _create_enum_if_not_exists("transaction_source", ["STRIPE", "USAGE", "ADJUSTMENT", "REFUND"])
 
     # -- credit_ledger_entries ------------------------------------------------
     op.create_table(
