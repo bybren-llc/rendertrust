@@ -238,7 +238,7 @@ rendertrust/
 │   ├── database.py              #   Async SQLAlchemy engine + sessions
 │   ├── metrics.py               #   Prometheus metric definitions
 │   ├── models/                  #   SQLAlchemy domain models
-│   ├── api/v1/                  #   REST API routes (9 routers)
+│   ├── api/v1/                  #   REST API routes (10 routers)
 │   ├── auth/                    #   JWT, blacklist, rate limiting
 │   ├── billing/                 #   Stripe webhook, credit ledger, usage, payout
 │   ├── scheduler/               #   Edge node models, crypto, dispatch, fleet
@@ -268,7 +268,7 @@ rendertrust/
 │   ├── arch/                    #   Architecture manual
 │   ├── dr/                      #   Disaster recovery runbook
 │   ├── spikes/                  #   Technical spikes (x402 evaluation)
-│   └── security/                #   Security documentation
+│   └── sop/                     #   Standard operating procedures
 ├── ci/                          # CI/CD and infrastructure (MIT)
 │   ├── grafana/                 #   Dashboard provisioning
 │   ├── loki/                    #   Loki, Promtail, Grafana datasource configs
