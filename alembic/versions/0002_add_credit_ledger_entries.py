@@ -32,10 +32,14 @@ branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 # PostgreSQL native ENUM types
+# create_type=False prevents SQLAlchemy from auto-creating the enum during
+# create_table — we handle creation ourselves via _create_enum_if_not_exists
+# to avoid "type already exists" errors with asyncpg.
 transaction_direction = sa.Enum(
     "CREDIT",
     "DEBIT",
     name="transaction_direction",
+    create_type=False,
 )
 transaction_source = sa.Enum(
     "STRIPE",
@@ -43,6 +47,7 @@ transaction_source = sa.Enum(
     "ADJUSTMENT",
     "REFUND",
     name="transaction_source",
+    create_type=False,
 )
 
 
