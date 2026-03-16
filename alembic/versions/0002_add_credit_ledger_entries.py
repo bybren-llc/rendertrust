@@ -22,6 +22,7 @@ Create Date: 2026-03-09
 from collections.abc import Sequence
 
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 from alembic import op
 
@@ -31,17 +32,16 @@ down_revision: str | None = "0001_baseline"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
-# PostgreSQL native ENUM types
-# create_type=False prevents SQLAlchemy from auto-creating the enum during
-# create_table — we handle creation ourselves via _create_enum_if_not_exists
-# to avoid "type already exists" errors with asyncpg.
-transaction_direction = sa.Enum(
+# PostgreSQL native ENUM types — use postgresql.ENUM with create_type=False
+# to prevent auto-creation during create_table. We manage type lifecycle
+# ourselves via _create_enum_if_not_exists / downgrade DROP TYPE.
+transaction_direction = postgresql.ENUM(
     "CREDIT",
     "DEBIT",
     name="transaction_direction",
     create_type=False,
 )
-transaction_source = sa.Enum(
+transaction_source = postgresql.ENUM(
     "STRIPE",
     "USAGE",
     "ADJUSTMENT",
