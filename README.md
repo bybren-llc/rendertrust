@@ -198,7 +198,7 @@ Edge Node   Edge Node   Edge Node
 - Public operator leaderboard (jobs completed, uptime, earnings)
 - Real-time data refresh (60-second polling)
 
-### Monitoring (`ci/grafana/`, `ci/promtail.yml`)
+### Monitoring (`ci/grafana/`, `ci/loki/`)
 
 - Prometheus metrics: HTTP requests, job pipeline, fleet health, credits, WebSocket connections
 - Grafana dashboards: API performance, job pipeline, fleet health, credits
@@ -271,7 +271,7 @@ rendertrust/
 │   └── security/                #   Security documentation
 ├── ci/                          # CI/CD and infrastructure (MIT)
 │   ├── grafana/                 #   Dashboard provisioning
-│   ├── promtail.yml             #   Log shipping config
+│   ├── loki/                    #   Loki, Promtail, Grafana datasource configs
 │   └── deploy.sh                #   Zero-downtime deploy script
 ├── loadtest/                    # k6 load testing harness (MIT)
 ├── specs/                       # SAFe specifications
