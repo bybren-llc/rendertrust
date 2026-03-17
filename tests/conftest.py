@@ -60,6 +60,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.pool import NullPool
 
 from core.auth.jwt import create_access_token
 from core.database import Base, get_db_session
@@ -86,13 +87,18 @@ TEST_USER_PASSWORD = "testpassword123"  # noqa: S105  -- test-only secret
 @pytest.fixture(scope="session")
 async def test_engine():
     """Create a session-scoped async engine and bootstrap the schema."""
-    engine = create_async_engine(TEST_DATABASE_URL, echo=False)
+    _is_sqlite = TEST_DATABASE_URL.startswith("sqlite")
+
+    # Use NullPool for PostgreSQL/asyncpg to prevent "another operation is in
+    # progress" errors caused by connection sharing across async test fixtures.
+    # SQLite uses StaticPool (single in-memory connection shared across tests).
+    pool_kwargs = {} if _is_sqlite else {"poolclass": NullPool}
+    engine = create_async_engine(TEST_DATABASE_URL, echo=False, **pool_kwargs)
 
     # When running against PostgreSQL (CI), Alembic migrations have already
     # created the schema (including PostgreSQL-specific ENUM types).  Calling
     # metadata.create_all on top of that causes "type already exists" errors.
     # Only bootstrap via create_all for SQLite (unit tests).
-    _is_sqlite = TEST_DATABASE_URL.startswith("sqlite")
 
     if _is_sqlite:
         async with engine.begin() as conn:
