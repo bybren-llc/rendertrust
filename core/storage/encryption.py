@@ -41,7 +41,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 # Wire format constants
-_IV_LENGTH = 12   # 96-bit nonce recommended for AES-GCM
+_IV_LENGTH = 12  # 96-bit nonce recommended for AES-GCM
 _TAG_LENGTH = 16  # 128-bit authentication tag
 _KEY_LENGTH = 32  # 256-bit AES key
 

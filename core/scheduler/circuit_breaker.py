@@ -119,9 +119,7 @@ class CircuitBreaker:
         if count >= FAILURE_THRESHOLD:
             # Trip the breaker -- transition node to UNHEALTHY
             await session.execute(
-                update(EdgeNode)
-                .where(EdgeNode.id == node_id)
-                .values(status=NodeStatus.UNHEALTHY)
+                update(EdgeNode).where(EdgeNode.id == node_id).values(status=NodeStatus.UNHEALTHY)
             )
             await session.flush()
 
@@ -170,9 +168,7 @@ class CircuitBreaker:
 
         # Ensure node is HEALTHY in the database
         await session.execute(
-            update(EdgeNode)
-            .where(EdgeNode.id == node_id)
-            .values(status=NodeStatus.HEALTHY)
+            update(EdgeNode).where(EdgeNode.id == node_id).values(status=NodeStatus.HEALTHY)
         )
         await session.flush()
 
@@ -205,9 +201,7 @@ class CircuitBreaker:
         Returns:
             Effective ``NodeStatus``.
         """
-        result = await session.execute(
-            select(EdgeNode).where(EdgeNode.id == node_id)
-        )
+        result = await session.execute(select(EdgeNode).where(EdgeNode.id == node_id))
         node = result.scalar_one_or_none()
         if node is None:
             return NodeStatus.OFFLINE

@@ -77,7 +77,7 @@ class AppSettings(BaseSettings):
     x402_compute_price: str = "$0.01"
 
     # Storage encryption
-    encryption_master_key: str = "0" * 64  # 32-byte hex key, MUST change in prod  # noqa: S105
+    encryption_master_key: str = "0" * 64  # 32-byte hex key, MUST change in prod
 
     # CORS
     cors_origins: list[str] = ["http://localhost:3000", "http://localhost:8000"]
@@ -100,7 +100,7 @@ class AppSettings(BaseSettings):
             if self.jwt_secret_key == _default_secret:
                 msg = "JWT_SECRET_KEY must be changed in production"
                 raise ValueError(msg)
-            _default_enc_key = "0" * 64  # noqa: S105
+            _default_enc_key = "0" * 64
             if self.encryption_master_key == _default_enc_key:
                 msg = "ENCRYPTION_MASTER_KEY must be changed in production"
                 raise ValueError(msg)

@@ -170,16 +170,12 @@ class TestListJobs:
         await db_session.flush()
 
         queued_job = _make_job(node=node, status=JobStatus.QUEUED, payload_ref="s3://q")
-        dispatched_job = _make_job(
-            node=node, status=JobStatus.DISPATCHED, payload_ref="s3://d"
-        )
+        dispatched_job = _make_job(node=node, status=JobStatus.DISPATCHED, payload_ref="s3://d")
         db_session.add(queued_job)
         db_session.add(dispatched_job)
         await db_session.flush()
 
-        resp = await client.get(
-            "/api/v1/jobs?status=QUEUED", headers=auth_headers
-        )
+        resp = await client.get("/api/v1/jobs?status=QUEUED", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["count"] == 1
@@ -192,9 +188,7 @@ class TestListJobs:
         auth_headers: dict,
     ) -> None:
         """Invalid status filter returns 422."""
-        resp = await client.get(
-            "/api/v1/jobs?status=BOGUS", headers=auth_headers
-        )
+        resp = await client.get("/api/v1/jobs?status=BOGUS", headers=auth_headers)
         assert resp.status_code == 422
         assert "Invalid status: BOGUS" in resp.json()["detail"]
 
@@ -216,26 +210,20 @@ class TestListJobs:
         await db_session.flush()
 
         # First page: limit=2
-        resp1 = await client.get(
-            "/api/v1/jobs?limit=2&offset=0", headers=auth_headers
-        )
+        resp1 = await client.get("/api/v1/jobs?limit=2&offset=0", headers=auth_headers)
         assert resp1.status_code == 200
         data1 = resp1.json()
         assert len(data1["jobs"]) == 2
         assert data1["count"] == 2
 
         # Second page: offset=2, limit=2
-        resp2 = await client.get(
-            "/api/v1/jobs?limit=2&offset=2", headers=auth_headers
-        )
+        resp2 = await client.get("/api/v1/jobs?limit=2&offset=2", headers=auth_headers)
         assert resp2.status_code == 200
         data2 = resp2.json()
         assert len(data2["jobs"]) == 2
 
         # Last page: offset=4, limit=2 -> 1 job
-        resp3 = await client.get(
-            "/api/v1/jobs?limit=2&offset=4", headers=auth_headers
-        )
+        resp3 = await client.get("/api/v1/jobs?limit=2&offset=4", headers=auth_headers)
         assert resp3.status_code == 200
         data3 = resp3.json()
         assert len(data3["jobs"]) == 1
@@ -270,9 +258,7 @@ class TestGetJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["id"] == str(job.id)
@@ -303,9 +289,7 @@ class TestGetJob:
         auth_headers: dict,
     ) -> None:
         """Invalid UUID format returns 422."""
-        resp = await client.get(
-            "/api/v1/jobs/not-a-uuid", headers=auth_headers
-        )
+        resp = await client.get("/api/v1/jobs/not-a-uuid", headers=auth_headers)
         assert resp.status_code == 422
         assert resp.json()["detail"] == "Invalid job ID format"
 
@@ -334,9 +318,7 @@ class TestCancelJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "FAILED"
@@ -359,9 +341,7 @@ class TestCancelJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "FAILED"
@@ -383,9 +363,7 @@ class TestCancelJob:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.post(
-            f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers
-        )
+        resp = await client.post(f"/api/v1/jobs/{job.id}/cancel", headers=auth_headers)
         assert resp.status_code == 400
         assert "Cannot cancel job" in resp.json()["detail"]
 
@@ -425,9 +403,7 @@ class TestAuthentication:
         client: AsyncClient,
     ) -> None:
         """Get job without auth returns 401 or 403."""
-        resp = await client.get(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000"
-        )
+        resp = await client.get("/api/v1/jobs/00000000-0000-0000-0000-000000000000")
         assert resp.status_code in (401, 403)
 
     async def test_cancel_job_unauthenticated(
@@ -435,7 +411,5 @@ class TestAuthentication:
         client: AsyncClient,
     ) -> None:
         """Cancel job without auth returns 401 or 403."""
-        resp = await client.post(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000/cancel"
-        )
+        resp = await client.post("/api/v1/jobs/00000000-0000-0000-0000-000000000000/cancel")
         assert resp.status_code in (401, 403)

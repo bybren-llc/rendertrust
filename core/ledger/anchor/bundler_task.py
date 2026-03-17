@@ -49,6 +49,7 @@ logger = logging.getLogger(__name__)
 # Database access protocol
 # ---------------------------------------------------------------------------
 
+
 class EntryRepository(Protocol):
     """Minimal interface for accessing ledger entries.
 
@@ -75,6 +76,7 @@ class EntryRepository(Protocol):
 # ---------------------------------------------------------------------------
 # Background loop
 # ---------------------------------------------------------------------------
+
 
 async def run_bundler_loop(
     service: AnchoringService,

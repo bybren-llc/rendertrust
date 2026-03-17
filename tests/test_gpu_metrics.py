@@ -66,17 +66,11 @@ from edgekit.poller.metrics import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
-NVIDIA_SMI_OUTPUT_RTX4090 = (
-    "NVIDIA GeForce RTX 4090, 24576, 8192, 75, 62\n"
-)
+NVIDIA_SMI_OUTPUT_RTX4090 = "NVIDIA GeForce RTX 4090, 24576, 8192, 75, 62\n"
 
-NVIDIA_SMI_OUTPUT_A100 = (
-    "NVIDIA A100-SXM4-80GB, 81920, 40960, 92, 71\n"
-)
+NVIDIA_SMI_OUTPUT_A100 = "NVIDIA A100-SXM4-80GB, 81920, 40960, 92, 71\n"
 
-NVIDIA_SMI_OUTPUT_SPACES = (
-    "  NVIDIA GeForce RTX 3080 , 10240 , 4096 , 50 , 55  \n"
-)
+NVIDIA_SMI_OUTPUT_SPACES = "  NVIDIA GeForce RTX 3080 , 10240 , 4096 , 50 , 55  \n"
 
 
 @pytest.fixture
@@ -380,9 +374,7 @@ class TestRunPoller:
                 "edgekit.poller.metrics.detect_cpu",
                 return_value=CpuInfo(model="test", cores=4),
             ),
-            patch(
-                "edgekit.poller.metrics.asyncio.sleep", new_callable=AsyncMock
-            ) as mock_sleep,
+            patch("edgekit.poller.metrics.asyncio.sleep", new_callable=AsyncMock) as mock_sleep,
             pytest.raises(KeyboardInterrupt),
         ):
             await run_poller(mock_relay_client, interval=10)

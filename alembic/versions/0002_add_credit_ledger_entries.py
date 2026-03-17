@@ -22,6 +22,7 @@ Create Date: 2026-03-09
 from collections.abc import Sequence
 
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 from alembic import op
 
@@ -31,26 +32,46 @@ down_revision: str | None = "0001_baseline"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
-# PostgreSQL native ENUM types
-transaction_direction = sa.Enum(
+# PostgreSQL native ENUM types — use postgresql.ENUM with create_type=False
+# to prevent auto-creation during create_table. We manage type lifecycle
+# ourselves via _create_enum_if_not_exists / downgrade DROP TYPE.
+transaction_direction = postgresql.ENUM(
     "CREDIT",
     "DEBIT",
     name="transaction_direction",
+    create_type=False,
 )
-transaction_source = sa.Enum(
+transaction_source = postgresql.ENUM(
     "STRIPE",
     "USAGE",
     "ADJUSTMENT",
     "REFUND",
     name="transaction_source",
+    create_type=False,
 )
+
+
+def _create_enum_if_not_exists(name: str, values: Sequence[str]) -> None:
+    """Create a PostgreSQL ENUM type only if it does not already exist.
+
+    Works around SQLAlchemy Enum.create(checkfirst=True) failing with asyncpg,
+    and PostgreSQL < 16.4 not supporting CREATE TYPE IF NOT EXISTS.
+    """
+    bind = op.get_bind()
+    result = bind.execute(
+        sa.text("SELECT 1 FROM pg_type WHERE typname = :name"),
+        {"name": name},
+    )
+    if not result.scalar():
+        vals = ", ".join(f"'{v}'" for v in values)
+        bind.execute(sa.text(f"CREATE TYPE {name} AS ENUM ({vals})"))
 
 
 def upgrade() -> None:
     """Create credit_ledger_entries table with enum types and constraints."""
     # -- enum types -----------------------------------------------------------
-    transaction_direction.create(op.get_bind(), checkfirst=True)
-    transaction_source.create(op.get_bind(), checkfirst=True)
+    _create_enum_if_not_exists("transaction_direction", ["CREDIT", "DEBIT"])
+    _create_enum_if_not_exists("transaction_source", ["STRIPE", "USAGE", "ADJUSTMENT", "REFUND"])
 
     # -- credit_ledger_entries ------------------------------------------------
     op.create_table(

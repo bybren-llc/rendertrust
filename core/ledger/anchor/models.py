@@ -99,11 +99,7 @@ class AnchorRecord(Base):
     )
 
     def __repr__(self) -> str:
-        return (
-            f"<AnchorRecord id={self.id!s} "
-            f"tx_hash={self.tx_hash!r} "
-            f"entries={self.entry_count}>"
-        )
+        return f"<AnchorRecord id={self.id!s} tx_hash={self.tx_hash!r} entries={self.entry_count}>"
 
 
 class CreditLedgerEntry(Base):
@@ -168,7 +164,5 @@ class CreditLedgerEntry(Base):
 
     def __repr__(self) -> str:
         return (
-            f"<CreditLedgerEntry id={self.id} "
-            f"account={self.account_id!r} "
-            f"delta={self.delta_usd}>"
+            f"<CreditLedgerEntry id={self.id} account={self.account_id!r} delta={self.delta_usd}>"
         )

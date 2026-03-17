@@ -69,7 +69,5 @@ class AnchorConfig:
             contract_address=os.environ.get("ANCHOR_CONTRACT_ADDRESS", ""),
             private_key=os.environ.get("ANCHOR_PRIVATE_KEY", ""),
             batch_size=int(os.environ.get("ANCHOR_BATCH_SIZE", "100")),
-            interval_seconds=int(
-                os.environ.get("ANCHOR_INTERVAL_SECONDS", "300")
-            ),
+            interval_seconds=int(os.environ.get("ANCHOR_INTERVAL_SECONDS", "300")),
         )

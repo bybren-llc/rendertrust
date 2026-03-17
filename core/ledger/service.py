@@ -45,8 +45,7 @@ class InsufficientCreditsError(Exception):
         self.requested = requested
         self.available = available
         super().__init__(
-            f"Insufficient credits for user {user_id}: "
-            f"requested {requested}, available {available}"
+            f"Insufficient credits for user {user_id}: requested {requested}, available {available}"
         )
 
 

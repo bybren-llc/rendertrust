@@ -47,6 +47,7 @@ if TYPE_CHECKING:
 # Helpers
 # =====================================================================
 
+
 def _make_entry(
     entry_id: int = 1,
     account_id: str = "user:alice",
@@ -60,7 +61,13 @@ def _make_entry(
     entry.account_id = account_id
     entry.delta_usd = delta_usd
     entry.created_at = created_at or datetime.datetime(
-        2024, 6, 1, 12, 0, 0, tzinfo=datetime.timezone.utc  # noqa: UP017
+        2024,
+        6,
+        1,
+        12,
+        0,
+        0,
+        tzinfo=datetime.timezone.utc,  # noqa: UP017
     )
     entry.ref_event_id = None
     entry.anchor_id = anchor_id
@@ -108,9 +115,7 @@ class FakeEntryRepository:
         unanchored = [e for e in self.entries if e.anchor_id is None]
         return unanchored[:limit]
 
-    async def save_anchor(
-        self, record: AnchorRecord, entry_ids: Sequence[int]
-    ) -> None:
+    async def save_anchor(self, record: AnchorRecord, entry_ids: Sequence[int]) -> None:
         self.saved_records.append(record)
         self.saved_entry_ids.append(list(entry_ids))
         # Simulate marking entries as anchored.

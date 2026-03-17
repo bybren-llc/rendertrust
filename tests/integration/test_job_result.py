@@ -156,9 +156,7 @@ class TestGetJobResultHappyPath:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert data["download_url"] == MOCK_PRESIGNED_URL
@@ -184,9 +182,7 @@ class TestGetJobResultHappyPath:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 200
         data = resp.json()
         assert "job_id" in data
@@ -216,9 +212,7 @@ class TestGetJobResultHappyPath:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 200
         assert resp.json()["expires_in"] == 3600
 
@@ -270,9 +264,7 @@ class TestGetJobResultIncompleteJobs:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 404
         assert "not completed" in resp.json()["detail"]
 
@@ -292,9 +284,7 @@ class TestGetJobResultIncompleteJobs:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 404
         assert "not completed" in resp.json()["detail"]
 
@@ -314,9 +304,7 @@ class TestGetJobResultIncompleteJobs:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 404
         assert "not completed" in resp.json()["detail"]
 
@@ -340,9 +328,7 @@ class TestGetJobResultIncompleteJobs:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 404
         assert "not completed" in resp.json()["detail"]
 
@@ -375,9 +361,7 @@ class TestGetJobResultNoResultRef:
         db_session.add(job)
         await db_session.flush()
 
-        resp = await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
         assert resp.status_code == 404
         assert "no result stored" in resp.json()["detail"]
 
@@ -397,9 +381,7 @@ class TestGetJobResultInvalidId:
         auth_headers: dict,
     ) -> None:
         """Non-UUID job_id returns 422 with 'Invalid job ID format'."""
-        resp = await client.get(
-            "/api/v1/jobs/not-a-uuid/result", headers=auth_headers
-        )
+        resp = await client.get("/api/v1/jobs/not-a-uuid/result", headers=auth_headers)
         assert resp.status_code == 422
         assert resp.json()["detail"] == "Invalid job ID format"
 
@@ -417,9 +399,7 @@ class TestGetJobResultAuthentication:
         client: AsyncClient,
     ) -> None:
         """Request without auth token returns 401 or 403."""
-        resp = await client.get(
-            "/api/v1/jobs/00000000-0000-0000-0000-000000000000/result"
-        )
+        resp = await client.get("/api/v1/jobs/00000000-0000-0000-0000-000000000000/result")
         assert resp.status_code in (401, 403)
 
 
@@ -453,9 +433,7 @@ class TestStorageServiceIntegration:
         db_session.add(job)
         await db_session.flush()
 
-        await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         mock_storage_service.generate_presigned_url.assert_called_once_with(
             key=result_key,
@@ -483,9 +461,7 @@ class TestStorageServiceIntegration:
         db_session.add(job)
         await db_session.flush()
 
-        await client.get(
-            f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-        )
+        await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         call_args = mock_storage_service.generate_presigned_url.call_args
         assert call_args.kwargs["expires_in"] == 3600

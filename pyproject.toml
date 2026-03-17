@@ -154,6 +154,9 @@ module = [
     "botocore.*",
     "mypy_boto3_s3.*",
     "db.*",
+    "redis.*",
+    "prometheus_client.*",
+    "passlib.*",
 ]
 ignore_missing_imports = true
 
@@ -164,6 +167,13 @@ module = [
     "core.gateway.x402.*",
     "core.ledger.*",
     "core.scheduler.*",
+    "core.relay.*",
+    "core.auth.*",
+    "core.storage.*",
+    "core.api.v1.ledger",
+    "core.api.v1.health",
+    "core.api.v1.auth",
+    "core.metrics",
     "edgekit.*",
     "rollup_anchor.*",
     "loadtest.*",

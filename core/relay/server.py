@@ -48,9 +48,7 @@ _WS_CLOSE_AUTH_FAILED = 4001
 _WS_CLOSE_HEARTBEAT_TIMEOUT = 4002
 
 
-async def _authenticate_websocket(
-    websocket: WebSocket, node_id: uuid.UUID
-) -> bool:
+async def _authenticate_websocket(websocket: WebSocket, node_id: uuid.UUID) -> bool:
     """Validate the JWT token from WebSocket query params.
 
     Args:
@@ -118,9 +116,7 @@ async def _heartbeat_loop(
             return
 
 
-async def _handle_message(
-    node_id: uuid.UUID, data: dict
-) -> None:
+async def _handle_message(node_id: uuid.UUID, data: dict[str, object]) -> None:
     """Process an incoming WebSocket message from a node.
 
     Args:
@@ -177,9 +173,7 @@ async def relay_websocket(websocket: WebSocket, node_id: uuid.UUID) -> None:
 
     # Heartbeat synchronization
     last_pong = asyncio.Event()
-    heartbeat_task = asyncio.create_task(
-        _heartbeat_loop(websocket, node_id, last_pong)
-    )
+    heartbeat_task = asyncio.create_task(_heartbeat_loop(websocket, node_id, last_pong))
 
     try:
         while True:

@@ -38,9 +38,7 @@ class JobPricing(BaseModel):
     """
 
     __tablename__ = "job_pricing"
-    __table_args__ = (
-        Index("ix_job_pricing_job_type", "job_type", unique=True),
-    )
+    __table_args__ = (Index("ix_job_pricing_job_type", "job_type", unique=True),)
 
     job_type: Mapped[str] = mapped_column(
         String(100),

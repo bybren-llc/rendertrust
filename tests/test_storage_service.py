@@ -167,9 +167,7 @@ class TestUploadFile:
         call_kwargs = mock_s3_client.put_object.call_args
         assert call_kwargs.kwargs["ContentType"] == "application/octet-stream"
 
-    def test_upload_invalid_key_raises_key_error(
-        self, storage_service: StorageService
-    ) -> None:
+    def test_upload_invalid_key_raises_key_error(self, storage_service: StorageService) -> None:
         """Upload with an empty key raises StorageKeyError."""
         with pytest.raises(StorageKeyError, match="must not be empty"):
             storage_service.upload_file("", b"data")
@@ -229,9 +227,7 @@ class TestDownloadFile:
         with pytest.raises(StorageDownloadError, match="Failed to download"):
             storage_service.download_file("user-1/job-1/missing")
 
-    def test_download_invalid_key_raises_key_error(
-        self, storage_service: StorageService
-    ) -> None:
+    def test_download_invalid_key_raises_key_error(self, storage_service: StorageService) -> None:
         """download_file with an empty key raises StorageKeyError."""
         with pytest.raises(StorageKeyError):
             storage_service.download_file("")
@@ -316,16 +312,12 @@ class TestDeleteFile:
         self, storage_service: StorageService, mock_s3_client: MagicMock
     ) -> None:
         """delete_file raises StorageDeleteError on ClientError."""
-        mock_s3_client.delete_object.side_effect = _make_client_error(
-            operation="DeleteObject"
-        )
+        mock_s3_client.delete_object.side_effect = _make_client_error(operation="DeleteObject")
 
         with pytest.raises(StorageDeleteError, match="Failed to delete"):
             storage_service.delete_file("user-1/job-1/result")
 
-    def test_delete_invalid_key_raises_key_error(
-        self, storage_service: StorageService
-    ) -> None:
+    def test_delete_invalid_key_raises_key_error(self, storage_service: StorageService) -> None:
         """delete_file with an empty key raises StorageKeyError."""
         with pytest.raises(StorageKeyError):
             storage_service.delete_file("")
@@ -558,7 +550,9 @@ class TestPresignedUrlExpiry:
         with pytest.raises(ValueError, match="must not exceed"):
             storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86401)
 
-    def test_presigned_url_allows_24h(self, storage_service: StorageService, mock_s3_client: MagicMock) -> None:
+    def test_presigned_url_allows_24h(
+        self, storage_service: StorageService, mock_s3_client: MagicMock
+    ) -> None:
         """generate_presigned_url allows exactly 24 hours."""
         mock_s3_client.generate_presigned_url.return_value = "https://s3/presigned"
         url = storage_service.generate_presigned_url("user-1/job-1/result", expires_in=86400)

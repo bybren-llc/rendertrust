@@ -283,9 +283,9 @@ async def test_cooldown_allows_scale_up_after_period(
         assert result1 == "scale_up"
 
         # Simulate cooldown period elapsed
-        monitor._last_scale_up = datetime.datetime.now(
-            tz=datetime.UTC
-        ) - datetime.timedelta(seconds=COOLDOWN_PERIOD + 1)
+        monitor._last_scale_up = datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(
+            seconds=COOLDOWN_PERIOD + 1
+        )
 
         # Second call after cooldown should emit again
         result2 = await monitor.check_and_scale(db_session)

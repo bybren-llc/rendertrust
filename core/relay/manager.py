@@ -65,7 +65,7 @@ class ConnectionManager:
         self._connections.pop(node_id, None)
         logger.info("node_disconnected", node_id=str(node_id), total=len(self._connections))
 
-    async def send_to_node(self, node_id: uuid.UUID, message: dict) -> bool:
+    async def send_to_node(self, node_id: uuid.UUID, message: dict[str, object]) -> bool:
         """Send a JSON message to a specific connected node.
 
         Args:
@@ -82,7 +82,7 @@ class ConnectionManager:
         await websocket.send_json(message)
         return True
 
-    async def broadcast(self, message: dict) -> None:
+    async def broadcast(self, message: dict[str, object]) -> None:
         """Send a JSON message to all connected nodes.
 
         Disconnected or errored sockets are silently skipped (cleanup

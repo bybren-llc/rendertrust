@@ -319,10 +319,10 @@ class TestSieveCorrectness:
     @pytest.mark.parametrize(
         ("limit", "expected_count"),
         [
-            (2, 1),       # Only 2
-            (10, 4),      # 2, 3, 5, 7
-            (30, 10),     # First 10 primes
-            (100, 25),    # 25 primes up to 100
+            (2, 1),  # Only 2
+            (10, 4),  # 2, 3, 5, 7
+            (30, 10),  # First 10 primes
+            (100, 25),  # 25 primes up to 100
             (1000, 168),  # 168 primes up to 1000
         ],
     )

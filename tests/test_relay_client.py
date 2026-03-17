@@ -54,6 +54,7 @@ from edgekit.relay.client import RelayClient
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def node_id():
     """Generate a test node UUID."""

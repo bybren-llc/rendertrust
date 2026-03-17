@@ -309,8 +309,8 @@ async def test_generate_payout_report_all_active_nodes():
     # Subsequent calls: _get_completed_jobs for each node
     session.execute.side_effect = [
         _mock_scalars_result([node_a, node_b]),  # distinct node IDs
-        _mock_scalars_result(jobs_a),             # jobs for node_a
-        _mock_scalars_result(jobs_b),             # jobs for node_b
+        _mock_scalars_result(jobs_a),  # jobs for node_a
+        _mock_scalars_result(jobs_b),  # jobs for node_b
     ]
 
     with patch("core.billing.payout.get_job_price", new_callable=AsyncMock) as mock_price:
@@ -353,7 +353,7 @@ async def test_execute_payouts_creates_ledger_entries():
     session = AsyncMock()
     session.execute.side_effect = [
         _mock_scalars_result([node_id]),  # active node IDs
-        _mock_scalars_result(jobs),       # jobs for node
+        _mock_scalars_result(jobs),  # jobs for node
     ]
 
     mock_entry = MagicMock()
@@ -397,9 +397,9 @@ async def test_execute_payouts_idempotent():
     # Each call to execute_payouts triggers 2 execute() calls
     session.execute.side_effect = [
         _mock_scalars_result([node_id]),  # active node IDs (1st call)
-        _mock_scalars_result(jobs),       # jobs for node (1st call)
+        _mock_scalars_result(jobs),  # jobs for node (1st call)
         _mock_scalars_result([node_id]),  # active node IDs (2nd call)
-        _mock_scalars_result(jobs),       # jobs for node (2nd call)
+        _mock_scalars_result(jobs),  # jobs for node (2nd call)
     ]
 
     mock_entry = MagicMock()

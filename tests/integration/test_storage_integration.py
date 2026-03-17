@@ -60,7 +60,6 @@ from botocore.exceptions import ClientError
 from core.scheduler.models import EdgeNode, JobDispatch, JobStatus, NodeStatus
 from core.storage.config import StorageSettings
 from core.storage.service import (
-    StorageDeleteError,
     StorageDownloadError,
     StorageError,
     StorageKeyError,
@@ -111,9 +110,7 @@ def mock_s3_client() -> MagicMock:
 
 
 @pytest.fixture
-def storage_service(
-    storage_settings: StorageSettings, mock_s3_client: MagicMock
-) -> StorageService:
+def storage_service(storage_settings: StorageSettings, mock_s3_client: MagicMock) -> StorageService:
     """Return a StorageService wired to a mocked S3 client."""
     return StorageService(settings=storage_settings, client=mock_s3_client)
 
@@ -491,16 +488,12 @@ class TestJobResultStorageError:
         await db_session.flush()
 
         mock_storage = MagicMock()
-        mock_storage.generate_presigned_url.side_effect = StorageError(
-            "S3 connection refused"
-        )
+        mock_storage.generate_presigned_url.side_effect = StorageError("S3 connection refused")
 
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
             mock_cls.return_value = mock_storage
             with pytest.raises(StorageError, match="S3 connection refused"):
-                await client.get(
-                    f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-                )
+                await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
     async def test_storage_client_error_during_presigned_url_propagates(
         self,
@@ -530,9 +523,7 @@ class TestJobResultStorageError:
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
             mock_cls.return_value = mock_storage
             with pytest.raises(StorageError, match="Failed to generate presigned URL"):
-                await client.get(
-                    f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-                )
+                await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
 
 # =========================================================================
@@ -564,9 +555,7 @@ class TestJobResultIncompleteJobStorageNotCalled:
         await db_session.flush()
 
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
-            resp = await client.get(
-                f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-            )
+            resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         assert resp.status_code == 404
         assert "not completed" in resp.json()["detail"]
@@ -589,9 +578,7 @@ class TestJobResultIncompleteJobStorageNotCalled:
         await db_session.flush()
 
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
-            resp = await client.get(
-                f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-            )
+            resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         assert resp.status_code == 404
         mock_cls.assert_not_called()
@@ -626,9 +613,7 @@ class TestJobResultMissingRefStorageNotCalled:
         await db_session.flush()
 
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
-            resp = await client.get(
-                f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-            )
+            resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         assert resp.status_code == 404
         assert "no result stored" in resp.json()["detail"]
@@ -889,9 +874,7 @@ class TestFullEndToEndStorageToApi:
 
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
             mock_cls.return_value = mock_storage
-            resp = await client.get(
-                f"/api/v1/jobs/{job.id}/result", headers=auth_headers
-            )
+            resp = await client.get(f"/api/v1/jobs/{job.id}/result", headers=auth_headers)
 
         assert resp.status_code == 200
         data = resp.json()
@@ -947,12 +930,8 @@ class TestFullEndToEndStorageToApi:
         with patch("core.api.v1.jobs.StorageService") as mock_cls:
             mock_cls.return_value = mock_storage
 
-            resp_a = await client.get(
-                f"/api/v1/jobs/{job_a.id}/result", headers=auth_headers
-            )
-            resp_b = await client.get(
-                f"/api/v1/jobs/{job_b.id}/result", headers=auth_headers
-            )
+            resp_a = await client.get(f"/api/v1/jobs/{job_a.id}/result", headers=auth_headers)
+            resp_b = await client.get(f"/api/v1/jobs/{job_b.id}/result", headers=auth_headers)
 
         assert resp_a.status_code == 200
         assert resp_b.status_code == 200

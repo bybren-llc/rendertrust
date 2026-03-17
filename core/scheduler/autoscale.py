@@ -139,12 +139,14 @@ class AutoScaleMonitor:
             ``True`` if the event was published, ``False`` otherwise.
         """
         settings = get_settings()
-        payload = json.dumps({
-            "event": channel,
-            "avg_load": round(avg_load, 4),
-            "node_count": node_count,
-            "timestamp": datetime.datetime.now(tz=datetime.UTC).isoformat(),
-        })
+        payload = json.dumps(
+            {
+                "event": channel,
+                "avg_load": round(avg_load, 4),
+                "node_count": node_count,
+                "timestamp": datetime.datetime.now(tz=datetime.UTC).isoformat(),
+            }
+        )
 
         try:
             r = aioredis.from_url(settings.redis_url)

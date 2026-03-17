@@ -194,9 +194,7 @@ class TestHeartbeat:
         assert resp.json()["status"] == "HEALTHY"
 
         # Verify in DB
-        result = await db_session.execute(
-            select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id))
-        )
+        result = await db_session.execute(select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id)))
         node = result.scalar_one_or_none()
         assert node is not None
         assert node.status == NodeStatus.HEALTHY
@@ -218,16 +216,12 @@ class TestHeartbeat:
         assert resp.status_code == 200
 
         # Verify load in DB
-        result = await db_session.execute(
-            select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id))
-        )
+        result = await db_session.execute(select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id)))
         node = result.scalar_one_or_none()
         assert node is not None
         assert node.current_load == pytest.approx(0.75)
 
-    async def test_heartbeat_without_auth_returns_401_or_403(
-        self, client: AsyncClient
-    ) -> None:
+    async def test_heartbeat_without_auth_returns_401_or_403(self, client: AsyncClient) -> None:
         """No Bearer token on heartbeat returns 401 or 403."""
         resp = await client.post(
             "/api/v1/nodes/heartbeat",
@@ -257,9 +251,7 @@ class TestHeartbeat:
 class TestStaleNodeDetection:
     """Test mark_stale_nodes service function."""
 
-    async def test_mark_stale_nodes(
-        self, client: AsyncClient, db_session: AsyncSession
-    ) -> None:
+    async def test_mark_stale_nodes(self, client: AsyncClient, db_session: AsyncSession) -> None:
         """HEALTHY nodes with old heartbeat transition to UNHEALTHY."""
         # Register and send heartbeat to make node HEALTHY
         data, _ = await _register_node(client)
@@ -275,9 +267,7 @@ class TestStaleNodeDetection:
         assert resp.json()["status"] == "HEALTHY"
 
         # Manually backdate last_heartbeat to simulate staleness
-        result = await db_session.execute(
-            select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id))
-        )
+        result = await db_session.execute(select(EdgeNode).where(EdgeNode.id == uuid.UUID(node_id)))
         node = result.scalar_one()
         node.last_heartbeat = datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(
             seconds=120

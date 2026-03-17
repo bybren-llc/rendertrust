@@ -170,9 +170,7 @@ class WorkerExecutor:
         job_type = job_data.get("job_type")
         if not job_type:
             logger.error("worker_missing_job_type", job_id=str(job_id))
-            await self._send_status(
-                job_id, "failed", detail="Missing job_type in job data"
-            )
+            await self._send_status(job_id, "failed", detail="Missing job_type in job data")
             return
 
         log = logger.bind(job_id=str(job_id), job_type=job_type)

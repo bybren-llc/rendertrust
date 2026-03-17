@@ -45,7 +45,7 @@ class RelayMessage(BaseModel):
     """
 
     type: RelayMessageType
-    payload: dict = Field(default_factory=dict)
+    payload: dict[str, object] = Field(default_factory=dict)
     timestamp: datetime.datetime = Field(
         default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
     )

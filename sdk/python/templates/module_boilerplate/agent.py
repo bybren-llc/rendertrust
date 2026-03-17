@@ -3,7 +3,7 @@ def run(payload: dict) -> dict:
 
 
 if __name__ == "__main__":
-    import sys
     import json
+    import sys
 
     print(json.dumps(run(json.load(sys.stdin))))

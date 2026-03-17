@@ -387,9 +387,7 @@ class TestEdgeCases:
     @pytest.mark.asyncio
     async def test_status_send_failure_does_not_crash(self, mock_relay, echo_plugin):
         """Executor continues even if relay.send_status_update raises."""
-        mock_relay.send_status_update = AsyncMock(
-            side_effect=RuntimeError("relay down")
-        )
+        mock_relay.send_status_update = AsyncMock(side_effect=RuntimeError("relay down"))
         executor = WorkerExecutor(
             relay_client=mock_relay,
             plugins=[echo_plugin],
@@ -424,8 +422,7 @@ class TestEdgeCases:
         assert mock_relay.send_status_update.call_count == 4
 
         all_statuses = [
-            c.kwargs.get("status")
-            for c in mock_relay.send_status_update.call_args_list
+            c.kwargs.get("status") for c in mock_relay.send_status_update.call_args_list
         ]
         assert all_statuses.count("running") == 2
         assert all_statuses.count("completed") == 1
